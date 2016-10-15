@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block head %}
+	<style>
+		#signup {
+			float: right;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Content -->
+	<div class="jumbotron" id="header_jumbo">
+		<div>
+			<h1>Sign in</h1>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-md-push-4 col-sm-6 col-sm-push-3 col-xs-10 col-xs-push-1">
+					<div class="login-panel panel panel-default">
+					    <div class="panel-heading">
+					        <h3 class="panel-title">Sign In</h3>
+					    </div>
+					    <div class="panel-body">
+					    	{% crispy user_form user_form.helper %}
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- /.container -->
+{% endblock %}
