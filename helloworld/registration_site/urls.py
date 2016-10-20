@@ -7,6 +7,7 @@ from . import views
 app_name = 'registration_site'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^login/', views.login, name='login'),
-    url(r'^signup/', views.login, name='signup'),
+    url(r'^login/', views.login_view, name='login'),
+    url(r'^signup/', views.signup_view, name='signup'),
+    url(r'^dashboard/', views.dashboard, name='dashboard'),
 ]

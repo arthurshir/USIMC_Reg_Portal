@@ -5,47 +5,57 @@ from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, HTM
 from django.contrib.auth.models import User
 from crispy_forms.bootstrap import StrictButton
 
-class UserSigninForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('email', 'password')
+class UserSigninForm(forms.Form):
+
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
     helper.layout = Layout(
         Div(
         	Div('email', css_class='col-xs-12'),
         	Div('password', css_class='col-xs-12'),
     	),
         ButtonHolder(
-        	StrictButton('Sign in', css_class='btn btn-success', type="submit"),
-        	StrictButton('Sign up', css_class='btn btn-info', style="float: right;"),
+        	StrictButton('Log in', css_class='btn btn-success', type="submit"),
 		),
+        HTML("""
+            <div style="height:4px;"> </div>
+            <a href="/signup">or sign up</a>
+        """),
     )
 
-class UserCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
-
-    class Meta:
-        model = User
-        fields = ('email', 'first_name', 'last_name', 'password')
+class UserSignupForm(forms.Form):
+    email = forms.CharField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-xs-4'
+    helper.field_class = 'col-xs-8'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
     helper.layout = Layout(
-        HTML("""
-            <div class="rowspacer" style="height:20px;"> </div>
-            <h4>Sign up</h4>
-            <div class="rowspacer" style="height:20px;"> </div>
-        """),
         Div(
-        	Div('first_name', css_class='col-xs-12'),
-        	Div('last_name', css_class='col-xs-12'),
-        	Div('email', css_class='col-xs-12'),
-        	Div('password', css_class='col-xs-12'),
-        	)
+            Div('first_name', css_class='col-xs-5'),
+            Div('last_name', css_class='col-xs-5 col-xs-offset-2'),
+            Div('email', css_class='col-xs-12'),
+            Div('password', css_class='col-xs-12'),
+            Div('confirm_password', css_class='col-xs-12'),
+        ),
+        ButtonHolder(
+            StrictButton('Sign up', css_class='btn btn-success', type="submit"),
+        ),
+        HTML("""
+            <div style="height:4px;"> </div>
+            <a href="/login">or log in</a>
+        """),
     )
+
 
