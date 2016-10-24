@@ -1,0 +1,42 @@
+Data Model Format
+
+Key: -> <id> Means has all attributes of 'id' (See 'id's below)
+Model Classes:
+	Contestant:
+		Parent
+			person -> Person
+			contact -> Contact
+			location -> Location
+		Contestant
+			person -> Person
+			location -> Location
+		Contest Information
+			instruments
+			accompanist
+			group
+			piece1 -> Piece
+			piece2 -> Piece
+			pieceChinese -> Piece
+		Teacher Information
+			person -> Person
+			contact -> Contact
+			location -> Location
+	Person:
+		first Name
+		middle Name
+		last Name
+	Contact:
+		email
+		home Phone
+		mobile Phone
+	Location:
+		address
+		country
+		city
+		state
+		zip Code
+	Piece:
+		isChinese
+		catalogue
+		title
+		composer
