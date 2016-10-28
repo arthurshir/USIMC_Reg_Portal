@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div, HTML
 from django.contrib.auth.models import User
 from crispy_forms.bootstrap import StrictButton
+from . import models
 
 class UserSigninForm(forms.Form):
 
@@ -58,4 +59,17 @@ class UserSignupForm(forms.Form):
         """),
     )
 
+class ParentForm(forms.Form):
+    class Meta:
+        model=models.Parent
+        fields= '__all__'
 
+class PerformerForm(forms.Form):
+    class Meta:
+        model=models.Performer
+        fields= '__all__'
+
+class TeacherForm(forms.Form):
+    class Meta:
+        model=models.Teacher
+        fields= '__all__'

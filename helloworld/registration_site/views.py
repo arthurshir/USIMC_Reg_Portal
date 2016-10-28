@@ -59,8 +59,6 @@ def signup_view(request):
 	    context['panel_title'] = 'Sign up'
 	    return render(request, 'registration_site/sign_in.html', context)
 
-
-
 def createOrUpdateDjangoUser(email, password, first_name, last_name):
     try:
         user = User.objects.get(username=email)
@@ -71,3 +69,5 @@ def createOrUpdateDjangoUser(email, password, first_name, last_name):
     user.last_name = last_name
     user.save()
     return user
+
+
