@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Person(models.Model):
@@ -42,6 +43,7 @@ class Performer(Person):
 	piece2 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece2", verbose_name="Second Piece", null=True)
 	chinesePiece = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True)
 
-class Contestant(models.Model):
+class Profile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user", verbose_name="User")
 	performers = models.ForeignKey(Performer, related_name="performer", verbose_name="Performer", null=True)
 	parent = models.OneToOneField(Parent, on_delete=models.CASCADE, related_name="parent", verbose_name="Parent")
