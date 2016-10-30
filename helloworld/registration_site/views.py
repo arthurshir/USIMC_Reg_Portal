@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UserSigninForm, UserSignupForm
+from .forms import UserSigninForm, UserSignupForm, ParentForm, PerformerForm, TeacherForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -9,7 +9,10 @@ def index(request):
     return HttpResponse("Hello, world!")
 
 def dashboard(request):
-    return HttpResponse("Welcome to the Dashboard!")
+    context = {}
+    context['performerForm'] = PerformerForm()
+    context['parentForm'] = ParentForm()
+    return render(request, 'registration_site/dashboard.html', context)
 
 def login_view(request):
 	if request.method == "POST":

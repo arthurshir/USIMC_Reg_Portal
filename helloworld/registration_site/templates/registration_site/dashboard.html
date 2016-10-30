@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block head %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Content -->
+	<div class="jumbotron" id="header_jumbo">
+		<div>
+			<h1>Dashboard</h1>
+		</div>
+	</div>
+
+		<div class="container">
+			<div class="row col-md-10 col-md-offset-1">
+				<div class="panel panel-default">
+					<div class="panel-body">
+			            <ul class="nav nav-tabs" id="myTab">
+		            		<li class="active"><a data-target="#applications" data-toggle="tab">Applications</a></li>
+							<li class=""><a data-target="#profile" data-toggle="tab">Profile</a></li>
+						</ul>
+
+						<div class="tab-content">
+						  	<div class="tab-pane active" id="applications">
+					  			<div class="container-fluid">
+						  			{% crispy performerForm %}
+								</div>
+						  	</div>
+  							<div class="tab-pane" id="profile">
+  								<div class="container-fluid">
+						  			{% crispy parentForm %}
+								</div>
+						 	 </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+    <!-- /.container -->
+{% endblock %}

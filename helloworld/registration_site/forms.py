@@ -59,17 +59,99 @@ class UserSignupForm(forms.Form):
         """),
     )
 
-class ParentForm(forms.Form):
+class ParentForm(forms.ModelForm):
     class Meta:
         model=models.Parent
         fields= '__all__'
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div(
+                Div(
+                    HTML("""
+                        <h3>Parent Information</h3>
+                    """),
+                    Div('firstName', css_class='col-md-4'),
+                    Div('middleName', css_class='col-md-4'),
+                    Div('lastName', css_class='col-md-4'),
+                    Div('email', css_class='col-md-12'),
+                    Div('homePhone', css_class='col-md-12'),
+                    Div('mobilePhone', css_class='col-md-12'),
+                    css_class='row'
+                ),
+                css_class='col-md-7',
+            ),
+            Div(
+                Div(
+                    HTML("""
+                        <h3>Location</h3>
+                    """),
+                    Div('address', css_class='col-md-12'),
+                    Div('city', css_class='col-md-8'),
+                    Div('state', css_class='col-md-4'),
+                    Div('zipCode', css_class='col-md-12'),
+                    css_class='row'
+                ),
+                css_class='col-md-4 col-md-offset-1',
+            ),
+            css_class='row',
+        ),
+        
+        ButtonHolder(
+            StrictButton('Submit', css_class='btn btn-success', type="submit"),
+        ),
+    )
 
-class PerformerForm(forms.Form):
+class PerformerForm(forms.ModelForm):
     class Meta:
         model=models.Performer
         fields= '__all__'
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div(
+                Div(
+                    HTML("""
+                        <h3>Performer</h3>
+                    """),
+                    Div('firstName', css_class='col-md-4'),
+                    Div('middleName', css_class='col-md-4'),
+                    Div('lastName', css_class='col-md-4'),
+                    Div('teachers', css_class='col-md-12'),
+                    Div('instrument', css_class='col-md-12'),
+                    Div('accompanist', css_class='col-md-12'),
+                    Div('group', css_class='col-md-12'),
+                    css_class='row'
+                ),
+                css_class='col-md-7',
+            ),
+            Div(
+                Div(
+                    HTML("""
+                        <h3>Pieces</h3>
+                    """),
+                    Div('piece1', css_class='col-md-12'),
+                    Div('piece2', css_class='col-md-12'),
+                    Div('chinesePiece', css_class='col-md-12'),
+                    css_class='row'
+                ),
+                css_class='col-md-4 col-md-offset-1',
+            ),
+            css_class='row',
+        ),
+        
+        ButtonHolder(
+            StrictButton('Submit', css_class='btn btn-success', type="submit"),
+        ),
+    )
 
-class TeacherForm(forms.Form):
+class TeacherForm(forms.ModelForm):
     class Meta:
         model=models.Teacher
         fields= '__all__'

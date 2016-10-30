@@ -16,7 +16,6 @@ class Contact(models.Model):
 class Location(models.Model):
 	locationId = models.AutoField(primary_key=True)
 	address = models.CharField(max_length=200, verbose_name='Address')
-	country = models.CharField(max_length=200, verbose_name='Country')
 	city = models.CharField(max_length=200, verbose_name='City')
 	state = models.CharField(max_length=200, verbose_name='State')
 	zipCode = models.IntegerField(verbose_name='Zip Code')
@@ -34,9 +33,9 @@ class Parent(Person, Contact, Location):
 class Teacher(Person, Contact, Location):
 	pass
 
-class Performer(Person, Location):
+class Performer(Person):
 	teachers = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information")
-	instruments = models.CharField(max_length=200, verbose_name="instruments")
+	instrument = models.CharField(max_length=200, verbose_name="instrument")
 	accompanist = models.CharField(max_length=200, verbose_name="Accompanist")
 	group = models.CharField(max_length=200, verbose_name="Group")
 	piece1 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece1", verbose_name="First Piece")
