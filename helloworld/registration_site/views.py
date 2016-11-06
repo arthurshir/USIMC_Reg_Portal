@@ -50,9 +50,14 @@ def signup_view(request):
 			last_name = request.POST.get('last_name', '')
 			email = request.POST.get('email', '')
 			password = request.POST.get('password', '')
+			confirm_password = request.POST.get('confirm_password', '')
 
 			if User.objects.filter(username=email).exists():
 				messages.warning(request, 'A User for {} already exists'.format(email), extra_tags='signup')
+				return redirect('registration_site:signup')
+
+			if password != confirm_password: 
+				messages.warning(request, 'Passwords do not match', extra_tags='signup')
 				return redirect('registration_site:signup')
 
 			user = createOrUpdateDjangoUser(email, password, first_name, last_name)

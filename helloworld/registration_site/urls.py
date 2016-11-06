@@ -1,6 +1,7 @@
 """Main Website URL Configuration"""
 
 from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from . import views
 
@@ -10,4 +11,5 @@ urlpatterns = [
     url(r'^login/', views.login_view, name='login'),
     url(r'^signup/', views.signup_view, name='signup'),
     url(r'^dashboard/', views.dashboard, name='dashboard'),
+    url(r'^logout/$', auth_views.logout, {'next_page':'/'}, name='logout'),
 ]
