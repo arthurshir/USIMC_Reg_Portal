@@ -99,10 +99,6 @@ class ParentForm(forms.ModelForm):
             ),
             css_class='row',
         ),
-        
-        ButtonHolder(
-            StrictButton('Submit', css_class='btn btn-success', type="submit"),
-        ),
     )
 
 class PerformerForm(forms.ModelForm):
@@ -132,10 +128,6 @@ class PerformerForm(forms.ModelForm):
             ),
             css_class='row',
         ),
-        
-        ButtonHolder(
-            StrictButton('Submit', css_class='btn btn-success', type="submit"),
-        ),
     )
 
 class TeacherForm(forms.ModelForm):
@@ -150,6 +142,9 @@ class PieceForm(forms.ModelForm):
     class Meta:
         model=models.Piece
         fields= '__all__'
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
 
 class PieceFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
