@@ -27,7 +27,6 @@ class Piece(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Title')
 	composer = models.CharField(max_length=200, verbose_name='Composer')
 
-
 class Parent(Person, Contact, Location):
 	pass
 
@@ -35,6 +34,7 @@ class Teacher(Person, Contact, Location):
 	pass
 
 class Performer(Person):
+	profileOwner = models.ForeignKey("Profile", related_name="profileOwner", verbose_name="Owner", null=True)
 	teachers = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information")
 	instrument = models.CharField(max_length=200, verbose_name="instrument")
 	accompanist = models.CharField(max_length=200, verbose_name="Accompanist")
@@ -44,6 +44,6 @@ class Performer(Person):
 	chinesePiece = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True)
 
 class Profile(models.Model):
+	# Foreign Key Performer
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user", verbose_name="User")
-	performers = models.ForeignKey(Performer, related_name="performer", verbose_name="Performer", null=True)
 	parent = models.OneToOneField(Parent, on_delete=models.CASCADE, related_name="parent", verbose_name="Parent")

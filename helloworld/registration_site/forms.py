@@ -123,25 +123,12 @@ class PerformerForm(forms.ModelForm):
                     Div('firstName', css_class='col-md-4'),
                     Div('middleName', css_class='col-md-4'),
                     Div('lastName', css_class='col-md-4'),
-                    Div('teachers', css_class='col-md-12'),
                     Div('instrument', css_class='col-md-12'),
                     Div('accompanist', css_class='col-md-12'),
                     Div('group', css_class='col-md-12'),
                     css_class='row'
                 ),
-                css_class='col-md-7',
-            ),
-            Div(
-                Div(
-                    HTML("""
-                        <h3>Pieces</h3>
-                    """),
-                    Div('piece1', css_class='col-md-12'),
-                    Div('piece2', css_class='col-md-12'),
-                    Div('chinesePiece', css_class='col-md-12'),
-                    css_class='row'
-                ),
-                css_class='col-md-4 col-md-offset-1',
+                css_class='col-md-12',
             ),
             css_class='row',
         ),
@@ -155,3 +142,17 @@ class TeacherForm(forms.ModelForm):
     class Meta:
         model=models.Teacher
         fields= '__all__'
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+
+class PieceForm(forms.ModelForm):
+    class Meta:
+        model=models.Piece
+        fields= '__all__'
+
+class PieceFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super(PieceFormSetHelper, self).__init__(*args, **kwargs)
+        self.form_class = 'form-horizontal'
+        self.field_template = 'bootstrap3/layout/inline_field.html'

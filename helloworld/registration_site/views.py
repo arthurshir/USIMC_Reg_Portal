@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UserSigninForm, UserSignupForm, ParentForm, PerformerForm, TeacherForm
+from .forms import UserSigninForm, UserSignupForm, ParentForm, PerformerForm, TeacherForm, PieceForm, PieceFormSetHelper
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.forms.models import formset_factory
 
 def index(request):
     return HttpResponse("Hello, world!")
@@ -11,6 +12,10 @@ def index(request):
 def dashboard(request):
     context = {}
     context['performerForm'] = PerformerForm()
+    context['teacherForm'] = TeacherForm()
+    context['pieceFormSet'] = formset_factory(PieceForm, extra=2)()
+    context['pieceFormSetHelper'] = PieceFormSetHelper()
+
     context['parentForm'] = ParentForm()
     return render(request, 'registration_site/dashboard.html', context)
 
