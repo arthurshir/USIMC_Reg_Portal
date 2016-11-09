@@ -29,10 +29,14 @@ class Piece(models.Model):
 
 
 class Parent(Person, Contact, Location):
-	pass
+	person = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="p_person", verbose_name="Parent's Info", null=True, blank=True)
+	location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="p_location", verbose_name="Parent's Location", null=True, blank=True)
+	contact = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="p_contact", verbose_name="Parent's Contact", null=True, blank=True)
 
 class Teacher(Person, Contact, Location):
-	pass
+	person = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="t_person", verbose_name="Teacher's Info", null=True, blank=True)
+	location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="t_location", verbose_name="Teachers's Location", null=True, blank=True)
+	contact = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="t_contact", verbose_name="Teacher's Contact", null=True, blank=True)
 
 class Performer(Person):
 	teachers = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information", null=True, blank=True)

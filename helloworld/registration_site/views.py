@@ -47,6 +47,10 @@ def signup_view(request):
 			password = request.POST.get('password', '')
 			confirm_password = request.POST.get('confirm_password', '')
 
+			if not '@' in email:
+				messages.warning(request, 'Not an email address', extra_tags='signup')
+				return redirect('registration_site:signup')
+
 			if User.objects.filter(username=email).exists():
 				messages.warning(request, 'A User for {} already exists'.format(email), extra_tags='signup')
 				return redirect('registration_site:signup')
