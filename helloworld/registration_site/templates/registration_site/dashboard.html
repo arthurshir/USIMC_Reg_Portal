@@ -4,6 +4,20 @@
 {% block head %}
 <style>
 </style>
+<script>
+function submitForm() {
+	var form = $("#entireForm")
+    $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function (data) {
+            alert(data['success'] ? 'success' : data['error']);
+            _isDirty = false;
+        }
+    });
+}
+</script>
 {% endblock %}
 
 {% block content %}
@@ -23,18 +37,26 @@
 							<li class=""><a data-target="#profile" data-toggle="tab">Profile</a></li>
 						</ul>
 
-						<div class="tab-content">
-						  	<div class="tab-pane active" id="applications">
-					  			<div class="container-fluid">
-						  			{% crispy performerForm %}
-								</div>
-						  	</div>
-  							<div class="tab-pane" id="profile">
-  								<div class="container-fluid">
-						  			{% crispy parentForm %}
-								</div>
-						 	 </div>
-						</div>
+						<form id="entireForm" method="post" >
+							<div class="tab-content">
+							  	<div class="tab-pane active" id="applications">
+						  			<div class="container-fluid">
+							  			{% crispy performerForm %}
+							  			{% crispy teacherForm %}
+							  			{% crispy pieceForm1 %}
+							  			{% crispy pieceForm2 %}
+							  			{% crispy chinesePieceForm %}
+									</div>
+									<input type="submit" class="btn btn-success" value="Submit" onclick="submitForm();">
+							  	</div>
+	  							<div class="tab-pane" id="profile">
+	  								<div class="container-fluid">
+							  			{% crispy parentForm %}
+									</div>
+									<input type="submit" class="btn btn-success" value="Submit" onclick="submitForm();">
+							 	</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

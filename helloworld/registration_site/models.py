@@ -27,7 +27,6 @@ class Piece(models.Model):
 	title = models.CharField(max_length=200, verbose_name='Title', null=True, blank=True)
 	composer = models.CharField(max_length=200, verbose_name='Composer', null=True, blank=True)
 
-
 class Parent(Person, Contact, Location):
 	person = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="p_person", verbose_name="Parent's Info", null=True, blank=True)
 	location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="p_location", verbose_name="Parent's Location", null=True, blank=True)
@@ -39,7 +38,8 @@ class Teacher(Person, Contact, Location):
 	contact = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="t_contact", verbose_name="Teacher's Contact", null=True, blank=True)
 
 class Performer(Person):
-	teachers = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information", null=True, blank=True)
+	owningProfile = models.ForeignKey("Profile", related_name="profileOwner", verbose_name="Owner", null=True)
+	_teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information", null=True, blank=True)
 	instrument = models.CharField(max_length=200, verbose_name="instrument", null=True, blank=True)
 	accompanist = models.CharField(max_length=200, verbose_name="Accompanist", null=True, blank=True)
 	group = models.CharField(max_length=200, verbose_name="Group", null=True, blank=True)
@@ -48,6 +48,6 @@ class Performer(Person):
 	chinesePiece = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True, blank=True)
 
 class Profile(models.Model):
+	# Foreign Key Performer
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user", verbose_name="User")
-	performers = models.ForeignKey(Performer, related_name="performer", verbose_name="Performer", null=True, blank=True)
 	parent = models.OneToOneField(Parent, on_delete=models.CASCADE, related_name="parent", verbose_name="Parent", null=True, blank=True)
