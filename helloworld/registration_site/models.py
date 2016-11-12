@@ -42,14 +42,14 @@ class Teacher(Person, Contact, Location):
 	pass
 
 class Performer(Person):
-	owningProfile = models.ForeignKey("Profile", related_name="profileOwner", verbose_name="Owner", null=True)
-	_teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information", null=True, blank=True)
+	owningProfile = models.ForeignKey("Profile", related_name="profileOwner", verbose_name="Owner")
+	_teacher = models.OneToOneField(Teacher, on_delete=models.CASCADE, related_name="teacher", verbose_name="Teacher's Information")
 	instrument = models.CharField(max_length=200, verbose_name="instrument", null=True, blank=True)
 	accompanist = models.CharField(max_length=200, verbose_name="Accompanist", null=True, blank=True)
 	group = models.CharField(max_length=200, verbose_name="Group", null=True, blank=True)
-	piece1 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece1", verbose_name="First Piece", null=True, blank=True)
-	piece2 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece2", verbose_name="Second Piece", null=True, blank=True)
-	chinesePiece = models.OneToOneField(ChinesePiece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True, blank=True)
+	piece1 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece1", verbose_name="First Piece")
+	piece2 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece2", verbose_name="Second Piece")
+	chinesePiece = models.OneToOneField(ChinesePiece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece")
 
 class Profile(models.Model):
 	# Foreign Key Performer

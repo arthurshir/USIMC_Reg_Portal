@@ -35,8 +35,8 @@ def dashboard(request):
             print("Form should be saved")
         else:
             data['success'] = False
-            data['error'] = "Invalid Form"
-            print("Invalid Form")
+            data['error'] = "Invalid Form:\n performerForm: {}\nteacherForm: {}\npieceForm1: {}\npieceForm2: {}\nchinesePieceForm: {}\nparentForm: {}\n".format(performerForm.errors,teacherForm.errors,pieceForm1.errors,pieceForm2.errors,chinesePieceForm.errors,parentForm.errors)
+            
         return HttpResponse(json.dumps(data), content_type="application/json")
 
     else:

@@ -17,8 +17,11 @@ class UserSigninForm(forms.Form):
     helper.form_method = 'POST'
     helper.layout = Layout(
         Div(
-        	Div('email', css_class='col-xs-12'),
-        	Div('password', css_class='col-xs-12'),
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+        	Div('email', css_class="container-fluid"),
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+        	Div('password', css_class="container-fluid"),
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
     	),
         ButtonHolder(
         	StrictButton('Log in', css_class='btn btn-success', type="submit"),
@@ -31,32 +34,35 @@ class UserSigninForm(forms.Form):
 
 class UserSignupForm(forms.Form):
     email = forms.CharField()
-    first_name = forms.CharField()
-    last_name = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     helper = FormHelper()
+    helper.label_class = 'hidden'
     helper.form_class = 'form-horizontal'
-    helper.label_class = 'col-xs-4'
-    helper.field_class = 'col-xs-8'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_method = 'POST'
     helper.layout = Layout(
         Div(
-            Div('first_name', css_class='col-xs-5'),
-            Div('last_name', css_class='col-xs-5 col-xs-offset-2'),
-            Div('email', css_class='col-xs-12'),
-            Div('password', css_class='col-xs-12'),
-            Div('confirm_password', css_class='col-xs-12'),
-        ),
-        ButtonHolder(
-            StrictButton('Sign up', css_class='btn btn-success', type="submit"),
-        ),
-        HTML("""
-            <div style="height:4px;"> </div>
-            <a href="/login">or log in</a>
-        """),
+            Div(
+                HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+                Div('email', css_class="container-fluid"),
+                HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+                Div('password', css_class="container-fluid"),
+                HTML("""<div class="description">Must be between 5 and 15 characters. Should only include letters and numbers.</div>"""),
+                HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+                Div('confirm_password', css_class="container-fluid"),
+                HTML("""<div class="rowspacer" style="height:20px;"></div>"""),
+            ),
+            ButtonHolder(
+                StrictButton('Sign up', css_class='btn btn-success', type="submit"),
+            ),
+            HTML("""
+                <div style="height:4px;"> </div>
+                <a href="/login">or log in</a>
+            """),
+            
+        )
     )
 
 class ParentForm(forms.ModelForm):
@@ -104,7 +110,7 @@ class ParentForm(forms.ModelForm):
 class PerformerForm(forms.ModelForm):
     class Meta:
         model=models.Performer
-        fields= '__all__'
+        fields= ('firstName', 'middleName', 'lastName', 'instrument', 'accompanist', 'group',)
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
@@ -137,6 +143,23 @@ class TeacherForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout (
+        HTML("""
+            <h3>Teacher</h3>
+        """),
+        "firstName",
+        "middleName",
+        "lastName",
+        "contactId",
+        "email",
+        "homePhone",
+        "mobilePhone",
+        "locationId",
+        "address",
+        "city",
+        "state",
+        "zipCode",
+    )
 
 class PieceForm(forms.ModelForm):
     class Meta:
@@ -145,6 +168,15 @@ class PieceForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout (
+        HTML("""
+            <h3>Piece</h3>
+        """),
+        'pieceId',
+        'catalogue',
+        'title',
+        'composer',
+    )
 
 class ChinesePieceForm(forms.ModelForm):
     class Meta:
@@ -153,6 +185,15 @@ class ChinesePieceForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.layout = Layout (
+        HTML("""
+            <h3>Chinese Piece</h3>
+        """),
+        'pieceId',
+        'catalogue',
+        'title',
+        'composer',
+    )
 
 class PieceFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):

@@ -20,17 +20,25 @@ function submitForm() {
 </script>
 {% endblock %}
 
+{% block title %}
+<div class="title">Dashboard</div>
+{% endblock %}
+{% block rightNavButton %}
+<a style="color:white; margin-right: 20px; margin-top: 10px;" href="\login">Logout</a>
+{% endblock %}
+
 {% block content %}
 <!-- Page Content -->
-	<div class="jumbotron" id="header_jumbo">
-		<div>
-			<h1>Dashboard</h1>
-		</div>
-	</div>
 
-		<div class="container">
-			<div class="row col-md-10 col-md-offset-1">
-				<div class="panel panel-default">
+			<div class="row col-md-8 col-md-offset-2">
+				<div style="margin: 50px; margin-top: 70px; margin-bottom: 20px;" class="panel panel-default">
+					<div class="panel-body">
+						Saved
+					</div>
+				</div>
+			</div>
+			<div class="row col-md-8 col-md-offset-2">
+				<div style="margin: 50px; margin-top: 0px;" class="panel panel-default">
 					<div class="panel-body">
 			            <ul class="nav nav-tabs" id="myTab">
 		            		<li class="active"><a data-target="#applications" data-toggle="tab">Applications</a></li>
@@ -53,7 +61,7 @@ function submitForm() {
 	  								<div class="container-fluid">
 							  			{% crispy parentForm %}
 									</div>
-									<input type="submit" class="btn btn-success" value="Submit" onclick="submitForm();">
+									<input class="btn btn-success" value="Submit" onclick="submitForm();">
 							 	</div>
 							</div>
 						</form>
