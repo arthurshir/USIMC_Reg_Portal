@@ -9,22 +9,26 @@ class Person(models.Model):
 	firstName = models.CharField(max_length=200, verbose_name='First Name', null=True, blank=True)
 	middleName = models.CharField(max_length=200, verbose_name='Middle Name', null=True, blank=True)
 	lastName = models.CharField(max_length=200, verbose_name='Last Name', null=True, blank=True)
+	
 class Contact(models.Model):
 	contactId = models.AutoField(primary_key=True)
 	email = models.EmailField(verbose_name='Email', null=True, blank=True)
 	homePhone = models.IntegerField(verbose_name='Home Phone', null=True, blank=True)
 	mobilePhone = models.IntegerField(verbose_name='Mobile Phone', null=True, blank=True)
+
 class Location(models.Model):
 	locationId = models.AutoField(primary_key=True)
 	address = models.CharField(max_length=200, verbose_name='Address', null=True, blank=True)
 	city = models.CharField(max_length=200, verbose_name='City', null=True, blank=True)
 	state = models.CharField(max_length=200, verbose_name='State', null=True, blank=True)
 	zipCode = models.IntegerField(verbose_name='Zip Code', null=True, blank=True)
+
 class Piece(models.Model):
 	pieceId = models.AutoField(primary_key=True)
 	catalogue = models.CharField(max_length=200, verbose_name='Catalogue', null=True, blank=True)
 	title = models.CharField(max_length=200, verbose_name='Title', null=True, blank=True)
 	composer = models.CharField(max_length=200, verbose_name='Composer', null=True, blank=True)
+
 class ChinesePiece(models.Model):
 	pieceId = models.AutoField(primary_key=True)
 	catalogue = models.CharField(max_length=200, verbose_name='Catalogue', null=True, blank=True)

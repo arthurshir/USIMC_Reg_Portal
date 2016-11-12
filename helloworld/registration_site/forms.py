@@ -146,6 +146,14 @@ class PieceForm(forms.ModelForm):
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
 
+class ChinesePieceForm(forms.ModelForm):
+    class Meta:
+        model=models.Piece
+        fields= '__all__'
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+
 class PieceFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
         super(PieceFormSetHelper, self).__init__(*args, **kwargs)

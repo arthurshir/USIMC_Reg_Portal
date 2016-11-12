@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UserSigninForm, UserSignupForm, ParentForm, PerformerForm, TeacherForm, PieceForm, PieceFormSetHelper
+from .forms import UserSigninForm, UserSignupForm, ParentForm, PerformerForm, TeacherForm, PieceForm, ChinesePieceForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.forms.models import formset_factory
-from .models import Performer, Profile, Parent
+from .models import Performer, Profile, Parent, Teacher, Piece, ChinesePiece
 import json
 
 def index(request):
@@ -20,7 +20,7 @@ def dashboard(request):
 		teacherForm = TeacherForm(request.POST, instance=performer._teacher, prefix="teacher")
 		pieceForm1 = PieceForm(request.POST, instance=performer.piece1, prefix="piece1")
 		pieceForm2 = PieceForm(request.POST, instance=performer.piece2, prefix="piece2")
-		chinesePieceForm = PieceForm(request.POST, instance=performer.chinesePiece, prefix="chinesePiece")
+		chinesePieceForm = ChinesePieceForm(request.POST, instance=performer.chinesePiece, prefix="chinesePiece")
 		parentForm = ParentForm(request.POST, instance=profile.parent, prefix="parent")
 
 		data = {}
@@ -45,7 +45,7 @@ def dashboard(request):
 		context['teacherForm'] = TeacherForm(instance=performer._teacher, prefix="teacher")
 		context['pieceForm1'] = PieceForm(instance=performer.piece1, prefix="piece1")
 		context['pieceForm2'] = PieceForm(instance=performer.piece2, prefix="piece2")
-		context['chinesePieceForm'] = PieceForm(instance=performer.chinesePiece, prefix="chinesePiece")
+		context['chinesePieceForm'] = ChinesePieceForm(instance=performer.chinesePiece, prefix="chinesePiece")
 
 		context['parentForm'] = ParentForm(instance=profile.parent, prefix="parent")
 		return render(request, 'registration_site/dashboard.html', context)
@@ -90,10 +90,19 @@ def signup_view(request):
 				messages.warning(request, 'A User for {} already exists'.format(email), extra_tags='signup')
 				return redirect('registration_site:signup')
 
+			## Instantiate Initial User Objects
+			# Profile
 			user = createOrUpdateDjangoUser(email, password, first_name, last_name)
-			login(request, user)
 			parent = Parent.objects.create()
-			profile = Profile.objects.create(user = request.user, parent=parent)
+			profile = Profile.objects.create(user = user, parent=parent)
+			# Performer
+			teacher = Teacher.objects.create()
+			piece1 = Piece.objects.create()
+			piece2 = Piece.objects.create()
+			chinesePiece = ChinesePiece.objects.create()
+			performer = Performer.objects.create(_teacher=teacher, piece1=piece1, piece2=piece2, chinesePiece=chinesePiece, owningProfile=profile)
+
+			login(request, user)
 			return redirect('registration_site:dashboard')
 		else:
 			messages.warning(request, 'Wrong Signup Information', extra_tags='signup')
