@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.forms.models import formset_factory
-from .models import Performer, Profile
+from .models import Performer, Profile, Parent
 import json
 
 def index(request):
@@ -92,6 +92,8 @@ def signup_view(request):
 
 			user = createOrUpdateDjangoUser(email, password, first_name, last_name)
 			login(request, user)
+			parent = Parent.objects.create()
+			profile = Profile.objects.create(user = request.user, parent=parent)
 			return redirect('registration_site:dashboard')
 		else:
 			messages.warning(request, 'Wrong Signup Information', extra_tags='signup')
