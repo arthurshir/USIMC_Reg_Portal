@@ -22,20 +22,20 @@ class Location(models.Model):
 	zipCode = models.IntegerField(verbose_name='Zip Code', null=True, blank=True)
 class Piece(models.Model):
 	pieceId = models.AutoField(primary_key=True)
-	isChinese = models.BooleanField(verbose_name='Chinese Piece')
+	catalogue = models.CharField(max_length=200, verbose_name='Catalogue', null=True, blank=True)
+	title = models.CharField(max_length=200, verbose_name='Title', null=True, blank=True)
+	composer = models.CharField(max_length=200, verbose_name='Composer', null=True, blank=True)
+class ChinesePiece(models.Model):
+	pieceId = models.AutoField(primary_key=True)
 	catalogue = models.CharField(max_length=200, verbose_name='Catalogue', null=True, blank=True)
 	title = models.CharField(max_length=200, verbose_name='Title', null=True, blank=True)
 	composer = models.CharField(max_length=200, verbose_name='Composer', null=True, blank=True)
 
 class Parent(Person, Contact, Location):
-	person = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="p_person", verbose_name="Parent's Info", null=True, blank=True)
-	location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="p_location", verbose_name="Parent's Location", null=True, blank=True)
-	contact = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="p_contact", verbose_name="Parent's Contact", null=True, blank=True)
+	pass
 
 class Teacher(Person, Contact, Location):
-	person = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="t_person", verbose_name="Teacher's Info", null=True, blank=True)
-	location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="t_location", verbose_name="Teachers's Location", null=True, blank=True)
-	contact = models.OneToOneField(Contact, on_delete=models.CASCADE, related_name="t_contact", verbose_name="Teacher's Contact", null=True, blank=True)
+	pass
 
 class Performer(Person):
 	owningProfile = models.ForeignKey("Profile", related_name="profileOwner", verbose_name="Owner", null=True)
@@ -45,7 +45,7 @@ class Performer(Person):
 	group = models.CharField(max_length=200, verbose_name="Group", null=True, blank=True)
 	piece1 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece1", verbose_name="First Piece", null=True, blank=True)
 	piece2 = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="piece2", verbose_name="Second Piece", null=True, blank=True)
-	chinesePiece = models.OneToOneField(Piece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True, blank=True)
+	chinesePiece = models.OneToOneField(ChinesePiece, on_delete=models.CASCADE, related_name="chinesePiece", verbose_name="Chinese Piece", null=True, blank=True)
 
 class Profile(models.Model):
 	# Foreign Key Performer
