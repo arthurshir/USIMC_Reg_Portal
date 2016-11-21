@@ -107,6 +107,7 @@ def signup_view(request):
             chinesePiece = ChinesePiece.objects.create()
             performer = Performer.objects.create(_teacher=teacher, piece1=piece1, piece2=piece2, chinesePiece=chinesePiece, owningProfile=profile)
 
+
             login(request, user)
             return redirect('registration_site:dashboard')
         else:
