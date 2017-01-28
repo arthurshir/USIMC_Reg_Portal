@@ -1,0 +1,79 @@
+Example Instantiation
+
+>>> from registration_site.models import *
+>>> USIMCUser
+>>> USIMCUser.objects.create()
+>>> USIMCUser.objects.create(User())
+>>> USIMCUser()
+>>> user = Unknown command: 'syncdb'
+>>> user = USIMCUser()
+>>> user.user
+>>> user.user = User()
+>>> user
+>>> user.user
+>>> Entry(usimc_user = user)
+>>> entry = Entry(usimc_user = user)
+>>> entry.awards_applying_for = ['C']
+>>> entry.category = 'NS'
+>>> user.save()
+>>> user.user.save()
+>>> user.save()
+>>> User.objects
+>>> User.objects.first
+>>> User.objects.first()
+>>> USIMCUser.objects
+>>> USIMCUser.objects.all()
+>>> user.save()
+>>> user.save()
+>>> Entry.save()
+>>> entry.save()
+>>> user.save()
+>>> user.save()
+>>> user.id
+>>> user
+>>> user.entry
+>>> use.id
+>>> user.id = 1
+>>> user.save()
+>>> entry
+>>> entry.save()
+>>> user.user
+>>> user.user.save()
+>>> user.user.email
+>>> user.user
+>>> user.save()
+>>> user.user
+>>> regularUser = User()User.objects.create_user(username='john',
+>>>                                  email='jlennon@beatles.com',
+>>>                                  password='glass onion')
+>>> regularUser = User.objects.
+>>> User
+>>> regularUser = User()User.objects.create_user(username='john',
+>>> regularUser = User.objects.create_user(username="john", email="jlennon@gmail.com", password="john")
+>>> user
+>>> user.user
+>>> user.user = regularUser
+>>> user.user
+>>> user.save()
+>>> emtry.save()
+>>> entry.save()
+>>> entry.usimcUser = user
+>>> entry.usimcUser
+>>> user.save()
+>>> entry.save()
+>>> entry.usimcUser = user
+>>> entry.usimcUser
+>>> entry.usimcUser_id
+>>> entry.usimcUser,ud
+>>> entry.usimcUser.id
+>>> entry.id
+>>> entry.id = 1
+>>> entry.id
+>>> entry.usimcUser.id
+>>> entry.save()
+>>> entry.usimc_user_id
+>>> entry.usimc_user_id = 1
+>>> entry.save()
+>>> entry
+>>> entry.usimc_use_id
+>>>
