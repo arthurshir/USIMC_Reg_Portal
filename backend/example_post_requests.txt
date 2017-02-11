@@ -1,0 +1,60 @@
+curl -X POST -d "username=roylkingarthur@gmail.com&password=1234" http://localhost:8000/api-token-auth/
+
+curl -X POST -d "username=arthur@gmail.com&password=1234" http://localhost:8000/api-token-auth/
+
+curl -X POST -d "username=arthursdd@gmail.com&password=1234&first_name=Arthur&last_name=Shir" http://localhost:8000/users/register
+
+curl -X POST -d "username=test13@gmail.com&password=1234" http://localhost:8000/users/login
+
+
+
+curl -X POST -d "username=FUCKIGHELL&password=1234&first_name=Arthur&last_name=Shir" http://localhost:8000/users/register
+
+
+curl -X POST -d "username=FUCKIGHELL&password=1234&first_name=Arthur&last_name=Shir" http://localhost:8000/users/register
+
+
+curl -X POST -d "username=FUCKIGHELL&password=1234" http://localhost:8000/api-token-auth/
+
+
+
+//
+// Token Requests
+//
+
+//
+curl -X POST -d "username=roylkingarthur@gmail.com&password=1234" http://localhost:8000/api-token/obtain/
+// Verify Token
+curl -X POST -H "Content-Type: application/json" -d '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIxNjM4fQ.NYm7WVBenMZfLcCv5-f9AuZTLgYtIrpqnbrUKeCVnjE"}' http://localhost:8000/api-token/verify/
+// Refresh Token
+curl -X POST -H "Content-Type: application/json" -d '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIwNjE4fQ.zDzHI1iYs8KugOnV_6iM_JIfja98HvCmU-WeSPol2jQ"}' http://localhost:8000/api-token/refresh/
+
+
+//
+// Account Requests
+//
+
+// Register
+curl -X POST -d "username=roylkingarthur@gmail.com&password=1234&first_name=Arthur&last_name=Shir" http://localhost:8000/users/register
+// Login
+curl -X POST -d "username=roylkingarthur@gmail.com&password=1234" http://localhost:8000/users/login
+
+
+//
+// Database Requests
+//
+
+// Create Entry
+curl -X POST -d "instrument_category=PI&age_category=9" http://localhost:8000/entries/create/
+curl -X POST
+    -H "Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIwNjE4fQ.zDzHI1iYs8KugOnV_6iM_JIfja98HvCmU-WeSPol2jQ"
+    -d "instrument_category=PI&age_category=9"
+    http://localhost:8000/entries/create/
+curl -X POST -H "Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIxNjM4fQ.NYm7WVBenMZfLcCv5-f9AuZTLgYtIrpqnbrUKeCVnjE" -d "instrument_category=PI&age_category=9" http://localhost:8000/entries/create/
+
+// Entry Detail
+curl -X GET -H "Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIzMzMyfQ.RCiQjW8aS96_hBeBNqkRLM4hq4s2bIbV-qCOF5Ac5to" http://localhost:8000/entries/4/
+
+
+Token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJveWxraW5nYXJ0aHVyQGdtYWlsLmNvbSIsInVzZXJfaWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNDg2NzIzMzMyfQ.RCiQjW8aS96_hBeBNqkRLM4hq4s2bIbV-qCOF5Ac5to

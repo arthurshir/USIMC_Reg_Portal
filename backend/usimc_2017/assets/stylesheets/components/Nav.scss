@@ -1,0 +1,87 @@
+@import "../master";
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $nav-height;
+  box-shadow: 0 0 2px rgba(0,0,0,.5);
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  background-color: $brand-color;
+  z-index: 1;
+
+  .nav__wrapper {
+    /*max-width: $max-width;*/
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    display: flex;
+
+    .nav__logo-wrapper {
+      align-items: center;
+      justify-content: space-between;
+      display: flex;
+      text-decoration: none;
+      &:active {
+        color: inherit;
+      }
+
+      #logo {
+        width: 50px;
+        height: 50px;
+        margin:5px;
+      }
+      .title {
+        margin: 5px;
+        height: 55px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        #title-text {
+          line-height: 26px;
+          margin: 0px;
+          font-weight: 300;
+          font-size: 22px;
+          flex: 1;
+          color: #000000;
+          letter-spacing: -0.06px;
+          /* Just so it's visible */
+        }
+        #sub-text {
+          line-height: 18px;
+          margin: 0px;
+          font-weight: 300;
+          font-size: 15px;
+          letter-spacing: -0.07px;
+        }
+      }
+    }
+  }
+}
+
+.btn--nav {
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+
+.btn--nav + .btn--nav {
+  margin-left: 1em;
+}
+
+@media screen and (max-width: 400px) {
+  .nav__wrapper {
+    justify-content: none;
+  }
+
+  .nav__logo-wrapper {
+    margin: 0 auto;
+  }
+
+  .btn--nav {
+    display: none;
+  }
+}

@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+backend/usimc_2017/assets/bundles
+backend/usimc_2017/static/
+backend/usimc_2017/node_modules/
+
 *.sqlite3
 migrations/
 

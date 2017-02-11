@@ -1,0 +1,27 @@
+/*This file contains all application-wide CSS variables.*/
+
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans:100,300,400,500,600,700');
+
+$text-font-stack: 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+$code-font-stack: 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Monaco', monospace;
+$serif-font-stack: Georgia, Times, 'Times New Roman', serif;
+
+$brand-color: #E9F1F8;
+$dark-brand-color: #54577F;
+$error-color: #FB4F4F;
+
+$background-color: #FAFAFA;
+$very-light-grey: #EDEDED;
+$light-grey: #CCC;
+$mid-grey: #999;
+$dark-grey: #666;
+$very-dark-grey: #333;
+$text-color: #222;
+
+$max-width: 768px;
+$nav-height: 3.5em;
+$footer-height: 0.5em;
+
+body {
+  font-family: 'Fira Sans', sans-serif;
+}
