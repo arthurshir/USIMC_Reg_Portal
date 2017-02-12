@@ -33,7 +33,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: [ 'style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap' ]
+        loaders: [ 'style-loader', 'css-loader', 'sass-loader?sourceMap' ]
       },
       { 
         test: /\.svg$/,
@@ -41,7 +41,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: "file-loader?name=/public/icons/[name].[ext]"
+        loader: "file-loader?name=/static/images/[name].[ext]"
       },
     ],
   },

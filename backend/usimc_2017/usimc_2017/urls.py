@@ -21,6 +21,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # Frontend
-    url(r'^$', TemplateView.as_view(template_name='index.html')),
     url(r'^backend/', include('registration_site.urls')),
+    url(r'^', TemplateView.as_view(template_name='index.html')),
 ]

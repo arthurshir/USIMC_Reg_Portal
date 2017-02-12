@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Website for general information and application to the USIMC 2017 International Music Competition",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "object-assign": "^4.1.1"
+  },
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.22.1",

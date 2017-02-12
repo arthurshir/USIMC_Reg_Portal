@@ -17,12 +17,12 @@ class Nav extends Component {
     // based on the current authentication state.
     const navButtons = this.props.loggedIn ? (
         <div>
-          <Link to="/dashboard" className="btn btn--dash btn--nav">Dashboard</Link>
+          <Link to="/dashboard/" className="btn btn--dash btn--nav">Dashboard</Link>
         </div>
       ) : (
         <div>
-          <Link to="/register" className="btn btn--login btn--nav">Register</Link>
-          <Link to="/login" className="btn btn--login btn--nav">Login</Link>
+          <Link to="/register/" className="btn btn--login btn--nav">Register</Link>
+          <Link to="/" className="btn btn--login btn--nav">Login</Link>
         </div>
       );
 
@@ -35,7 +35,7 @@ class Nav extends Component {
             src={logoimage} />
             <div className='title'>
               <div>
-                <h3 id='title-text'>California Music Teachers Association</h3>
+                <h3 id='title-text'>USIMC 2017 Annual Competition</h3>
                 <p id='sub-text'>Chinese Music Teachers Association of Northern California</p>
               </div>
             </div>

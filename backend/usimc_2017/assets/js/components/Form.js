@@ -7,12 +7,9 @@
  */
 
 import React, { Component } from 'react';
-import { changeForm } from '../actions/AppActions';
 import { History } from 'react-router';
-import LoadingButton from './LoadingButton.react';
-// Object.assign is not yet fully supported in all browsers, so we fallback to
-// a polyfill
-const assign = Object.assign || require('object.assign');
+import LoadingButton from './LoadingButton.js';
+import style from '../../stylesheets/components/Form.scss';
 
 class LoginForm extends Component {
   render() {
@@ -26,7 +23,7 @@ class LoginForm extends Component {
           <p className="form__error form__error--failed">Something went wrong, please try again!</p>
         </div>
         <div className="form__field-wrapper">
-          <input className="form__field-input" type="text" id="username" value={this.props.data.username} placeholder="frank.underwood" onChange={this._changeUsername.bind(this)} autoCorrect="off" autoCapitalize="off" spellCheck="false" />
+          <input className="form__field-input" type="text" id="username" value={this.props.data.username} placeholder="FrankChen@gmail.com" onChange={this._changeUsername.bind(this)} autoCorrect="off" autoCapitalize="off" spellCheck="false" />
           <label className="form__field-label" htmlFor="username">Username</label>
         </div>
         <div className="form__field-wrapper">
@@ -62,15 +59,6 @@ class LoginForm extends Component {
     this._emitChange(newState);
   }
 
-  // Merges the current state with a change
-  _mergeWithCurrentState(change) {
-    return assign(this.props.data, change);
-  }
-
-  // Emits a change of the form state to the application state
-  _emitChange(newState) {
-    this.props.dispatch(changeForm(newState));
-  }
 
   // onSubmit call the passed onSubmit function
   _onSubmit(evt) {

@@ -9,6 +9,7 @@
 // Import stuff
 import React, { Component } from 'react';
 import Nav from './Nav.js';
+import { connect } from 'react-redux';
 import Footer from './Footer.js';
 // import { connect } from 'react-redux';
 // import auth from '../utils/auth';
@@ -25,6 +26,14 @@ class App extends Component {
   }
 }
 
+// REDUX STUFF
+
+// Which props do we want to inject, given the global state?
+function select(state) {
+  return {
+    data: state
+  };
+}
 
 // Wrap the component to inject dispatch and state into it
-export default (App);
+export default connect(select)(App);

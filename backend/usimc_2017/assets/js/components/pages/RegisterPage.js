@@ -13,7 +13,7 @@ import LoadingIndicator from '../LoadingIndicator.js';
 import style from '../../../stylesheets/components/FormPage.scss';
 
 
-class LoginPage extends Component {
+class RegisterPage extends Component {
   render() {
     const dispatch = this.props.dispatch;
     const { formState } = this.props.data;
@@ -21,9 +21,9 @@ class LoginPage extends Component {
       <div className="form-page__wrapper">
         <div className="form-page__form-wrapper">
           <div className="form-page__form-header">
-            <h2 className="form-page__form-heading">Login</h2>
+            <h2 className="form-page__form-heading">Register</h2>
           </div>
-          <Form data={formState} dispatch={dispatch} location={location} history={this.props.history} onSubmit={this._login} btnText={"Login"}/>
+          <Form data={formState} dispatch={dispatch} location={location} history={this.props.history} onSubmit={this._login} btnText={"Register"}/>
         </div>
       </div>
     );
@@ -41,5 +41,5 @@ function select(state) {
 }
 
 // Wrap the component to inject dispatch and state into it
-export default connect(select)(LoginPage);
+export default connect(select)(RegisterPage);
 
