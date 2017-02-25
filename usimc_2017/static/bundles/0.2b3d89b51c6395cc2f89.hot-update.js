@@ -1,0 +1,88 @@
+webpackHotUpdate(0,{
+
+/***/ 115:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router__ = __webpack_require__(72);
+/**
+ *
+ * Nav.react.js
+ *
+ * This component renders the navigation bar
+ *
+ */
+
+
+
+// import style from '../../stylesheets/components/Nav.scss';
+__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"stylesheets/components/Nav\""); e.code = 'MODULE_NOT_FOUND';; throw e; }()));
+
+class Nav extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
+  render() {
+    // Render either the Log In and register buttons, or the logout button
+    // based on the current authentication state.
+    const navButtons = this.props.loggedIn ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'div',
+      null,
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_1_react_router__["d" /* Link */],
+        { to: '/dashboard', className: 'btn btn--dash btn--nav' },
+        'Dashboard'
+      )
+    ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'div',
+      null,
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_1_react_router__["d" /* Link */],
+        { to: '/register', className: 'btn btn--login btn--nav' },
+        'Register'
+      ),
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_1_react_router__["d" /* Link */],
+        { to: '/login', className: 'btn btn--login btn--nav' },
+        'Login'
+      )
+    );
+
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'div',
+      { className: 'nav' },
+      __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        { className: 'nav__wrapper' },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          __WEBPACK_IMPORTED_MODULE_1_react_router__["d" /* Link */],
+          { to: '/', className: 'nav__logo-wrapper' },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h1',
+            { className: 'nav__logo' },
+            'Login\xA0Flow'
+          )
+        ),
+        navButtons
+      )
+    );
+  }
+}
+
+Nav.propTypes = {
+  loggedIn: __WEBPACK_IMPORTED_MODULE_0_react___default.a.PropTypes.bool.isRequired
+};
+
+/* harmony default export */ __webpack_exports__["a"] = Nav;
+
+/***/ }),
+
+/***/ 238:
+false,
+
+/***/ 239:
+false,
+
+/***/ 42:
+false
+
+})
