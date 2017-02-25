@@ -3,6 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.views import View
+from django.shortcuts import render
 
 
 class IndexView(View):
@@ -12,7 +13,7 @@ class IndexView(View):
         return HttpResponse(self.greeting)
 
 class LoginView(View):
-	greeting = "Log in here!"
+    greeting = "Log in here!"
 
     def get(self, request):
         return HttpResponse(self.greeting)

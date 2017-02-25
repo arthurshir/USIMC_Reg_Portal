@@ -27,31 +27,31 @@ class PersonForm(forms.ModelForm):
         fields = ['firstName', 'middleName', 'lastName', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code']
 
 
-# class UserSigninForm(forms.Form):
+class UserSigninForm(forms.Form):
 
-#     email = forms.CharField()
-#     password = forms.CharField(widget=forms.PasswordInput())
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
-#     helper = FormHelper()
-#     helper.form_class = 'form-horizontal'
-#     helper.field_template = 'bootstrap3/layout/inline_field.html'
-#     helper.form_method = 'POST'
-#     helper.layout = Layout(
-#         Div(
-#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
-#         	Div('email', css_class="container-fluid"),
-#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
-#         	Div('password', css_class="container-fluid"),
-#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
-#     	),
-#         ButtonHolder(
-#         	StrictButton('Log in', css_class='btn btn-success', type="submit"),
-# 		),
-#         HTML("""
-#             <div style="height:4px;"> </div>
-#             <a href="/signup">or sign up</a>
-#         """),
-#     )
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+        	Div('email', css_class="container-fluid"),
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+        	Div('password', css_class="container-fluid"),
+            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+    	),
+        ButtonHolder(
+        	StrictButton('Log in', css_class='btn btn-success', type="submit"),
+		),
+        HTML("""
+            <div style="height:4px;"> </div>
+            <a href="/signup">or sign up</a>
+        """),
+    )
 
 # class UserSignupForm(forms.Form):
 #     email = forms.CharField()

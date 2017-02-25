@@ -1,57 +1,13 @@
 {% load staticfiles %}
 <html>
 	<head>
-		<title>California Music Teachers Association of Northern California</title>
+		<title>{% block web_title %}{% endblock %}</title>
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Bootstrap -->
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>		
 		{% block head %}{% endblock %}
-		<style>
-			footer { 
-				position: fixed;
-			    background-color: #376A8A !important;
-			    height: 26px;
-			    bottom: 0px;
-			    width: 100%;
-			}
-			.navbar-nav {
-				background-color: #376A8A !important;
-			}
-			.navbar-nav {
-				color: white;
-				width: 100%;
-				height: 80px;
-				text-align: center;
-			}
-			.navbar-nav > li {
-				color: white;
-				float: none;
-				display: inline-block;
-			}
-
-			#title {
-				margin-top: 20px;
-				font-size: 25px;
-				float: center;
-				text-align: center;
-			}
-
-			.content {
-				position: relative;
-				top:80px;
-				bottom: 10px;
-			    left:0px;
-				width:100%;
-		        height: -webkit-calc(100% - 105px);
-			    height:    -moz-calc(100% - 105px);
-			    height:         calc(100% - 105px);
-			}
-			.navbar-right {
-				color: white;
-			}
-		</style>
 	</head>
 	<body>
 		<nav class="navbar navbar-default navbar-fixed-top">

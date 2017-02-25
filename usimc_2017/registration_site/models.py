@@ -109,11 +109,11 @@ class EntryManager(Manager):
 class Entry(Model):
     # Attribs
     awards_applying_for = ArrayField( CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES) )
-    instrument_category = CharField(choices=PERFORMER_CATEGORIES)
+    instrument_category = CharField(choices=PERFORMER_CATEGORIES, max_length=4)
     age_category = IntegerField(choices=AGE_CATEGORIES)
     submitted = BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     # Relations
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
