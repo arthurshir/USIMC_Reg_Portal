@@ -6,27 +6,44 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<!-- Bootstrap -->
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- Include Font -->
+		<link href="https://fonts.googleapis.com/css?family=Fira+Sans:100,300,400,500" rel="stylesheet">
+		<link rel="stylesheet" href="{% static 'main_website/base.css' %}">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>		
 		{% block head %}{% endblock %}
 	</head>
 	<body>
 		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="navbar-header">
-			    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-			      <span class="icon-bar"></span>
-			      <span class="icon-bar"></span>
-			      <span class="icon-bar"></span>
-			    </button>  
-			</div>
-
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li id="title">{% block title %}{% endblock %}</li>
-					<li class="navbar-right">{% block rightNavButton %}{% endblock %}</li>
-				</ul>
-			</div>
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+				<a class="navbar-brand" href="/">
+					<div class="navbar-wrapper">
+						<img id="small_logo" src="{% static 'main_website/small_logo.png' %}">
+						<div class="navbar-brand-title">
+							<span id="title">{% block title %}{% endblock %}</span>
+							<span id="subtitle">{% block subtitle %}{% endblock %}</span>
+						</div>
+					</div>
+				</a>
+	    </div>
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	    	<ul class="nav navbar-nav navbar-right">
+		    	<li class="right-button">{% block rightNavButton %}{% endblock %}</li>
+		    </ul>
+	    </div>
 		</nav>
+
 		<div class="content">{% block content %}{% endblock %}</div>
-		<footer> </footer>
+
+		<footer>
+				© Copyright CMTANC 2017
+		</footer>
 	</body>
 </html>

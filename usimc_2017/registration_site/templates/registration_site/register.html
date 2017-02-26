@@ -1,0 +1,11 @@
+{% extends 'registration_site/form.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block panel_title %}
+  Register
+{% endblock %}
+
+{% block form %}
+  {% crispy form form.helper %}
+{% endblock %}

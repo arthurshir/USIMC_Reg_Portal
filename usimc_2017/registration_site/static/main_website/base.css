@@ -1,0 +1,79 @@
+.btn-add {
+  flex: 1; }
+
+.flex-column {
+  display: flex;
+  flex-direction: column; }
+
+.flex-row {
+  display: flex;
+  flex-direction: row; }
+
+.flex-center {
+  align-items: center; }
+
+.flex-stretch {
+  align-items: stretch; }
+
+#small_logo {
+  height: 50px;
+  width: 50px; }
+
+.content {
+  margin-top: 70px;
+  margin-bottom: 36px;
+  min-height: calc(100% - 70px - 36px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: scroll; }
+
+.navbar {
+  min-height: 70px !important;
+  background-color: #E9F1F8; }
+  .navbar .navbar-brand {
+    padding: 10px; }
+    .navbar .navbar-brand .navbar-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center; }
+      .navbar .navbar-brand .navbar-wrapper .navbar-brand-title {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#title {
+          color: black;
+          font-size: 22px;
+          font-weight: 300; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#subtitle {
+          font-size: 15px;
+          font-weight: 200; }
+
+footer {
+  background-color: #54577F;
+  color: white;
+  position: fixed;
+  width: 100%;
+  height: 36px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: 200;
+  padding: 10px; }
+
+.centered-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100% - 70px - 36px); }
+
+html * {
+  font-family: 'Fira Sans' !important; }
+
+.form-horizontal {
+  margin: 0px; }
+
+/*# sourceMappingURL=base.css.map */

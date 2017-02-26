@@ -108,7 +108,10 @@ class EntryManager(Manager):
 
 class Entry(Model):
     # Attribs
-    awards_applying_for = ArrayField( CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES) )
+
+    awards_applying_for = ArrayField(
+        CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES)
+    )
     instrument_category = CharField(choices=PERFORMER_CATEGORIES, max_length=4)
     age_category = IntegerField(choices=AGE_CATEGORIES)
     submitted = BooleanField(default=False)
@@ -127,7 +130,7 @@ class Entry(Model):
         default_related_name =  'entry'
 
     def __unicode__(self):
-        return self.usimc_user.user.username + "\'s Entry for " + self.category + " creatd at: " + created_at.strftime('%Y-%m-%d %H:%M')
+        return self.usimc_user.user.username + "\'s Entry for " + self.instrument_category + " created at: " + self.created_at.strftime('%Y-%m-%d %H:%M')
 
 class Piece(Model):
 
@@ -145,16 +148,16 @@ class Piece(Model):
 class Person(Model):
 
     # Attributes
-    firstName = CharField(max_length=200, verbose_name='First Name')
-    middleName = CharField(max_length=200, verbose_name='Middle Name')
-    lastName = CharField(max_length=200, verbose_name='Last Name')
+    first_name = CharField(max_length=200, verbose_name='First Name')
+    middle_name = CharField(max_length=200, verbose_name='Middle Name')
+    last_name = CharField(max_length=200, verbose_name='Last Name')
     email = EmailField(verbose_name='Email')
     phone_number = IntegerField(verbose_name='Phone Number')
     instrument = CharField(max_length=200)
     teacher_first_name = CharField(max_length=200, verbose_name='Teacher\'s First Name')
     teacher_middle_name = CharField(max_length=200, verbose_name='Teacher\'s Middle Name', blank=True)
     teacher_last_name = CharField(max_length=200, verbose_name='Teacher\'s Last Name')
-    teacher_code = CharField(max_length=200, verbose_name='Teacher\'s CMTANC Code', blank=True)
+    teacher_code = CharField(max_length=200, verbose_name='Teacher\'s CMTANC Code (Optional)', blank=True)
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='USIMC User')

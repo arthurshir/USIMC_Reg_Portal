@@ -1,0 +1,30 @@
+{% extends 'registration_site/application_form.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+{% endblock %}
+
+<!-- Title -->
+{% block title %}USIMC International Music Competition{% endblock %}
+{% block subtitle %}Hosted by CMTANC{% endblock %}
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block form_title %}
+  Step 1. Choose Categories
+{% endblock %}
+{% block form %}
+  <form action="." method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div style="height: 10px;"></div>
+    <div class="nav-panel">
+      <a href="{% url 'registration_site:dashboard' %}" type="button" class="btn btn-default">Cancel</a>
+      <input type="submit" value="Create" class="btn btn-success">
+    </div>
+  </form>
+{% endblock %}

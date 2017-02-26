@@ -17,8 +17,8 @@
 {% block content %}
 <div class="centered-wrapper">
   <div class="btn-group" role="group" aria-label="...">
-    <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
-    <a href="{% url 'registration_site:application_list' %}" type="button" class="btn btn-default">Update or Edit an old Application</a>
+    <a href="{% url 'registration_site:login' %}" type="button" class="btn btn-default">Log in</a>
+    <a href="{% url 'registration_site:register' %}" type="button" class="btn btn-default">Register</a>
   </div>
 </div>
 {% endblock %}

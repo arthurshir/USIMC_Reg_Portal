@@ -1,6 +1,9 @@
 from django import forms
 from . import models
 
+from crispy_forms.helper import *
+from crispy_forms.layout import *
+
 
 class EntryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -9,6 +12,12 @@ class EntryForm(forms.ModelForm):
     class Meta:
         model = models.Entry
         fields = ['awards_applying_for', 'instrument_category', 'age_category']
+
+    awards_applying_for = forms.MultipleChoiceField(choices=models.AWARD_CATEGORIES, widget=forms.CheckboxSelectMultiple)
+
+    # widgets = {
+    #     'awards_applying_for':  forms.CheckboxSelectMultiple()
+    # } 
 
 class PieceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -24,11 +33,41 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = models.Person
-        fields = ['firstName', 'middleName', 'lastName', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code']
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code']
 
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div('first_name', css_class="col-md-4"),
+            Div('middle_name', css_class="col-md-4"),
+            Div('last_name', css_class="col-md-4"),
+            css_class ='row'
+        ),
+        Div(
+            Div('email', css_class="col-md-6"),
+            Div('phone_number', css_class="col-md-6"),
+            css_class ='row'
+        ),
+        Div(
+            Div('instrument', css_class="col-md-12"),
+            css_class ='row'
+        ),
+        Div(
+            Div('teacher_first_name', css_class="col-md-4"),
+            Div('teacher_middle_name', css_class="col-md-4"),
+            Div('teacher_last_name', css_class="col-md-4"),
+            css_class ='row'
+        ),
+        Div(
+            Div('teacher_code', css_class="col-md-12"),
+            css_class ='row'
+        ),
+    )
 
-class UserSigninForm(forms.Form):
-
+class LoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -38,18 +77,38 @@ class UserSigninForm(forms.Form):
     helper.form_method = 'POST'
     helper.layout = Layout(
         Div(
-            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
         	Div('email', css_class="container-fluid"),
-            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
         	Div('password', css_class="container-fluid"),
-            HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
     	),
         ButtonHolder(
-        	StrictButton('Log in', css_class='btn btn-success', type="submit"),
-		),
+            Submit('submit', 'Submit', css_class='button white')
+        ),
         HTML("""
-            <div style="height:4px;"> </div>
-            <a href="/signup">or sign up</a>
+            <a href="{% url 'registration_site:register' %}">or register</a>
+        """),
+    )
+
+class RegistrationForm(forms.Form):
+
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div('email', css_class="container-fluid"),
+            Div('password', css_class="container-fluid"),
+            Div('password2', css_class="container-fluid"),
+        ),
+        ButtonHolder(
+            Submit('submit', 'Submit', css_class='button white')
+        ),
+        HTML("""
+            <a href="{% url 'registration_site:login' %}">or log in</a>
         """),
     )
 
@@ -101,9 +160,9 @@ class UserSigninForm(forms.Form):
 #                     HTML("""
 #                         <h3>Parent Information</h3>
 #                     """),
-#                     Div('firstName', css_class='col-md-4'),
-#                     Div('middleName', css_class='col-md-4'),
-#                     Div('lastName', css_class='col-md-4'),
+#                     Div('first_name', css_class='col-md-4'),
+#                     Div('middle_name', css_class='col-md-4'),
+#                     Div('last_name', css_class='col-md-4'),
 #                     Div('email', css_class='col-md-12'),
 #                     Div('homePhone', css_class='col-md-12'),
 #                     Div('mobilePhone', css_class='col-md-12'),
@@ -131,7 +190,7 @@ class UserSigninForm(forms.Form):
 # class PerformerForm(forms.ModelForm):
 #     class Meta:
 #         model=models.Performer
-#         fields= ('firstName', 'middleName', 'lastName', 'instrument', 'accompanist', 'group',)
+#         fields= ('first_name', 'middle_name', 'last_name', 'instrument', 'accompanist', 'group',)
 #     helper = FormHelper()
 #     helper.form_class = 'form-horizontal'
 #     helper.field_template = 'bootstrap3/layout/inline_field.html'
@@ -143,9 +202,9 @@ class UserSigninForm(forms.Form):
 #                     HTML("""
 #                         <h3>Performer</h3>
 #                     """),
-#                     Div('firstName', css_class='col-md-4'),
-#                     Div('middleName', css_class='col-md-4'),
-#                     Div('lastName', css_class='col-md-4'),
+#                     Div('first_name', css_class='col-md-4'),
+#                     Div('middle_name', css_class='col-md-4'),
+#                     Div('last_name', css_class='col-md-4'),
 #                     Div('instrument', css_class='col-md-12'),
 #                     Div('accompanist', css_class='col-md-12'),
 #                     Div('group', css_class='col-md-12'),
@@ -168,9 +227,9 @@ class UserSigninForm(forms.Form):
 #         HTML("""
 #             <h3>Teacher</h3>
 #         """),
-#         "firstName",
-#         "middleName",
-#         "lastName",
+#         "first_name",
+#         "middle_name",
+#         "last_name",
 #         "contactId",
 #         "email",
 #         "homePhone",
