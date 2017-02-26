@@ -148,16 +148,16 @@ class Piece(Model):
 class Person(Model):
 
     # Attributes
-    first_name = CharField(max_length=200, verbose_name='First Name')
-    middle_name = CharField(max_length=200, verbose_name='Middle Name')
-    last_name = CharField(max_length=200, verbose_name='Last Name')
-    email = EmailField(verbose_name='Email')
-    phone_number = IntegerField(verbose_name='Phone Number')
-    instrument = CharField(max_length=200)
-    teacher_first_name = CharField(max_length=200, verbose_name='Teacher\'s First Name')
-    teacher_middle_name = CharField(max_length=200, verbose_name='Teacher\'s Middle Name', blank=True)
-    teacher_last_name = CharField(max_length=200, verbose_name='Teacher\'s Last Name')
-    teacher_code = CharField(max_length=200, verbose_name='Teacher\'s CMTANC Code (Optional)', blank=True)
+    first_name = CharField(null=True, max_length=200, verbose_name='First Name')
+    middle_name = CharField(null=True, max_length=200, verbose_name='Middle Name')
+    last_name = CharField(null=True, max_length=200, verbose_name='Last Name')
+    email = EmailField(null=True, verbose_name='Email')
+    phone_number = IntegerField(null=True, verbose_name='Phone Number')
+    instrument = CharField(null=True, max_length=200)
+    teacher_first_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s First Name')
+    teacher_middle_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s Middle Name', blank=True)
+    teacher_last_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s Last Name')
+    teacher_code = CharField(null=True, max_length=200, verbose_name='Teacher\'s CMTANC Code (Optional)', blank=True)
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='USIMC User')

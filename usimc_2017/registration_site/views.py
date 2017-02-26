@@ -86,9 +86,6 @@ class DashboardView(View):
     def dispatch(self, *args, **kwargs):
         return super(DashboardView, self).dispatch(*args, **kwargs)
 
-def get_usimc_user(user):
-    return models.USIMCUser.objects.filter(user=user)[0]
-
 class NewApplicationView(View):
     context = {}
     context['form'] = forms.EntryForm
@@ -134,20 +131,20 @@ class EditPerformersView(View):
     context = {}
 
     def get(self, request):
-        usimc_user = get_usimc_user(request.user)
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         Formset = formset_factory(forms.PersonForm)
         initial_performers = models.Person.objects.filter(entry=usimc_user.entry.all()[0])
         initial_data = [{
-            'first_name' : 'x.first_name',
-            'middle_name' : 'x.middle_name',
-            'last_name' : 'x.last_name',
-            'email' : 'x.email',
-            'phone_number' : 'x.phone_number',
-            'instrument' : 'x.instrument',
-            'teacher_first_name' : 'x.teacher_first_name',
-            'teacher_middle_name' : 'x.teacher_middle_name',
-            'teacher_last_name' : 'x.teacher_last_name',
-            'teacher_code' : 'x.teacher_code'
+            'first_name' : x.first_name,
+            'middle_name' : x.middle_name,
+            'last_name' : x.last_name,
+            'email' : x.email,
+            'phone_number' : x.phone_number,
+            'instrument' : x.instrument,
+            'teacher_first_name' : x.teacher_first_name,
+            'teacher_middle_name' : x.teacher_middle_name,
+            'teacher_last_name' : x.teacher_last_name,
+            'teacher_code' : x.teacher_code,
             } for x in initial_performers]
         self.context['formset'] = Formset(initial=initial_data)
 
@@ -156,6 +153,7 @@ class EditPerformersView(View):
     def post(self, request):
         Formset = formset_factory(forms.PersonForm)
         formset = Formset(request.POST)
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         if formset.is_valid():
             for form in formset:
                 first_name = form.cleaned_data.get('first_name')
@@ -168,11 +166,13 @@ class EditPerformersView(View):
                 teacher_middle_name = form.cleaned_data.get('teacher_middle_name')
                 teacher_last_name = form.cleaned_data.get('teacher_last_name')
                 teacher_code = form.cleaned_data.get('teacher_code')
-
-                person = models.Person.objects.create(first_name = first_name, middle_name = middle_name, last_name = last_name, email = email, phone_number = phone_number, instrument = instrument, teacher_first_name = teacher_first_name, teacher_middle_name = teacher_middle_name, teacher_last_name = teacher_last_name, teacher_code = teacher_code)
+                entry = usimc_user.entry.all()[0]
+                person = models.Person.objects.create(first_name = first_name, middle_name = middle_name, last_name = last_name, email = email, phone_number = phone_number, instrument = instrument, teacher_first_name = teacher_first_name, teacher_middle_name = teacher_middle_name, teacher_last_name = teacher_last_name, teacher_code = teacher_code, entry=entry)
             self.context['formset'] = formset
             return render(request, 'registration_site/person_forms.html', self.context)
         else:
+            print formset.data
+            messages.warning(request, "Form is not valid?")
             self.context['formset'] = formset
             return render(request, 'registration_site/person_forms.html', self.context)
 
