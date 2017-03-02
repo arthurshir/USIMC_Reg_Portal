@@ -5,8 +5,6 @@ __pycache__/
 
 
 ~/.sass-cache/*
-*.sqlite3
-migrations/
 
 # C extensions
 *.so
