@@ -19,6 +19,10 @@
   Edit Application
 {% endblock %}
 {% block form %}
+  <div class="flex-start">
+    <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
+  </div>
+  <div style="height: 20px"></div>
   <form action="." method="post">
     {% csrf_token %}
     <div class="flex-column flex-center">
@@ -112,6 +116,9 @@
         </tbody>
       </table>
     </div>
-    <input type="submit" value="Save" class="btn btn-success">
+    <div class="flex-row">
+      <input type="submit" value="Save" class="btn btn-success">
+    </div>
+    <div style="height: 20px"></div>
   </form>
 {% endblock %}

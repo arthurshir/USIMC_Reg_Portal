@@ -106,8 +106,8 @@ class NewApplicationView(View):
         instrument_category = form.cleaned_data['instrument_category']
         age_category = form.cleaned_data['age_category']
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
-        return redirect('registration_site:edit_performers')
+        entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
+        return redirect('registration_site:edit_application', pk=entry.id)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -190,7 +190,7 @@ class DeleteApplicationView(View):
     context = {}
     def get(self, request, *args, **kwargs):
         entry = get_object_or_404(models.Entry, pk=self.kwargs['pk']).delete()
-        return redirect('registration_site:application_list')
+        return redirect('registration_site:dashboard')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
