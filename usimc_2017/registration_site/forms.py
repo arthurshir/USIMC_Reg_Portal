@@ -25,7 +25,7 @@ class PieceForm(forms.ModelForm):
 
     class Meta:
         model = models.Piece
-        fields = ['catalogue', 'title', 'composer']
+        fields = ['catalogue', 'title', 'composer', 'is_chinese']
 
 class PersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

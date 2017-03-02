@@ -1,75 +1,43 @@
-$(document).ready(function () {
-    // Code adapted from http://djangosnippets.org/snippets/1389/  
-    function updateElementIndex(el, prefix, ndx) {
-        var id_regex = new RegExp('(' + prefix + '-\\d+-)');
-        var replacement = prefix + '-' + ndx + '-';
-        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex,
-        replacement));
-        if (el.id) el.id = el.id.replace(id_regex, replacement);
-        if (el.name) el.name = el.name.replace(id_regex, replacement);
+$(document).ready(function(){
+  function updateElementIndex(el, prefix, ndx) {
+      var id_regex = new RegExp('(' + prefix + '-\\d+)');
+      var replacement = prefix + '-' + ndx;
+      if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+      if (el.id) el.id = el.id.replace(id_regex, replacement);
+      if (el.name) el.name = el.name.replace(id_regex, replacement);
     }
 
-    function deleteForm(btn, prefix) {
-        var formCount = $('.person-form-div').length;
-        // var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        if (formCount > 1) {
-            // Delete the item/form
-            $(btn).parents('.person-form-div').remove();
-            var forms = $('.person-form-div'); // Get all the forms  
-            // Update the total number of forms (1 less than before)
-            $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-            var i = 0;
-            // Go through the forms and set their indices, names and IDs
-            for (formCount = forms.length; i < formCount; i++) {
-                $(forms.get(i)).children().children().each(function () {
-                    if ($(this).attr('type') == 'text') updateElementIndex(this, prefix, i);
-                });
-            }
-        } // End if
-        else {
-            alert("You have to enter at least one todo item!");
-        }
-        return false;
-    }
+  function addForm(btn, prefix) {
+      var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+      var row = $('#piece-form:first').clone(true).get(0);
+      $(row).removeAttr('id').insertAfter($('#piece-form:last')).children('.hidden').removeClass('hidden');
+      $(row).children().not(':last').children().each(function() {
+        updateElementIndex(this, prefix, formCount);
+        $(this).val('');
+      });
+      $(row).find('.delete-row').click(function() {
+        deleteForm(this, prefix);
+      });
+      $('#id_' + prefix + '-TOTAL_FORMS').val(formCount + 1);
+      return false;
+  }
 
-    function addForm(btn, prefix) {
-        var formCount = $('.person-form-div').length;
-        // var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        // You can only submit a maximum of 10 todo items 
-        if (formCount < 12) {
-            // Clone a form (without event handlers) from the first form
-            var row = $(".person-form-div").clone(false).get(0);
-            // Insert it after the last form
-            $(row).removeAttr('id').hide().insertAfter(".person-form-div:last").slideDown(300);
+  function deleteForm(btn, prefix) {
+      $(btn).parents('#piece-form').remove();
+      var forms = $('#piece-form');
+      $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+      for (var i=0, formCount=forms.length; i<formCount; i++) {
+        $(forms.get(i)).children().not(':last').children().each(function() {
+            updateElementIndex(this, prefix, i);
+        });
+      }
+      return false;
+  }
 
-            // Remove the bits we don't want in the new row/form
-            // e.g. error messages
-            $(".errorlist", row).remove();
-            $(row).children().removeClass("error");
-
-            // Relabel or rename all the relevant bits
-            $(row).children().children().each(function () {
-                updateElementIndex(this, prefix, formCount);
-                $(this).val("");
-            });
-
-            // Add an event handler for the delete item/form link 
-            $(row).find("#delete").click(function () {
-                return deleteForm(this, prefix);
-            });
-
-        } // End if
-        else {
-            alert("Sorry, you can only enter a maximum of twelve items.");
-        }
-        return false;
-    }
-    // Register the click event handlers
-    $("#add").click(function () {
-        return addForm(this, "form");
-    });
-
-    $("#delete").click(function () {
-        return deleteForm(this, "form");
-    });
-});
+  $('.add-piece').click(function() {
+    return addForm(this, 'form');
+  });
+  $('.delete-piece').click(function() {
+    return deleteForm(this, 'form');
+  })
+  })

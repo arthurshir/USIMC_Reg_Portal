@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db.models import *
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
-
+from django.utils import timezone
 
 #
 # Choices
@@ -82,11 +82,20 @@ AGE_CATEGORIES = (
 )
 
 #
+# Custom Fields
+#
+class AutoDateTimeField(DateTimeField):
+    def pre_save(self, model_instance, add):
+        return datetime.datetime.now()
+
+#
 # User Model
 #
 
 class USIMCUser(Model):
     user = OneToOneField(User, on_delete=CASCADE, related_name="user", verbose_name="User")
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
     # Foreign Key Entry
 
 #
@@ -115,8 +124,8 @@ class Entry(Model):
     instrument_category = CharField(choices=PERFORMER_CATEGORIES, max_length=4)
     age_category = IntegerField(choices=AGE_CATEGORIES)
     submitted = BooleanField(default=False)
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
 
     # Relations
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
@@ -138,6 +147,9 @@ class Piece(Model):
     catalogue = CharField(max_length=200, verbose_name='Catalogue', blank=True)
     title = CharField(max_length=200, verbose_name='Title')
     composer = CharField(max_length=200, verbose_name='Composer')
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
+    is_chinese = BooleanField(default=False, verbose_name='is Chinese Piece')
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Piece')
@@ -148,16 +160,18 @@ class Piece(Model):
 class Person(Model):
 
     # Attributes
-    first_name = CharField(null=True, max_length=200, verbose_name='First Name')
-    middle_name = CharField(null=True, max_length=200, verbose_name='Middle Name')
-    last_name = CharField(null=True, max_length=200, verbose_name='Last Name')
-    email = EmailField(null=True, verbose_name='Email')
-    phone_number = IntegerField(null=True, verbose_name='Phone Number')
-    instrument = CharField(null=True, max_length=200)
-    teacher_first_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s First Name')
-    teacher_middle_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s Middle Name', blank=True)
-    teacher_last_name = CharField(null=True, max_length=200, verbose_name='Teacher\'s Last Name')
-    teacher_code = CharField(null=True, max_length=200, verbose_name='Teacher\'s CMTANC Code (Optional)', blank=True)
+    first_name = CharField(null=True, blank=False, max_length=200, verbose_name='First Name')
+    middle_name = CharField(null=True, blank=True, max_length=200, verbose_name='Middle Name')
+    last_name = CharField(null=True, blank=False, max_length=200, verbose_name='Last Name')
+    email = EmailField(null=True, blank=True, verbose_name='Email')
+    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+    instrument = CharField(null=True, blank=True, max_length=200)
+    teacher_first_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s First Name')
+    teacher_middle_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s Middle Name')
+    teacher_last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s Last Name')
+    teacher_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Code')
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='USIMC User')

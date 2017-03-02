@@ -4,6 +4,7 @@
 
 <!-- Head -->
 {% block head %}
+<script src="{% static 'registration_site/person_forms.js' %}"></script>
 {% endblock %}
 
 <!-- Title -->
@@ -15,28 +16,102 @@
 
 <!-- Main Content -->
 {% block form_title %}
-  Step 2. Performance Information
+  Edit Application
 {% endblock %}
 {% block form %}
   <form action="." method="post">
     {% csrf_token %}
     <div class="flex-column flex-center">
-      <div class="flex-row">
-        <div>
-          <h3>Person Form</h3>
-          {{ person_form|crispy }}
-        </div>
-        <div style="width: 30px;"></div>
-        <div>
-          <h3>Piece Form</h3>
-          {{ piece_form|crispy }}
-        </div>
-      </div>
-      <div style="height: 30px;"></div>
-      <div class="nav-panel">
-        <a href="{% url 'registration_site:dashboard' %}" type="button" class="btn btn-default">Back</a>
-        <input type="submit" value="Submit" class="btn btn-success">
-      </div>
+      <div>
+      <table id="entry_table" class="table table-hover table-mc-light-blue">
+        <thead>
+          <tr>
+            <th>Awards applying for</th>
+            <th>Instrument category</th>
+            <th>Age category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {{ entry_form.id }}
+            <td>{{entry_form.awards_applying_for}}</td>
+            <td>{{entry_form.instrument_category}}</td>
+            <td>{{entry_form.age_category}}</td>
+          </tr>
+          <tr>
+        </tbody>
+      </table>
+      <table id="performers_table" class="table table-hover table-mc-light-blue">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th colspan="10">Performer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in performer_formset %}
+            {{ form.id }}
+            <tr>
+              <td rowspan="7"><strong>1</strong></td>
+              <td>{{ form.first_name.label_tag }}<br>{{form.first_name}}</td>
+              <td>{{ form.middle_name.label_tag }}<br>{{form.middle_name}}</td>
+              <td>{{ form.last_name.label_tag }}<br>{{form.last_name}}</td>
+              <td rowspan="7">
+                <a>Delete</a>
+              </td>
+            </tr>
+            <tr>
+              <td>{{ form.email.label_tag }}<br>{{form.email}}</td>
+              <td>{{ form.phone_number.label_tag }}<br>{{form.phone_number}}</td>
+            </tr>
+            <tr>
+              <td>{{ form.instrument.label_tag }}<br>{{form.instrument}}</td>
+            </tr>
+            <tr>
+              <td>{{ form.teacher_first_name.label_tag }}<br>{{form.teacher_first_name}}</td>
+              <td>{{ form.teacher_middle_name.label_tag }}<br>{{form.teacher_middle_name}}</td>
+              <td>{{ form.teacher_last_name.label_tag }}<br>{{form.teacher_last_name}}</td>
+            <tr>
+            </tr>
+              <td>{{ form.teacher_code.label_tag }}<br>{{form.teacher_code}}</td>
+            </tr>
+            <tr>
+              <td colspan="10"><a>Add new</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <table id="performers_table" class="table table-hover table-mc-light-blue">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th colspan="3">Piece</th>
+          </tr>
+        </thead>
+        <tbody id="piece-form">
+          {% for form in piece_formset %}
+          <tr>
+            {{ form.id }}
+            <tr>
+              <td rowspan="4"><strong>1</strong></td>
+              <td>{{ form.title.label_tag }}<br>{{form.title}}</td>
+              <td>{{ form.composer.label_tag }}<br>{{form.composer}}</td>
+              <td>{{ form.catalogue.label_tag }}<br>{{form.catalogue}}</td>
+              <td rowspan="4">
+                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-row">Delete</a>
+              </td>
+            </tr>
+            <tr>
+              <td>{{ form.is_chinese.label_tag }} {{form.is_chinese}}</td>
+            </tr>
+            <tr>
+              <td colspan="10"><a href="javascript:void(0)" class="add-piece">Add new</a></td>
+            </tr>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+    <input type="submit" value="Save" class="btn btn-success">
   </form>
 {% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+{% endblock %}
+
+<!-- Title -->
+{% block title %}USIMC International Music Competition{% endblock %}
+{% block subtitle %}Hosted by CMTANC{% endblock %}
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div class="centered-wrapper">
+  <div class="flex-column">
+    <div>
+      <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
+    </div>
+    <!-- Table for viewing all entries owned by user -->
+    <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Awards applying for</th>
+          <th>Instrument category</th>
+          <th>Age category</th>
+          <th>Created at</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in entries %}
+          <tr>
+            <td data-title="Awards">{{ entry.awards_applying_for }}</td>
+            <td data-title="Instrument">{{ entry.instrument_category }}</td>
+            <td data-title="Age">{{ entry.age_category }}</td>
+            <td data-title="Created">{{ entry.created_at }}</td>
+            <td data-title="Submitted">{{ entry.submitted }}</td>
+            <td><a href="{% url 'registration_site:edit_application' pk=entry.pk %}">Edit</a></
+            <td><a href="{% url 'registration_site:delete_application' pk=entry.pk %}">Delete</a></td>
+            <td><button>Submit</button></td>
+          </tr>
+        {% endfor %}
+        <tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

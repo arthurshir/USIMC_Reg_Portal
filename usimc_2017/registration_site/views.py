@@ -6,8 +6,9 @@ from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
+from django.forms.models import modelformset_factory
 from . import forms
 from . import models
 
@@ -106,7 +107,7 @@ class NewApplicationView(View):
         age_category = form.cleaned_data['age_category']
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
-        return redirect('registration_site:edit_application')
+        return redirect('registration_site:edit_performers')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -114,14 +115,22 @@ class NewApplicationView(View):
 
 class EditApplicationView(View):
     context = {}
-    context['piece_form'] = forms.PieceForm
-    context['person_form'] = forms.PersonForm
+    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
+    PieceFormset = modelformset_factory(models.Piece, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
 
-    def get(self, request):
+    def update_forms_and_formsets(self, request):
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+        self.context['entry_form'] = forms.EntryForm(prefix='entry', instance=entry)
+        self.context['performer_formset'] = self.PersonFormset(prefix='performers', queryset=models.Person.objects.filter(entry=entry).order_by('created_at'))
+        self.context['piece_formset'] = self.PieceFormset(prefix='pieces', queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+
+    def get(self, request, *args, **kwargs):
+        self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_application.html', self.context)
 
     def post(self, request):
-        return render(request, 'registration_site/application_steps/new_application_step_1.html', self.context)
+        return render(request, 'registration_site/edit_application.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -129,52 +138,34 @@ class EditApplicationView(View):
 
 class EditPerformersView(View):
     context = {}
+    # Create Formset Factory
+    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
+
+    # Create Formset
+    def get_formset(self, request):
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        entry = usimc_user.entry.all()[0]
+        return self.PersonFormset(queryset=models.Person.objects.filter(entry=entry))
 
     def get(self, request):
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        Formset = formset_factory(forms.PersonForm)
-        initial_performers = models.Person.objects.filter(entry=usimc_user.entry.all()[0])
-        initial_data = [{
-            'first_name' : x.first_name,
-            'middle_name' : x.middle_name,
-            'last_name' : x.last_name,
-            'email' : x.email,
-            'phone_number' : x.phone_number,
-            'instrument' : x.instrument,
-            'teacher_first_name' : x.teacher_first_name,
-            'teacher_middle_name' : x.teacher_middle_name,
-            'teacher_last_name' : x.teacher_last_name,
-            'teacher_code' : x.teacher_code,
-            } for x in initial_performers]
-        self.context['formset'] = Formset(initial=initial_data)
-
+        # Update Formset
+        self.context['formset'] = self.get_formset(request)
         return render(request, 'registration_site/person_forms.html', self.context)
 
     def post(self, request):
-        Formset = formset_factory(forms.PersonForm)
-        formset = Formset(request.POST)
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        if formset.is_valid():
-            for form in formset:
-                first_name = form.cleaned_data.get('first_name')
-                middle_name = form.cleaned_data.get('middle_name')
-                last_name = form.cleaned_data.get('last_name')
-                email = form.cleaned_data.get('email')
-                phone_number = form.cleaned_data.get('phone_number')
-                instrument = form.cleaned_data.get('instrument')
-                teacher_first_name = form.cleaned_data.get('teacher_first_name')
-                teacher_middle_name = form.cleaned_data.get('teacher_middle_name')
-                teacher_last_name = form.cleaned_data.get('teacher_last_name')
-                teacher_code = form.cleaned_data.get('teacher_code')
-                entry = usimc_user.entry.all()[0]
-                person = models.Person.objects.create(first_name = first_name, middle_name = middle_name, last_name = last_name, email = email, phone_number = phone_number, instrument = instrument, teacher_first_name = teacher_first_name, teacher_middle_name = teacher_middle_name, teacher_last_name = teacher_last_name, teacher_code = teacher_code, entry=entry)
-            self.context['formset'] = formset
-            return render(request, 'registration_site/person_forms.html', self.context)
-        else:
-            print formset.data
-            messages.warning(request, "Form is not valid?")
-            self.context['formset'] = formset
-            return render(request, 'registration_site/person_forms.html', self.context)
+        print request.POST
+        self.context['formset'] = self.PersonFormset(request.POST)
+        for form in self.context['formset']:
+            if form.is_valid() and form.has_changed():
+                person = form.save(commit=False)
+                person.entry = models.USIMCUser.objects.filter(user=request.user)[0].entry.all()[0]
+                person.save()
+            else:
+                messages.warning(request, "Form is not valid?")
+        self.context['formset'].save()
+        # Update to formset with changed data
+        self.context['formset'] = self.get_formset(request)
+        return render(request, 'registration_site/person_forms.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -183,15 +174,27 @@ class EditPerformersView(View):
 
 class ApplicationListView(View):
     context = {}
-    context['form'] = forms.EntryForm
+    context['entries'] = []
 
     def get(self, request):
-        return render(request, 'registration_site/dashboard.html', self.context)
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        self.context['entries'] = usimc_user.entry.all().order_by('created_at')
+        return render(request, 'registration_site/application_list.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ApplicationListView, self).dispatch(*args, **kwargs)
 
+class DeleteApplicationView(View):
+
+    context = {}
+    def get(self, request, *args, **kwargs):
+        entry = get_object_or_404(models.Entry, pk=self.kwargs['pk']).delete()
+        return redirect('registration_site:application_list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteApplicationView, self).dispatch(*args, **kwargs)
 
 # from django.shortcuts import render, redirect, HttpResponse
 # from django.contrib.auth.decorators import login_required

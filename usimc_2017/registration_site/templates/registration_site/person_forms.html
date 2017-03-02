@@ -23,13 +23,16 @@
     {% csrf_token %}
     <div class="flex-stretch">
       <div class="flex-column">
-          {{ formset.management_form }}
-          {% for form in formset.forms %}
-            <div class="person-form-div">
-              {% crispy form form.helper %}
-              <button id="delete" class="btn btn-danger">Remove</button>
-            </div>
-          {% endfor %}
+      {{ formset.management_form }}
+      {% for form in formset %}
+      <div class="person-form-div">
+        {% for field in form %}
+          {{ field.label_tag }} {{ field }}
+        {% endfor %}
+        <button id="delete" class="btn btn-danger">Remove</button>
+      </div>
+      {% endfor %}
+
       </div>
       <div class="flex-row">
         <button id="add" class="btn btn-default btn-add">
