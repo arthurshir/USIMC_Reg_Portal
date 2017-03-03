@@ -158,6 +158,9 @@ class Piece(Model):
     class Meta:
         default_related_name = 'piece'
 
+    def __unicode__(self):
+        return self.title + self.composer
+
 class Person(Model):
 
     # Attributes

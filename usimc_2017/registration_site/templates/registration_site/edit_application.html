@@ -4,7 +4,8 @@
 
 <!-- Head -->
 {% block head %}
-<script src="{% static 'registration_site/person_forms.js' %}"></script>
+<script src="{% static 'registration_site/jquery.formset.js' %}"></script>
+<script src="{% static 'registration_site/edit_application.js' %}"></script>
 {% endblock %}
 
 <!-- Title -->
@@ -52,8 +53,9 @@
             <th colspan="10">Performer</th>
           </tr>
         </thead>
-        <tbody>
-          {% for form in performer_formset %}
+        {{ performer_formset.management_form }}
+        {% for form in performer_formset %}
+        <tbody id="performer-form">
             {{ form.id }}
             <tr>
               <td rowspan="7"><strong>1</strong></td>
@@ -61,7 +63,10 @@
               <td>{{ form.middle_name.label_tag }}<br>{{form.middle_name}}</td>
               <td>{{ form.last_name.label_tag }}<br>{{form.last_name}}</td>
               <td rowspan="7">
-                <a>Delete</a>
+                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-performer {% if forloop.first %}hidden{% endif %}">Delete</a>
+                <div class="hidden">
+                  {{ form.DELETE }}
+                </div>
               </td>
             </tr>
             <tr>
@@ -79,40 +84,49 @@
             </tr>
               <td>{{ form.teacher_code.label_tag }}<br>{{form.teacher_code}}</td>
             </tr>
-            <tr>
-              <td colspan="10"><a>Add new</a></td>
-            </tr>
-          {% endfor %}
+        </tbody>
+        {% endfor %}
+        <tbody>
+          <tr>
+            <td colspan="10"><a href="javascript:void(0)" class="add-performer">Add new</a></td>
+          </tr>
         </tbody>
       </table>
-      <table id="performers_table" class="table table-hover table-mc-light-blue">
+
+      <table id="pieces_table" class="table table-hover table-mc-light-blue">
         <thead>
           <tr>
             <th>#</th>
             <th colspan="3">Piece</th>
           </tr>
         </thead>
+        {{ piece_formset.management_form }}
+        {% for form in piece_formset %}
         <tbody id="piece-form">
-          {% for form in piece_formset %}
+          {{ form.id }}
           <tr>
-            {{ form.id }}
             <tr>
               <td rowspan="4"><strong>1</strong></td>
               <td>{{ form.title.label_tag }}<br>{{form.title}}</td>
               <td>{{ form.composer.label_tag }}<br>{{form.composer}}</td>
               <td>{{ form.catalogue.label_tag }}<br>{{form.catalogue}}</td>
               <td rowspan="4">
-                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-row">Delete</a>
+                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-piece {% if forloop.first %}hidden{% endif %}">Delete</a>
+                <div class="hidden">
+                  {{ form.DELETE }}
+                </div>
               </td>
             </tr>
             <tr>
               <td>{{ form.is_chinese.label_tag }} {{form.is_chinese}}</td>
             </tr>
-            <tr>
-              <td colspan="10"><a href="javascript:void(0)" class="add-piece">Add new</a></td>
-            </tr>
           </tr>
-          {% endfor %}
+        </tbody>
+        {% endfor %}
+        <tbody>
+          <tr>
+            <td colspan="10"><a href="javascript:void(0)" class="add-piece">Add new</a></td>
+          </tr>
         </tbody>
       </table>
     </div>

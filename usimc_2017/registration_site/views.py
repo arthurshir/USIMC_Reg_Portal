@@ -11,6 +11,7 @@ from django.forms import formset_factory
 from django.forms.models import modelformset_factory
 from . import forms
 from . import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class IndexView(View):
@@ -113,23 +114,70 @@ class NewApplicationView(View):
     def dispatch(self, *args, **kwargs):
         return super(NewApplicationView, self).dispatch(*args, **kwargs)
 
+def get_entry(user, pk):
+    usimc_user = models.USIMCUser.objects.filter(user=user)[0]
+    return usimc_user.entry.get(pk=pk)
+
+def get_usimc_user(user):
+    return models.USIMCUser.objects.filter(user=user)[0]
+
+def get_piece(user, pk):
+    return models.Piece.objects.get(entry=get_entry(user, pk), pk=pk)[0]
+
+def get_performer(user, pk):
+    return models.Performer.objects.get(entry=get_entry(user, pk), pk=pk)[0]
+
+
 class EditApplicationView(View):
     context = {}
-    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
-    PieceFormset = modelformset_factory(models.Piece, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
+    personFormsetPrefix = 'performers'
+    pieceFormsetPrefix = 'pieces'
+    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'], extra=1)
+    PieceFormset = modelformset_factory(models.Piece, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',], extra=1)
 
     def update_forms_and_formsets(self, request):
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         entry = usimc_user.entry.get(pk=self.kwargs['pk'])
         self.context['entry_form'] = forms.EntryForm(prefix='entry', instance=entry)
-        self.context['performer_formset'] = self.PersonFormset(prefix='performers', queryset=models.Person.objects.filter(entry=entry).order_by('created_at'))
-        self.context['piece_formset'] = self.PieceFormset(prefix='pieces', queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['performer_formset'] = self.PersonFormset(prefix=self.personFormsetPrefix, queryset=models.Person.objects.filter(entry=entry).order_by('created_at'))
+        self.context['piece_formset'] = self.PieceFormset(prefix=self.pieceFormsetPrefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_application.html', self.context)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+        piecesFormset = self.PieceFormset(request.POST, prefix=self.pieceFormsetPrefix)
+        performersFormset = self.PersonFormset(request.POST, prefix=self.personFormsetPrefix)
+        if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
+            for form in piecesFormset:
+                if form.has_changed():
+                    if form.cleaned_data.get('DELETE'):
+                        try:
+                            piece = form.instance
+                            piece.delete()
+                        except ObjectDoesNotExist:
+                            pass
+                    else:
+                        piece = form.save(commit=False)
+                        piece.entry = get_entry(request.user, self.kwargs['pk'])
+                        piece.save()
+            for form in performersFormset:
+                if form.has_changed():
+                    if form.cleaned_data.get('DELETE'):
+                        try:
+                            performer = form.instance
+                            performer.delete()
+                        except ObjectDoesNotExist:
+                            pass
+                    else:
+                        performer = form.save(commit=False)
+                        performer.entry = get_entry(request.user, self.kwargs['pk'])
+                        performer.save()
+        else:
+            print piecesFormset.errors
+            print performersFormset.errors
+        self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_application.html', self.context)
 
     @method_decorator(login_required)
