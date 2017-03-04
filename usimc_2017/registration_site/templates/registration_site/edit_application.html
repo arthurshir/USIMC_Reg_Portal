@@ -27,112 +27,72 @@
   <form action="." method="post">
     {% csrf_token %}
     <div class="flex-column flex-center">
-      <div>
-      <table id="entry_table" class="table table-hover table-mc-light-blue">
-        <thead>
-          <tr>
-            <th>Awards applying for</th>
-            <th>Instrument category</th>
-            <th>Age category</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {{ entry_form.id }}
-            <td>{{entry_form.awards_applying_for}}</td>
-            <td>{{entry_form.instrument_category}}</td>
-            <td>{{entry_form.age_category}}</td>
-          </tr>
-          <tr>
-        </tbody>
-      </table>
-      <table id="performers_table" class="table table-hover table-mc-light-blue">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th colspan="10">Performer</th>
-          </tr>
-        </thead>
-        {{ performer_formset.management_form }}
-        {% for form in performer_formset %}
-        <tbody id="performer-form">
-            {{ form.id }}
-            <tr>
-              <td rowspan="7"><strong>1</strong></td>
-              <td>{{ form.first_name.label_tag }}<br>{{form.first_name}}</td>
-              <td>{{ form.middle_name.label_tag }}<br>{{form.middle_name}}</td>
-              <td>{{ form.last_name.label_tag }}<br>{{form.last_name}}</td>
-              <td rowspan="7">
-                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-performer {% if forloop.first %}hidden{% endif %}">Delete</a>
-                <div class="hidden">
-                  {{ form.DELETE }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>{{ form.email.label_tag }}<br>{{form.email}}</td>
-              <td>{{ form.phone_number.label_tag }}<br>{{form.phone_number}}</td>
-            </tr>
-            <tr>
-              <td>{{ form.instrument.label_tag }}<br>{{form.instrument}}</td>
-            </tr>
-            <tr>
-              <td>{{ form.teacher_first_name.label_tag }}<br>{{form.teacher_first_name}}</td>
-              <td>{{ form.teacher_middle_name.label_tag }}<br>{{form.teacher_middle_name}}</td>
-              <td>{{ form.teacher_last_name.label_tag }}<br>{{form.teacher_last_name}}</td>
-            <tr>
-            </tr>
-              <td>{{ form.teacher_code.label_tag }}<br>{{form.teacher_code}}</td>
-            </tr>
-        </tbody>
-        {% endfor %}
-        <tbody>
-          <tr>
-            <td colspan="10"><a href="javascript:void(0)" class="add-performer">Add new</a></td>
-          </tr>
-        </tbody>
-      </table>
+      <form id="myForm" method="post" action="">
+          <table id="performer-table" border="0" cellpadding="0" cellspacing="0">
+              <tbody>
+                  {% for form in performer_formset.forms %}
+                  <tr>
+                      <td>
+                        {{ form.id }}
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                      </td>
+                      <td>
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                        {{ form.middle_name.label_tag }}
+                        {{ form.middle_name }}
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        {{ form.phone_number.label_tag }}
+                        {{ form.phone_number }}
+                        {{ form.instrument.label_tag }}
+                        {{ form.instrument }}
+                        {{ form.teacher_first_name.label_tag }}
+                        {{ form.teacher_first_name }}
+                        {{ form.teacher_middle_name.label_tag }}
+                        {{ form.teacher_middle_name }}
+                        {{ form.teacher_last_name.label_tag }}
+                        {{ form.teacher_last_name }}
+                        {{ form.teacher_code.label_tag }}
+                        {{ form.teacher_code }}
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          <div>
+            {{ performer_formset.management_form }}
+          </div>
 
-      <table id="pieces_table" class="table table-hover table-mc-light-blue">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th colspan="3">Piece</th>
-          </tr>
-        </thead>
-        {{ piece_formset.management_form }}
-        {% for form in piece_formset %}
-        <tbody id="piece-form">
-          {{ form.id }}
-          <tr>
-            <tr>
-              <td rowspan="4"><strong>1</strong></td>
-              <td>{{ form.title.label_tag }}<br>{{form.title}}</td>
-              <td>{{ form.composer.label_tag }}<br>{{form.composer}}</td>
-              <td>{{ form.catalogue.label_tag }}<br>{{form.catalogue}}</td>
-              <td rowspan="4">
-                <a id="remove-{{ form.prefix }}-row" href="javascript:void(0)" class="delete-piece {% if forloop.first %}hidden{% endif %}">Delete</a>
-                <div class="hidden">
-                  {{ form.DELETE }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>{{ form.is_chinese.label_tag }} {{form.is_chinese}}</td>
-            </tr>
-          </tr>
-        </tbody>
-        {% endfor %}
-        <tbody>
-          <tr>
-            <td colspan="10"><a href="javascript:void(0)" class="add-piece">Add new</a></td>
-          </tr>
-        </tbody>
-      </table>
+          <table id="piece-table" border="0" cellpadding="0" cellspacing="0">
+              <tbody>
+                  {% for form in piece_formset.forms %}
+                  <tr>
+                      <td>
+                        {{ form.id }}
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                      </td>
+                      <td>
+                        {{ form.title.label_tag}}
+                        {{ form.title }}
+                        {{ form.composer.label_tag}}
+                        {{ form.composer }}
+                        {{ form.catalogue.label_tag}}
+                        {{ form.catalogue }}
+                        {{ form.is_chinese.label_tag}}
+                        {{ form.is_chinese }}
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          <div>
+            {{ piece_formset.management_form }}
+          </div>
+          <input type="submit" value="Save" class="btn btn-success">
+      </form>
     </div>
-    <div class="flex-row">
-      <input type="submit" value="Save" class="btn btn-success">
-    </div>
-    <div style="height: 20px"></div>
   </form>
 {% endblock %}

@@ -17,8 +17,9 @@
 {% block content %}
 <div class="centered-wrapper">
   <div class="flex-column">
-    <div>
+    <div class="flex-space-between">
       <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
+      <a class="btn btn-info" href="{% url 'registration_site:logout' %}" type="button" class="btn btn-default">Log out</a>
     </div>
     <!-- Table for viewing all entries owned by user -->
     <table id="table" class="table table-hover table-mc-light-blue">

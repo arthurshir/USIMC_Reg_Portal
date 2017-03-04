@@ -145,9 +145,9 @@ class Entry(Model):
 class Piece(Model):
 
     # Attributes
-    catalogue = CharField(max_length=200, verbose_name='Catalogue', blank=True)
-    title = CharField(max_length=200, verbose_name='Title')
-    composer = CharField(max_length=200, verbose_name='Composer')
+    catalogue = CharField(max_length=200, verbose_name='Catalogue', blank=True, null=True)
+    title = CharField(max_length=200, verbose_name='Title', blank=True, null=True)
+    composer = CharField(max_length=200, verbose_name='Composer', blank=True, null=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
     is_chinese = BooleanField(default=False, verbose_name='is Chinese Piece')
@@ -164,9 +164,9 @@ class Piece(Model):
 class Person(Model):
 
     # Attributes
-    first_name = CharField(null=True, blank=False, max_length=200, verbose_name='First Name')
+    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     middle_name = CharField(null=True, blank=True, max_length=200, verbose_name='Middle Name')
-    last_name = CharField(null=True, blank=False, max_length=200, verbose_name='Last Name')
+    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
     email = EmailField(null=True, blank=True, verbose_name='Email')
     phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
     instrument = CharField(null=True, blank=True, max_length=200)

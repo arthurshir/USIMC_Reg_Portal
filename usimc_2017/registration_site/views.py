@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.decorators import method_decorator
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -18,13 +18,26 @@ class IndexView(View):
     context = {}
 
     def get(self, request):
+        if request.user.is_authenticated():
+            return redirect('registration_site:dashboard')
         return render(request, 'registration_site/home_page.html', self.context)
+
+class LogoutView(View):
+    context = {}
+
+    def get(self, request):
+        logout(request)
+        return redirect('registration_site:login')
+
 
 class LoginView(View):
     context = {}
     context['form'] = forms.LoginForm
 
     def get(self, request):
+        if request.user.is_authenticated():
+            return redirect('registration_site:dashboard')
+
         return render(request, 'registration_site/login.html', self.context)
 
     def post(self, request):
@@ -53,6 +66,8 @@ class RegisterView(View):
     context['form'] = forms.RegistrationForm
 
     def get(self, request):
+        if request.user.is_authenticated():
+            return redirect('registration_site:dashboard')
         return render(request, 'registration_site/register.html', self.context)
 
     def post(self, request):
@@ -108,6 +123,10 @@ class NewApplicationView(View):
         age_category = form.cleaned_data['age_category']
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
+
+        models.Piece.objects.create(entry = entry)
+        models.Person.objects.create(entry = entry)
+
         return redirect('registration_site:edit_application', pk=entry.id)
 
     @method_decorator(login_required)
@@ -132,8 +151,8 @@ class EditApplicationView(View):
     context = {}
     personFormsetPrefix = 'performers'
     pieceFormsetPrefix = 'pieces'
-    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'], extra=1)
-    PieceFormset = modelformset_factory(models.Piece, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',], extra=1)
+    PersonFormset = modelformset_factory(models.Person, extra=0, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
+    PieceFormset = modelformset_factory(models.Piece, extra=0, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
 
     def update_forms_and_formsets(self, request):
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
@@ -149,6 +168,7 @@ class EditApplicationView(View):
     def post(self, request, *args, **kwargs):
         piecesFormset = self.PieceFormset(request.POST, prefix=self.pieceFormsetPrefix)
         performersFormset = self.PersonFormset(request.POST, prefix=self.personFormsetPrefix)
+        print piecesFormset.data
         if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
             for form in piecesFormset:
                 if form.has_changed():

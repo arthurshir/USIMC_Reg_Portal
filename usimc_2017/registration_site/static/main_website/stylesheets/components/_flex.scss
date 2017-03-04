@@ -9,17 +9,26 @@
 }
 
 .flex-center {
+  display: flex;
   align-items: center;
 }
 
 .flex-stretch {
+  display: flex;
   align-items: stretch;
 };
 
 .flex-stretch {
+  display: flex;
   align-items: stretch;
 };
 
 .flex-start {
+  display: flex;
   align-items: flex-start;
+}
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between; 
 }
