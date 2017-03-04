@@ -12,7 +12,8 @@ from django.forms.models import modelformset_factory
 from . import forms
 from . import models
 from django.core.exceptions import ObjectDoesNotExist
-
+import django_excel as excel
+import csv
 
 class IndexView(View):
     context = {}
@@ -77,6 +78,8 @@ class RegisterView(View):
             return redirect_register_view_error(request, 'Form not valid?')
         # Check if user exists
         email = request.POST.get('email', '')
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
         password = request.POST.get('password', '')
         password2 = request.POST.get('password2', '')
         if User.objects.filter(username=email).exists() > 0:
@@ -86,7 +89,7 @@ class RegisterView(View):
         if password != password2:
             return redirect_register_view_error(request, 'Passwords do not match')
         # Create User and corresponding USIMCUser instances
-        user = User.objects.create(username=email, email=email, password=password)
+        user = User.objects.create(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
         user.set_password(password)
         user.save()
         usimc_user = models.USIMCUser.objects.create(user=user)
@@ -152,7 +155,7 @@ class EditApplicationView(View):
     personFormsetPrefix = 'performers'
     pieceFormsetPrefix = 'pieces'
     PersonFormset = modelformset_factory(models.Person, extra=0, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
-    PieceFormset = modelformset_factory(models.Piece, extra=0, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
+    PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
 
     def update_forms_and_formsets(self, request):
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
@@ -171,29 +174,27 @@ class EditApplicationView(View):
         print piecesFormset.data
         if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
             for form in piecesFormset:
-                if form.has_changed():
-                    if form.cleaned_data.get('DELETE'):
-                        try:
-                            piece = form.instance
-                            piece.delete()
-                        except ObjectDoesNotExist:
-                            pass
-                    else:
-                        piece = form.save(commit=False)
-                        piece.entry = get_entry(request.user, self.kwargs['pk'])
-                        piece.save()
+                if form.cleaned_data.get('DELETE'):
+                    try:
+                        piece = form.instance
+                        piece.delete()
+                    except ObjectDoesNotExist:
+                        pass
+                else:
+                    piece = form.save(commit=False)
+                    piece.entry = get_entry(request.user, self.kwargs['pk'])
+                    piece.save()
             for form in performersFormset:
-                if form.has_changed():
-                    if form.cleaned_data.get('DELETE'):
-                        try:
-                            performer = form.instance
-                            performer.delete()
-                        except ObjectDoesNotExist:
-                            pass
-                    else:
-                        performer = form.save(commit=False)
-                        performer.entry = get_entry(request.user, self.kwargs['pk'])
-                        performer.save()
+                if form.cleaned_data.get('DELETE'):
+                    try:
+                        performer = form.instance
+                        performer.delete()
+                    except ObjectDoesNotExist:
+                        pass
+                else:
+                    performer = form.save(commit=False)
+                    performer.entry = get_entry(request.user, self.kwargs['pk'])
+                    performer.save()
         else:
             print piecesFormset.errors
             print performersFormset.errors
@@ -254,8 +255,8 @@ class ApplicationListView(View):
         return super(ApplicationListView, self).dispatch(*args, **kwargs)
 
 class DeleteApplicationView(View):
-
     context = {}
+
     def get(self, request, *args, **kwargs):
         entry = get_object_or_404(models.Entry, pk=self.kwargs['pk']).delete()
         return redirect('registration_site:dashboard')
@@ -263,6 +264,71 @@ class DeleteApplicationView(View):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(DeleteApplicationView, self).dispatch(*args, **kwargs)
+
+class DownloadEntriesView(View ):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="entries.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            'Contact First Name',
+            'Contact Last Name',
+            'Contact Email',
+            'awards_applying_for',
+            'instrument_category',
+            'age_category',
+            'submitted',
+            'performers',
+            'pieces',
+            'created_at',
+            'updated_at',
+            ])
+
+        entries = models.Entry.objects.all()
+        for entry in entries:
+            user = entry.usimc_user.user
+            row = []
+            row.append(user.first_name)
+            row.append(user.last_name)
+            row.append(user.email)
+            row.append(map(lambda x: str(models.AWARD_CATEGORIES_DICT[x]), entry.awards_applying_for))
+            row.append(str(models.PERFORMER_CATEGORIES_DICT[entry.instrument_category]))
+            row.append(entry.age_category)
+            row.append(entry.submitted)
+
+            persons = models.Person.objects.filter(entry=entry)
+            person_column = ""
+            for person in persons:
+                person_column += str(person.first_name) + ', '
+                person_column += str(person.middle_name) + ', '
+                person_column += str(person.last_name) + ', '
+                person_column += str(person.email) + ', '
+                person_column += str(person.phone_number) + ', '
+                person_column += str(person.instrument) + ', '
+                person_column += str(person.teacher_first_name) + ', '
+                person_column += str(person.teacher_middle_name) + ', '
+                person_column += str(person.teacher_last_name) + ', '
+                person_column += str(person.teacher_code)
+                person_column += '\n'
+            row.append(person_column)
+
+            pieces = models.Piece.objects.filter(entry=entry)
+            piece_column = ""
+            for piece in pieces:
+                piece_column += str(piece.catalogue) + ', '
+                piece_column += str(piece.title) + ', '
+                piece_column += str(piece.composer) + ', '
+                piece_column += str(piece.is_chinese)
+                piece_column += '\n'
+            row.append(piece_column)
+
+            row.append(entry.created_at)
+            row.append(entry.updated_at)
+            writer.writerow(row)
+
+        return response
 
 # from django.shortcuts import render, redirect, HttpResponse
 # from django.contrib.auth.decorators import login_required

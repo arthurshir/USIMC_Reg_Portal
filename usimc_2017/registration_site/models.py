@@ -58,6 +58,7 @@ PERFORMER_CATEGORIES = (
     (CHAMBER_ENSEMBLE, 'Chamber Ensemble'),
     (VOCAL_ENSEMBLE, 'Vocal Ensemble'),
 )
+PERFORMER_CATEGORIES_DICT = dict(PERFORMER_CATEGORIES)
 
 # Award Categories
 AWARD_CATEGORIES = (
@@ -66,6 +67,7 @@ AWARD_CATEGORIES = (
     (BACH_AWARD, 'Bach Award'),
     (YOUNG_ARIST_AWARD, 'Young Artist Award'),
 )
+AWARD_CATEGORIES_DICT = dict(AWARD_CATEGORIES)
 
 # Age Categories
 AGE_CATEGORIES = (
@@ -81,6 +83,7 @@ AGE_CATEGORIES = (
     (_22_OR_UNDER, 'Age 22 or under'),
     (_30_OR_UNDER, 'Age 30 or under'),
 )
+AGE_CATEGORIES_DICT = dict(AGE_CATEGORIES)
 
 #
 # Custom Fields

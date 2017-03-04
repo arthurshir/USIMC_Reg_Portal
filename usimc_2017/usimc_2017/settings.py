@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'registration_site',
     'crispy_forms',
+    'django_excel',
 ]
 
 MIDDLEWARE = [

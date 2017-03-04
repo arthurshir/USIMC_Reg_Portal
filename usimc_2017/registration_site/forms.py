@@ -91,6 +91,8 @@ class LoginForm(forms.Form):
 class RegistrationForm(forms.Form):
 
     email = forms.CharField()
+    first_name = forms.CharField()
+    last_name = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
 
@@ -101,6 +103,8 @@ class RegistrationForm(forms.Form):
     helper.layout = Layout(
         Div(
             Div('email', css_class="container-fluid"),
+            Div('first_name', css_class="container-fluid"),
+            Div('last_name', css_class="container-fluid"),
             Div('password', css_class="container-fluid"),
             Div('password2', css_class="container-fluid"),
         ),

@@ -26,8 +26,9 @@
   <div style="height: 20px"></div>
   <form action="." method="post">
     {% csrf_token %}
-    <div class="flex-column flex-center">
+    <div class="flex-column flex-center" style="max-width: 800px;">
       <form id="myForm" method="post" action="">
+          <h3>Performers</h3>
           <table id="performer-table" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                   {% for form in performer_formset.forms %}
@@ -66,6 +67,7 @@
             {{ performer_formset.management_form }}
           </div>
 
+          <h3>Pieces</h3>
           <table id="piece-table" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                   {% for form in piece_formset.forms %}

@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^login/', views.LoginView.as_view(), name='login'),
     url(r'^register/', views.RegisterView.as_view(), name='register'),
     url(r'^logout/', views.LogoutView.as_view(), name='logout'),
+
+    url(r'^download-entries/', views.DownloadEntriesView.as_view(), name='download_entries'),
+
     url(r'^dashboard/$', views.ApplicationListView.as_view(), name='dashboard'),
     url(r'^dashboard/new/', views.NewApplicationView.as_view(), name='new_application'),
     url(r'^dashboard/(?P<pk>\d+)/edit/$', views.EditApplicationView.as_view(), name='edit_application'),
