@@ -44,28 +44,34 @@ _22_OR_UNDER = 22
 _30_OR_UNDER = 30
 
 # Performer Categories
-PERFORMER_CATEGORIES = (
+PERFORMER_SOLO_CATEGORIES = (
     (PIANO, 'Piano'),
     (VIOLIN, 'Violin'),
     (VIOLA, 'Viola'),
     (CELLO, 'Cello'),
-    (CHINESE_TRADITIONAL_INSTRUMENTS, 'Chinese Traditional Instruments'),
     (MARIMBA, 'Marimba'),
     (FLUTE, 'Flute'),
     (CLARINET, 'Clarinet'),
     (VOCAL, 'Vocal'),
-    (CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE, 'Chinese Traditional Instruments Ensemble'),
+    (CHINESE_TRADITIONAL_INSTRUMENTS, 'Chinese Traditional Instruments'),
+)
+PERFORMER_ENSEMBLE_CATEGORIES = (
     (CHAMBER_ENSEMBLE, 'Chamber Ensemble'),
     (VOCAL_ENSEMBLE, 'Vocal Ensemble'),
+    (CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE, 'Chinese Traditional Instruments Ensemble'),
 )
+PERFORMER_CATEGORIES = PERFORMER_SOLO_CATEGORIES + PERFORMER_ENSEMBLE_CATEGORIES
+
 PERFORMER_CATEGORIES_DICT = dict(PERFORMER_CATEGORIES)
+PERFORMER_SOLO_CATEGORIES_DICT = dict(PERFORMER_SOLO_CATEGORIES)
+PERFORMER_ENSEMBLE_CATEGORIES_DICT = dict(PERFORMER_ENSEMBLE_CATEGORIES)
 
 # Award Categories
 AWARD_CATEGORIES = (
-    (CHINESE_AWARD, 'Chinese Award'),
-    (JV_AWARD, 'J&V Foundation Award'),
-    (BACH_AWARD, 'Bach Award'),
     (YOUNG_ARIST_AWARD, 'Young Artist Award'),
+    (CHINESE_AWARD, 'Chinese Award'),
+    (BACH_AWARD, 'Bach Award'),
+    (JV_AWARD, 'J.V. Award'),
 )
 AWARD_CATEGORIES_DICT = dict(AWARD_CATEGORIES)
 
@@ -97,9 +103,10 @@ class AutoDateTimeField(DateTimeField):
 #
 
 class USIMCUser(Model):
-    user = OneToOneField(User, on_delete=CASCADE, related_name="user", verbose_name="User")
+    user = OneToOneField(User, on_delete=CASCADE, related_name="usimc_user", verbose_name="User")
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
+    is_admin = BooleanField(default=False)
     # Foreign Key Entry
 
 #
@@ -131,16 +138,24 @@ class Entry(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
+    # Parent Contact Information
+    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
+    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
+    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email Address')
+    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+
     # Relations
+    teacher = OneToOneField('Teacher', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Teacher")
+    lead_performer = OneToOneField('Person', null=True, on_delete=CASCADE, related_name="entry", verbose_name='Lead Performer')
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
     # Pieces Performing -- Pieces Foreign Key
-    # Applicants -- Person Foreign Key
+    # Applicants -- Ensember Members Foreign Key
 
     # Managers
     objects = EntryManager()
 
     class Meta:
-        default_related_name =  'entry'
+        default_related_name =  'entries'
 
     def __unicode__(self):
         return self.usimc_user.user.username + "\'s Entry for " + self.instrument_category + " created at: " + self.created_at.strftime('%Y-%m-%d %H:%M')
@@ -148,40 +163,69 @@ class Entry(Model):
 class Piece(Model):
 
     # Attributes
-    catalogue = CharField(max_length=200, verbose_name='Catalogue', blank=True, null=True)
     title = CharField(max_length=200, verbose_name='Title', blank=True, null=True)
+    opus = CharField(max_length=200, verbose_name='Opus', blank=True, null=True)
+    movement = CharField(max_length=200, verbose_name='Movement', blank=True, null=True)
     composer = CharField(max_length=200, verbose_name='Composer', blank=True, null=True)
+    length = IntegerField(verbose_name='Length', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
     is_chinese = BooleanField(default=False, verbose_name='is Chinese Piece')
+
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Piece')
 
     class Meta:
-        default_related_name = 'piece'
+        default_related_name = 'pieces'
 
     def __unicode__(self):
         return self.title + self.composer
+
+class Teacher(Model):
+    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
+    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
+    email = EmailField(null=True, blank=True, verbose_name='Email')
+    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+    cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
+
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
 
 class Person(Model):
 
     # Attributes
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
-    middle_name = CharField(null=True, blank=True, max_length=200, verbose_name='Middle Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
     email = EmailField(null=True, blank=True, verbose_name='Email')
     phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
     instrument = CharField(null=True, blank=True, max_length=200)
-    teacher_first_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s First Name')
-    teacher_middle_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s Middle Name')
-    teacher_last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s Last Name')
-    teacher_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Code')
+    address = CharField(null=True, blank=True, max_length=200)
+    city = CharField(null=True, blank=True, max_length=200)
+    state = CharField(null=True, blank=True, max_length=200)
+    zip_code = CharField(null=True, blank=True, max_length=200)
+    country = CharField(null=True, blank=True, max_length=200)
+
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
+
+    class Meta:
+        default_related_name = 'lead_performer'
+
+class EnsembleMember(Model):
+
+    # Attributes
+    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
+    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
+    email = EmailField(null=True, blank=True, verbose_name='Email')
+    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+    instrument = CharField(null=True, blank=True, max_length=200)
+
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
     # Relations
-    entry = ForeignKey('Entry', verbose_name='USIMC User')
+    entry = ForeignKey('Entry', verbose_name='Ensemble Member')
 
     class Meta:
-        default_related_name = 'person'
+        default_related_name = 'ensemble_members'

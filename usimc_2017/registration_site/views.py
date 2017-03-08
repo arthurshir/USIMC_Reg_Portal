@@ -15,6 +15,15 @@ from django.core.exceptions import ObjectDoesNotExist
 import django_excel as excel
 import csv
 
+PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument',])
+
+piece_formset_prefix = 'pieces'
+ensemble_member_formset_prefix = 'ensemble_member'
+lead_competitor_form_prefix = 'competitor'
+teacher_form_prefix = 'teacher'
+contact_form_prefix = 'contact'
+
 class IndexView(View):
     context = {}
 
@@ -29,7 +38,6 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('registration_site:login')
-
 
 class LoginView(View):
     context = {}
@@ -120,17 +128,24 @@ class NewApplicationView(View):
             messages.warning(request, "Form is not valid?")
             self.context['form'] = form
             return render(request, 'registration_site/create_new_application.html', self.context)
-        # Create Entry
+        # Create entry
         awards_applying_for = form.cleaned_data['awards_applying_for']
         instrument_category = form.cleaned_data['instrument_category']
         age_category = form.cleaned_data['age_category']
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
 
+        # Create teacher, lead performer, and pieces
+        entry.teacher = models.Teacher.objects.create()
+        entry.lead_performer = models.Person.objects.create()
         models.Piece.objects.create(entry = entry)
-        models.Person.objects.create(entry = entry)
 
-        return redirect('registration_site:edit_application', pk=entry.id)
+        # Ensemble
+        if instrument_category in models.PERFORMER_ENSEMBLE_CATEGORIES_DICT.values():
+            models.EnsembleMember.objects.create(entry = entry)
+            return redirect('registration_site:edit_ensemble_application', pk=entry.id)
+        else:
+            return redirect('registration_site:edit_solo_application', pk=entry.id)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -149,56 +164,75 @@ def get_piece(user, pk):
 def get_performer(user, pk):
     return models.Performer.objects.get(entry=get_entry(user, pk), pk=pk)[0]
 
-
-class EditApplicationView(View):
+class EditSoloApplicationView(View):
     context = {}
-    personFormsetPrefix = 'performers'
-    pieceFormsetPrefix = 'pieces'
-    PersonFormset = modelformset_factory(models.Person, extra=0, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
-    PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['catalogue', 'title', 'composer', 'is_chinese',])
 
     def update_forms_and_formsets(self, request):
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         entry = usimc_user.entry.get(pk=self.kwargs['pk'])
-        self.context['entry_form'] = forms.EntryForm(prefix='entry', instance=entry)
-        self.context['performer_formset'] = self.PersonFormset(prefix=self.personFormsetPrefix, queryset=models.Person.objects.filter(entry=entry).order_by('created_at'))
-        self.context['piece_formset'] = self.PieceFormset(prefix=self.pieceFormsetPrefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.EntryContactForm(prefix=teacher_form_prefix, instance=entry)
+
+    def get(self, request, *args, **kwargs):
+        self.update_forms_and_formsets(request)
+        return render(request, 'registration_site/edit_solo_application.html', self.context)
+
+    def post(self, request, *args, **kwargs):
+        return render(request, 'registration_site/edit_solo_application.html', self.context)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(EditSoloApplicationView, self).dispatch(*args, **kwargs)
+
+class EditApplicationView(View):
+    context = {}
+
+    def update_forms_and_formsets(self, request):
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+        self.context['piece_formset'] = self.PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.EntryContactForm(prefix=teacher_form_prefix, instance=entry)
+        self.context['ensemble_member_formset'] = forms.EnsembleMemberForm(prefix=ensemble_member_formset, queryset=entry.ensemble_members)
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_application.html', self.context)
 
     def post(self, request, *args, **kwargs):
-        piecesFormset = self.PieceFormset(request.POST, prefix=self.pieceFormsetPrefix)
-        performersFormset = self.PersonFormset(request.POST, prefix=self.personFormsetPrefix)
-        print piecesFormset.data
-        if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
-            for form in piecesFormset:
-                if form.cleaned_data.get('DELETE'):
-                    try:
-                        piece = form.instance
-                        piece.delete()
-                    except ObjectDoesNotExist:
-                        pass
-                else:
-                    piece = form.save(commit=False)
-                    piece.entry = get_entry(request.user, self.kwargs['pk'])
-                    piece.save()
-            for form in performersFormset:
-                if form.cleaned_data.get('DELETE'):
-                    try:
-                        performer = form.instance
-                        performer.delete()
-                    except ObjectDoesNotExist:
-                        pass
-                else:
-                    performer = form.save(commit=False)
-                    performer.entry = get_entry(request.user, self.kwargs['pk'])
-                    performer.save()
-        else:
-            print piecesFormset.errors
-            print performersFormset.errors
-        self.update_forms_and_formsets(request)
+        piecesFormset = PieceFormset(request.POST, prefix=piece_formset_prefix)
+        ensembleMemberFormset = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
+        # print piecesFormset.data
+        # if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
+        #     for form in piecesFormset:
+        #         if form.cleaned_data.get('DELETE'):
+        #             try:
+        #                 piece = form.instance
+        #                 piece.delete()
+        #             except ObjectDoesNotExist:
+        #                 pass
+        #         else:
+        #             piece = form.save(commit=False)
+        #             piece.entry = get_entry(request.user, self.kwargs['pk'])
+        #             piece.save()
+        #     for form in performersFormset:
+        #         if form.cleaned_data.get('DELETE'):
+        #             try:
+        #                 performer = form.instance
+        #                 performer.delete()
+        #             except ObjectDoesNotExist:
+        #                 pass
+        #         else:
+        #             performer = form.save(commit=False)
+        #             performer.entry = get_entry(request.user, self.kwargs['pk'])
+        #             performer.save()
+        # else:
+        #     print piecesFormset.errors
+        #     print performersFormset.errors
+        # self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_application.html', self.context)
 
     @method_decorator(login_required)
@@ -207,8 +241,6 @@ class EditApplicationView(View):
 
 class EditPerformersView(View):
     context = {}
-    # Create Formset Factory
-    PersonFormset = modelformset_factory(models.Person, can_delete=True, fields=['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code'])
 
     # Create Formset
     def get_formset(self, request):
@@ -265,6 +297,37 @@ class DeleteApplicationView(View):
     def dispatch(self, *args, **kwargs):
         return super(DeleteApplicationView, self).dispatch(*args, **kwargs)
 
+
+# Admin Views
+
+class AdminLoginView(View):
+    context = {}
+    context['form'] = forms.LoginForm
+
+    def get(self, request):
+        if request.user.is_authenticated():
+            return redirect('registration_site:admin_dashboard')
+
+        return render(request, 'registration_site/login.html', self.context)
+
+    def post(self, request):
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            email = request.POST.get('email', '')
+            password = request.POST.get('password', '')
+            user = authenticate(username=email, password=password)
+            print email, password
+            if user is not None:
+                login(request, user)
+                return redirect('registration_site:dashboard')
+            else:
+                messages.warning(request, 'Wrong Login Information', extra_tags='login')
+                return redirect('registration_site:login')
+        else:
+            messages.warning(request, 'Form not Valid?', extra_tags='login')
+            return redirect('registration_site:login')
+
+
 class DownloadEntriesView(View ):
 
     def get(self, request, *args, **kwargs):
@@ -286,46 +349,46 @@ class DownloadEntriesView(View ):
             'updated_at',
             ])
 
-        entries = models.Entry.objects.all()
+        entries = models.Entry.objects.all().order_by('instrument_category')
         for entry in entries:
             user = entry.usimc_user.user
             row = []
-            row.append(user.first_name)
-            row.append(user.last_name)
-            row.append(user.email)
-            row.append(map(lambda x: str(models.AWARD_CATEGORIES_DICT[x]), entry.awards_applying_for))
-            row.append(str(models.PERFORMER_CATEGORIES_DICT[entry.instrument_category]))
-            row.append(entry.age_category)
-            row.append(entry.submitted)
+            # row.append(user.first_name)
+            # row.append(user.last_name)
+            # row.append(user.email)
+            # row.append(map(lambda x: str(models.AWARD_CATEGORIES_DICT[x]), entry.awards_applying_for))
+            # row.append(str(models.PERFORMER_CATEGORIES_DICT[entry.instrument_category]))
+            # row.append(entry.age_category)
+            # row.append(entry.submitted)
 
-            persons = models.Person.objects.filter(entry=entry)
-            person_column = ""
-            for person in persons:
-                person_column += str(person.first_name) + ', '
-                person_column += str(person.middle_name) + ', '
-                person_column += str(person.last_name) + ', '
-                person_column += str(person.email) + ', '
-                person_column += str(person.phone_number) + ', '
-                person_column += str(person.instrument) + ', '
-                person_column += str(person.teacher_first_name) + ', '
-                person_column += str(person.teacher_middle_name) + ', '
-                person_column += str(person.teacher_last_name) + ', '
-                person_column += str(person.teacher_code)
-                person_column += '\n'
-            row.append(person_column)
+            # persons = models.Person.objects.filter(entry=entry)
+            # person_column = ""
+            # for person in persons:
+            #     person_column += str(person.first_name) + ', '
+            #     person_column += str(person.middle_name) + ', '
+            #     person_column += str(person.last_name) + ', '
+            #     person_column += str(person.email) + ', '
+            #     person_column += str(person.phone_number) + ', '
+            #     person_column += str(person.instrument) + ', '
+            #     person_column += str(person.teacher_first_name) + ', '
+            #     person_column += str(person.teacher_middle_name) + ', '
+            #     person_column += str(person.teacher_last_name) + ', '
+            #     person_column += str(person.teacher_code)
+            #     person_column += '\n'
+            # row.append(person_column)
 
-            pieces = models.Piece.objects.filter(entry=entry)
-            piece_column = ""
-            for piece in pieces:
-                piece_column += str(piece.catalogue) + ', '
-                piece_column += str(piece.title) + ', '
-                piece_column += str(piece.composer) + ', '
-                piece_column += str(piece.is_chinese)
-                piece_column += '\n'
-            row.append(piece_column)
+            # pieces = models.Piece.objects.filter(entry=entry)
+            # piece_column = ""
+            # for piece in pieces:
+            #     piece_column += str(piece.catalogue) + ', '
+            #     piece_column += str(piece.title) + ', '
+            #     piece_column += str(piece.composer) + ', '
+            #     piece_column += str(piece.is_chinese)
+            #     piece_column += '\n'
+            # row.append(piece_column)
 
-            row.append(entry.created_at)
-            row.append(entry.updated_at)
+            # row.append(entry.created_at)
+            # row.append(entry.updated_at)
             writer.writerow(row)
 
         return response
