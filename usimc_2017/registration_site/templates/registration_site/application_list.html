@@ -40,7 +40,7 @@
             <td data-title="Age">{{ entry.age_category }}</td>
             <td data-title="Created">{{ entry.created_at }}</td>
             <td data-title="Submitted">{{ entry.submitted }}</td>
-            <td><a href="{% url 'registration_site:edit_application' pk=entry.pk %}">Edit</a></td>
+            <td><a href="{% url 'registration_site:edit_application_redirect' pk=entry.pk %}">Edit</a></td>
             <td><a href="{% url 'registration_site:delete_application' pk=entry.pk %}">Delete</a></td>
             <td><button>Submit</button></td>
           </tr>

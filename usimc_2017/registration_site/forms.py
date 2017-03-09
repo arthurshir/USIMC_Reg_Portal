@@ -12,9 +12,9 @@ class EntryForm(forms.ModelForm):
 
     awards_applying_for = forms.MultipleChoiceField(choices=models.AWARD_CATEGORIES, widget=forms.CheckboxSelectMultiple)
 
-class EntryContactForm(forms.ModelForm):
+class ParentContactForm(forms.ModelForm):
     class Meta:
-        model = models.Entry
+        model = models.ParentContact
         fields = ['first_name', 'last_name', 'email', 'phone_number',]
 
 class PieceForm(forms.ModelForm):
@@ -74,8 +74,6 @@ class LoginForm(forms.Form):
 class RegistrationForm(forms.Form):
 
     email = forms.CharField()
-    first_name = forms.CharField()
-    last_name = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
 
@@ -86,8 +84,6 @@ class RegistrationForm(forms.Form):
     helper.layout = Layout(
         Div(
             Div('email', css_class="container-fluid"),
-            Div('first_name', css_class="container-fluid"),
-            Div('last_name', css_class="container-fluid"),
             Div('password', css_class="container-fluid"),
             Div('password2', css_class="container-fluid"),
         ),

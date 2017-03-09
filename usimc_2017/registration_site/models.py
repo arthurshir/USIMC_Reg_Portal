@@ -31,17 +31,11 @@ BACH_AWARD = 'B'
 YOUNG_ARIST_AWARD = 'Y'
 
 # Age Choices
-_8_OR_UNDER = 8
-_9_OR_UNDER = 9
-_10_OR_UNDER = 10
-_11_OR_UNDER = 11
-_12_OR_UNDER = 12
-_13_OR_UNDER = 13
-_14_OR_UNDER = 14
-_15_OR_UNDER = 15
-_17_OR_UNDER = 17
-_22_OR_UNDER = 22
-_30_OR_UNDER = 30
+CATEGORY_A = 'A'
+CATEGORY_B = 'B'
+CATEGORY_C = 'C'
+CATEGORY_D = 'D'
+CATEGORY_E = 'E'
 
 # Performer Categories
 PERFORMER_SOLO_CATEGORIES = (
@@ -77,17 +71,11 @@ AWARD_CATEGORIES_DICT = dict(AWARD_CATEGORIES)
 
 # Age Categories
 AGE_CATEGORIES = (
-    (_8_OR_UNDER, 'Age 8 or under'),
-    (_9_OR_UNDER, 'Age 9 or under'),
-    (_10_OR_UNDER, 'Age 10 or under'),
-    (_11_OR_UNDER, 'Age 11 or under'),
-    (_12_OR_UNDER, 'Age 12 or under'),
-    (_13_OR_UNDER, 'Age 13 or under'),
-    (_14_OR_UNDER, 'Age 14 or under'),
-    (_15_OR_UNDER, 'Age 15 or under'),
-    (_17_OR_UNDER, 'Age 17 or under'),
-    (_22_OR_UNDER, 'Age 22 or under'),
-    (_30_OR_UNDER, 'Age 30 or under'),
+    (CATEGORY_A, 'A'),
+    (CATEGORY_B, 'B'),
+    (CATEGORY_C, 'C'),
+    (CATEGORY_D, 'D'),
+    (CATEGORY_E, 'E'),
 )
 AGE_CATEGORIES_DICT = dict(AGE_CATEGORIES)
 
@@ -133,18 +121,13 @@ class Entry(Model):
         CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES)
     )
     instrument_category = CharField(choices=PERFORMER_CATEGORIES, max_length=4)
-    age_category = IntegerField(choices=AGE_CATEGORIES)
+    age_category = CharField(choices=AGE_CATEGORIES, max_length=1)
     submitted = BooleanField(default=False)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
-
-    # Parent Contact Information
-    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
-    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email Address')
-    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
-
+    
     # Relations
+    parent_contact = OneToOneField('ParentContact', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Parent Contact")
     teacher = OneToOneField('Teacher', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Teacher")
     lead_performer = OneToOneField('Person', null=True, on_delete=CASCADE, related_name="entry", verbose_name='Lead Performer')
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
@@ -159,6 +142,19 @@ class Entry(Model):
 
     def __unicode__(self):
         return self.usimc_user.user.username + "\'s Entry for " + self.instrument_category + " created at: " + self.created_at.strftime('%Y-%m-%d %H:%M')
+
+class ParentContact(Model):
+    # Attributes
+    first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
+    last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
+    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email Address')
+    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+
+    created_at = DateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
+
+    class Meta:
+        default_related_name = 'parent_contact'
 
 class Piece(Model):
 

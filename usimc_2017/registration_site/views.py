@@ -22,7 +22,7 @@ piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'
 lead_competitor_form_prefix = 'competitor'
 teacher_form_prefix = 'teacher'
-contact_form_prefix = 'contact'
+parent_contact_form_prefix = 'contact'
 
 class IndexView(View):
     context = {}
@@ -86,8 +86,6 @@ class RegisterView(View):
             return redirect_register_view_error(request, 'Form not valid?')
         # Check if user exists
         email = request.POST.get('email', '')
-        first_name = request.POST.get('first_name', '')
-        last_name = request.POST.get('last_name', '')
         password = request.POST.get('password', '')
         password2 = request.POST.get('password2', '')
         if User.objects.filter(username=email).exists() > 0:
@@ -97,7 +95,7 @@ class RegisterView(View):
         if password != password2:
             return redirect_register_view_error(request, 'Passwords do not match')
         # Create User and corresponding USIMCUser instances
-        user = User.objects.create(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
+        user = User.objects.create(username=email, email=email, password=password)
         user.set_password(password)
         user.save()
         usimc_user = models.USIMCUser.objects.create(user=user)
@@ -135,13 +133,16 @@ class NewApplicationView(View):
         usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
         entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
 
-        # Create teacher, lead performer, and pieces
+        # Create Initial Relations
         entry.teacher = models.Teacher.objects.create()
         entry.lead_performer = models.Person.objects.create()
+        entry.parent_contact = models.ParentContact.objects.create()
         models.Piece.objects.create(entry = entry)
+        entry.save()
 
         # Ensemble
-        if instrument_category in models.PERFORMER_ENSEMBLE_CATEGORIES_DICT.values():
+        print models.PERFORMER_CATEGORIES_DICT[instrument_category], models.PERFORMER_ENSEMBLE_CATEGORIES_DICT.values()
+        if models.PERFORMER_CATEGORIES_DICT[instrument_category] in models.PERFORMER_ENSEMBLE_CATEGORIES_DICT.values():
             models.EnsembleMember.objects.create(entry = entry)
             return redirect('registration_site:edit_ensemble_application', pk=entry.id)
         else:
@@ -164,7 +165,75 @@ def get_piece(user, pk):
 def get_performer(user, pk):
     return models.Performer.objects.get(entry=get_entry(user, pk), pk=pk)[0]
 
+def edit_application_redirect(request, pk):
+    entry = get_entry(request.user, pk)
+    if models.PERFORMER_CATEGORIES_DICT[entry.instrument_category] in models.PERFORMER_ENSEMBLE_CATEGORIES_DICT.values():
+        return redirect('registration_site:edit_ensemble_application', pk=entry.id)
+    else:
+        return redirect('registration_site:edit_solo_application', pk=entry.id)
+
+
 class EditSoloApplicationView(View):
+    context = {}
+
+    def update_forms_and_formsets(self, request):
+        # Retrieve user and entry
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+
+        # Set forms
+        self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+
+    def get(self, request, *args, **kwargs):
+        self.update_forms_and_formsets(request)
+        return render(request, 'registration_site/edit_solo_application.html', self.context)
+
+    def post(self, request, *args, **kwargs):
+        # Retrieve user and entry
+        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+
+        # Collect forms
+        self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
+        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+
+        if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(),]):
+            return render(request, 'registration_site/edit_solo_application.html', self.context)
+        else:
+            # Update single instance objects
+            self.context['lead_competitor_form'].save()
+            self.context['teacher_form'].save()
+            self.context['contact_form'].save()
+
+            # Update Pieces
+            for form in self.context['piece_formset'].forms:
+                # only do stuff for forms in which is_checked is checked
+                if form.cleaned_data.get('is_checked'):
+                    if action == u'delete':
+                        # Call save to get actual model, then delete
+                        model_instance = form.save(commit=False)
+                        model_instance.delete()
+                    if action == u'save':
+                        # Call save to get actual model (or not), then update (or create)
+                        model_instance = form.save(commit = False)
+                        model_instance.entry = entry
+                        model_instance.save()
+
+
+            # Refresh with new forms
+            self.update_forms_and_formsets(request)
+            return render(request, 'registration_site/edit_solo_application.html', self.context)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(EditSoloApplicationView, self).dispatch(*args, **kwargs)
+
+class EditEnsembleApplicationView(View):
     context = {}
 
     def update_forms_and_formsets(self, request):
@@ -173,34 +242,12 @@ class EditSoloApplicationView(View):
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
         self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
-        self.context['contact_form'] = forms.EntryContactForm(prefix=teacher_form_prefix, instance=entry)
+        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry)
+        self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all())
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
-        return render(request, 'registration_site/edit_solo_application.html', self.context)
-
-    def post(self, request, *args, **kwargs):
-        return render(request, 'registration_site/edit_solo_application.html', self.context)
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(EditSoloApplicationView, self).dispatch(*args, **kwargs)
-
-class EditApplicationView(View):
-    context = {}
-
-    def update_forms_and_formsets(self, request):
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
-        self.context['piece_formset'] = self.PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
-        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
-        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
-        self.context['contact_form'] = forms.EntryContactForm(prefix=teacher_form_prefix, instance=entry)
-        self.context['ensemble_member_formset'] = forms.EnsembleMemberForm(prefix=ensemble_member_formset, queryset=entry.ensemble_members)
-
-    def get(self, request, *args, **kwargs):
-        self.update_forms_and_formsets(request)
-        return render(request, 'registration_site/edit_application.html', self.context)
+        return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
     def post(self, request, *args, **kwargs):
         piecesFormset = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -237,7 +284,7 @@ class EditApplicationView(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(EditApplicationView, self).dispatch(*args, **kwargs)
+        return super(EditEnsembleApplicationView, self).dispatch(*args, **kwargs)
 
 class EditPerformersView(View):
     context = {}
