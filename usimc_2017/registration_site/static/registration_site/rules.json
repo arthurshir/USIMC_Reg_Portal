@@ -1,4 +1,11 @@
 {
+  "age_group_names": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
   "age_measurement_date": 1496275200,
   "instrument_categories": { 
     "piano": {
@@ -117,6 +124,18 @@
       "max_pieces": 4,
       "max_length": 6
     },
+    "chinese_traditional_instruments_ensemble": {
+      "name": "Chinese Traditional Instruments Ensemble",
+      "ensemble": {
+        "max_competitors": 7
+      },
+      "age_groups": [
+        15,
+        30
+      ],
+      "max_pieces": 4,
+      "max_length": 6
+    },
     "chamber_ensemble": {
       "name": "Chamber Ensemble",
       "ensemble": {
@@ -133,18 +152,6 @@
       "name": "Vocal Ensemble",
       "ensemble": {
         "max_competitors": 6
-      },
-      "age_groups": [
-        15,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6
-    },
-    "chinese_traditional_instruments_ensemble": {
-      "name": "Chinese Traditional Instruments Ensemble",
-      "ensemble": {
-        "max_competitors": 7
       },
       "age_groups": [
         15,

@@ -86,7 +86,7 @@ class Entry(Model):
     awards_applying_for = ArrayField(
         CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES)
     )
-    instrument_category = CharField(choices=usimc_rules.INSTRUMENT_CATEGORY_CHOICES, max_length=4)
+    instrument_category = CharField(choices=usimc_rules.INSTRUMENT_CATEGORY_CHOICES, max_length=100)
     age_category = CharField(choices=AGE_CATEGORIES, max_length=1)
     submitted = BooleanField(default=False)
     created_at = DateTimeField(default=timezone.now)

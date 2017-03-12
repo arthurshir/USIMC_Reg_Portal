@@ -1,54 +1,30 @@
 $(document).ready(function() {
+  // Collect rules
+  var rules;
+  $.getJSON( "/static/registration_site/rules.json", function( data ) {
+    rules = data;
+    console.log(rules);
+  });
 
-
-  import json
-
-  data = open('/static/rules.json').read() #opens the json file and saves the raw contents
-  jsonData = json.dumps(data) #converts to a json structure
-
-  VIOLA = 'VA' // Not 4, 5
-  CELLO = 'CE' // Not 5
-
-  // All not 3, 4, 5
-  CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE = 'CNE'
-  CHAMBER_ENSEMBLE = 'CHE'
-  VOCAL_ENSEMBLE = 'VOE'
-
+  // When instrument is chosen, set available options accordingly
   $('#id_instrument_category').change(function() {
-      // TODO: Change this to a more easily changed / dynamic
-      if (
-          ( $(this).val() === 'VA' ) ||
-          ( $(this).val() === 'CE' ) ||
-          ( $(this).val() === 'CNE' ) ||
-          ( $(this).val() === 'CHE' ) ||
-          ( $(this).val() === 'VOE' )
-        ) {
-
-        // Enable all
-        enable_all_age_options();
-
-        // Set specific rules
-        if ( $(this).val() === 'VA' ) {
-          toggle_age_option("D", false);
-          toggle_age_option("E", false);
-        } else if ( $(this).val() === 'CE' ) {
-          toggle_age_option("E", false);
-        } else {
-          toggle_age_option("C", false);
-          toggle_age_option("D", false);
-          toggle_age_option("E", false);
-        }
+    if ( rules != null && rules['instrument_categories'][$(this).val()]['age_groups'].length < rules['age_group_names'].length) {
+      // Disable all
+      toggle_all_age_options(false);
+      // Toggle 
+      for (index in rules['instrument_categories'][$(this).val()]['age_groups']) {
+        toggle_age_option(rules['age_group_names'][index], true)
+      }
     } else {
-      enable_all_age_options();
+      toggle_all_age_options(true);
     }
   });
 
-  function enable_all_age_options() {
+  function toggle_all_age_options(enabled) {
     $("select#id_age_category option").map(function() {return $(this).val();}).get().
       forEach( function(option) { 
         if (option) {
-          console.log(option);
-          toggle_age_option(option, true);
+          toggle_age_option(option, enabled);
         }
     })
   }
