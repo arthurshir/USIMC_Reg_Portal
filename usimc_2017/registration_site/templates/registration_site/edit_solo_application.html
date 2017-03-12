@@ -47,13 +47,17 @@
                         {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                       </td>
                       <td>
-                        {{ form.title.label_tag}}
+                        {{ form.title.label_tag }}
                         {{ form.title }}
-                        {{ form.composer.label_tag}}
+                        {{ form.opus.label_tag }}
+                        {{ form.opus }}
+                        {{ form.movement.label_tag }}
+                        {{ form.movement }}
+                        {{ form.composer.label_tag }}
                         {{ form.composer }}
-                        {{ form.catalogue.label_tag}}
-                        {{ form.catalogue }}
-                        {{ form.is_chinese.label_tag}}
+                        {{ form.length.label_tag }}
+                        {{ form.length }}
+                        {{ form.is_chinese.label_tag }}
                         {{ form.is_chinese }}
                       </td>
                   </tr>

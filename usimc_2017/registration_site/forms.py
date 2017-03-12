@@ -25,7 +25,13 @@ class PieceForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = models.Person
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'address', 'city', 'state', 'zip_code', 'country',]
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'birthday']
+    birthday = forms.DateField(
+        widget=forms.SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+            years=range(1980, 2017),
+        ),
+    )
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
@@ -43,7 +49,12 @@ class TeacherForm(forms.ModelForm):
 class EnsembleMemberForm(forms.ModelForm):
     class Meta:
         model = models.EnsembleMember
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'instrument',]
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday']
+    birthday = forms.DateField(
+        widget=forms.SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        ),
+    )
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

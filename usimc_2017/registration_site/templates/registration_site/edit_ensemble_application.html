@@ -5,7 +5,7 @@
 <!-- Head -->
 {% block head %}
 <script src="{% static 'registration_site/jquery.formset.js' %}"></script>
-<script src="{% static 'registration_site/edit_application.js' %}"></script>
+<script src="{% static 'registration_site/edit_ensemble_application.js' %}"></script>
 {% endblock %}
 
 <!-- Title -->
@@ -39,7 +39,7 @@
           {{ lead_competitor_form|crispy }}
 
           <h3>Performers</h3>
-          <table id="performer-table" border="0" cellpadding="0" cellspacing="0">
+          <table id="ensemble-member-table" border="0" cellpadding="0" cellspacing="0">
               <tbody>
                   {% for form in ensemble_member_formset.forms %}
                   <tr>
@@ -50,8 +50,6 @@
                       <td>
                         {{ form.first_name.label_tag }}
                         {{ form.first_name }}
-                        {{ form.middle_name.label_tag }}
-                        {{ form.middle_name }}
                         {{ form.last_name.label_tag }}
                         {{ form.last_name }}
                         {{ form.email.label_tag }}
@@ -60,21 +58,15 @@
                         {{ form.phone_number }}
                         {{ form.instrument.label_tag }}
                         {{ form.instrument }}
-                        {{ form.teacher_first_name.label_tag }}
-                        {{ form.teacher_first_name }}
-                        {{ form.teacher_middle_name.label_tag }}
-                        {{ form.teacher_middle_name }}
-                        {{ form.teacher_last_name.label_tag }}
-                        {{ form.teacher_last_name }}
-                        {{ form.teacher_code.label_tag }}
-                        {{ form.teacher_code }}
+                        {{ form.birthday.label_tag }}
+                        {{ form.birthday }}
                       </td>
                   </tr>
                   {% endfor %}
               </tbody>
           </table>
           <div>
-            {{ performer_formset.management_form }}
+            {{ ensemble_member_formset.management_form }}
           </div>
 
           <h3>Pieces</h3>
@@ -87,13 +79,17 @@
                         {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                       </td>
                       <td>
-                        {{ form.title.label_tag}}
+                        {{ form.title.label_tag }}
                         {{ form.title }}
-                        {{ form.composer.label_tag}}
+                        {{ form.opus.label_tag }}
+                        {{ form.opus }}
+                        {{ form.movement.label_tag }}
+                        {{ form.movement }}
+                        {{ form.composer.label_tag }}
                         {{ form.composer }}
-                        {{ form.catalogue.label_tag}}
-                        {{ form.catalogue }}
-                        {{ form.is_chinese.label_tag}}
+                        {{ form.length.label_tag }}
+                        {{ form.length }}
+                        {{ form.is_chinese.label_tag }}
                         {{ form.is_chinese }}
                       </td>
                   </tr>

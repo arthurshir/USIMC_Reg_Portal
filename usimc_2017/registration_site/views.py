@@ -16,7 +16,7 @@ import django_excel as excel
 import csv
 
 PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
-EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument',])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'
@@ -130,7 +130,7 @@ class NewApplicationView(View):
         awards_applying_for = form.cleaned_data['awards_applying_for']
         instrument_category = form.cleaned_data['instrument_category']
         age_category = form.cleaned_data['age_category']
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        usimc_user = get_usimc_user(request.user)
         entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
 
         # Create Initial Relations
@@ -178,8 +178,8 @@ class EditSoloApplicationView(View):
 
     def update_forms_and_formsets(self, request):
         # Retrieve user and entry
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
 
         # Set forms
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
@@ -193,8 +193,8 @@ class EditSoloApplicationView(View):
 
     def post(self, request, *args, **kwargs):
         # Retrieve user and entry
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -211,19 +211,12 @@ class EditSoloApplicationView(View):
             self.context['contact_form'].save()
 
             # Update Pieces
-            for form in self.context['piece_formset'].forms:
-                # only do stuff for forms in which is_checked is checked
-                if form.cleaned_data.get('is_checked'):
-                    if action == u'delete':
-                        # Call save to get actual model, then delete
-                        model_instance = form.save(commit=False)
-                        model_instance.delete()
-                    if action == u'save':
-                        # Call save to get actual model (or not), then update (or create)
-                        model_instance = form.save(commit = False)
-                        model_instance.entry = entry
-                        model_instance.save()
-
+            instances = self.context['piece_formset'].save(commit=False)
+            for instance in self.context['piece_formset'].deleted_objects:
+                instance.delete()
+            for instance in instances:
+                instance.entry = entry
+                instance.save() 
 
             # Refresh with new forms
             self.update_forms_and_formsets(request)
@@ -237,8 +230,11 @@ class EditEnsembleApplicationView(View):
     context = {}
 
     def update_forms_and_formsets(self, request):
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
-        entry = usimc_user.entry.get(pk=self.kwargs['pk'])
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Set Forms
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
         self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
@@ -250,37 +246,44 @@ class EditEnsembleApplicationView(View):
         return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
     def post(self, request, *args, **kwargs):
-        piecesFormset = PieceFormset(request.POST, prefix=piece_formset_prefix)
-        ensembleMemberFormset = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
-        # print piecesFormset.data
-        # if all([piecesFormset.is_valid(), performersFormset.is_valid()]):
-        #     for form in piecesFormset:
-        #         if form.cleaned_data.get('DELETE'):
-        #             try:
-        #                 piece = form.instance
-        #                 piece.delete()
-        #             except ObjectDoesNotExist:
-        #                 pass
-        #         else:
-        #             piece = form.save(commit=False)
-        #             piece.entry = get_entry(request.user, self.kwargs['pk'])
-        #             piece.save()
-        #     for form in performersFormset:
-        #         if form.cleaned_data.get('DELETE'):
-        #             try:
-        #                 performer = form.instance
-        #                 performer.delete()
-        #             except ObjectDoesNotExist:
-        #                 pass
-        #         else:
-        #             performer = form.save(commit=False)
-        #             performer.entry = get_entry(request.user, self.kwargs['pk'])
-        #             performer.save()
-        # else:
-        #     print piecesFormset.errors
-        #     print performersFormset.errors
-        # self.update_forms_and_formsets(request)
-        return render(request, 'registration_site/edit_application.html', self.context)
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Collect forms
+        self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
+        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+        self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
+
+        if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), self.context['ensemble_member_formset'].is_valid()]):
+            return render(request, 'registration_site/edit_ensemble_application.html', self.context)
+        else:
+            # Update single instance objects
+            self.context['lead_competitor_form'].save()
+            self.context['teacher_form'].save()
+            self.context['contact_form'].save()
+
+            # Update pieces
+            instances = self.context['piece_formset'].save(commit=False)
+            for instance in self.context['piece_formset'].deleted_objects:
+                instance.delete()
+            for instance in instances:
+                instance.entry = entry
+                instance.save() 
+
+            # Update ensemble members
+            instances = self.context['ensemble_member_formset'].save(commit=False)
+            for instance in self.context['ensemble_member_formset'].deleted_objects:
+                instance.delete()
+            for instance in instances:
+                instance.entry = entry
+                instance.save() 
+
+            # Refresh with new forms and render
+            self.update_forms_and_formsets(request)
+            return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -291,7 +294,7 @@ class EditPerformersView(View):
 
     # Create Formset
     def get_formset(self, request):
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        usimc_user = get_usimc_user(request.user)
         entry = usimc_user.entry.all()[0]
         return self.PersonFormset(queryset=models.Person.objects.filter(entry=entry))
 
@@ -325,7 +328,7 @@ class ApplicationListView(View):
     context['entries'] = []
 
     def get(self, request):
-        usimc_user = models.USIMCUser.objects.filter(user=request.user)[0]
+        usimc_user = get_usimc_user(request.user)
         self.context['entries'] = usimc_user.entry.all().order_by('created_at')
         return render(request, 'registration_site/application_list.html', self.context)
 

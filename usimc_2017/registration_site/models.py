@@ -201,6 +201,7 @@ class Person(Model):
     state = CharField(null=True, blank=True, max_length=200)
     zip_code = CharField(null=True, blank=True, max_length=200)
     country = CharField(null=True, blank=True, max_length=200)
+    birthday = DateField(null=True, blank=True)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
@@ -216,6 +217,7 @@ class EnsembleMember(Model):
     email = EmailField(null=True, blank=True, verbose_name='Email')
     phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
     instrument = CharField(null=True, blank=True, max_length=200)
+    birthday = DateField(null=True, blank=True)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
