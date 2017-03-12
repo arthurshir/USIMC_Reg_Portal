@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
+
+  import json
+
+  data = open('/static/rules.json').read() #opens the json file and saves the raw contents
+  jsonData = json.dumps(data) #converts to a json structure
+
   VIOLA = 'VA' // Not 4, 5
   CELLO = 'CE' // Not 5
 

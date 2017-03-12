@@ -27,4 +27,7 @@ urlpatterns = [
     url(r'^admin/login/', views.AdminLoginView.as_view(), name='admin_register'),
     url(r'^admin/download-entries/', views.DownloadEntriesView.as_view(), name='download_entries'),
     url(r'^admin/dashboard/', views.DownloadEntriesView.as_view(), name='admin_dashboard'),
+
+    # Info
+    url(r'^info/rules.json$', views.rules_json, name='rules_json'),
 ]

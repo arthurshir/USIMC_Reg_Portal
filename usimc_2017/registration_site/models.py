@@ -5,24 +5,12 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 import datetime
+import usimc_rules
 
 #
 # Choices
 #
 
-# Performer Choices
-PIANO = 'PI'
-VIOLIN = 'VN'
-VIOLA = 'VA'
-CELLO = 'CE'
-CHINESE_TRADITIONAL_INSTRUMENTS = 'CN'
-MARIMBA = 'MA'
-FLUTE = 'FL'
-CLARINET = 'CL'
-VOCAL = 'VO'
-CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE = 'CNE'
-CHAMBER_ENSEMBLE = 'CHE'
-VOCAL_ENSEMBLE = 'VOE'
 
 # Award Choices
 CHINESE_AWARD = 'C'
@@ -37,28 +25,6 @@ CATEGORY_C = 'C'
 CATEGORY_D = 'D'
 CATEGORY_E = 'E'
 
-# Performer Categories
-PERFORMER_SOLO_CATEGORIES = (
-    (PIANO, 'Piano'),
-    (VIOLIN, 'Violin'),
-    (VIOLA, 'Viola'),
-    (CELLO, 'Cello'),
-    (MARIMBA, 'Marimba'),
-    (FLUTE, 'Flute'),
-    (CLARINET, 'Clarinet'),
-    (VOCAL, 'Vocal'),
-    (CHINESE_TRADITIONAL_INSTRUMENTS, 'Chinese Traditional Instruments'),
-)
-PERFORMER_ENSEMBLE_CATEGORIES = (
-    (CHAMBER_ENSEMBLE, 'Chamber Ensemble'),
-    (VOCAL_ENSEMBLE, 'Vocal Ensemble'),
-    (CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE, 'Chinese Traditional Instruments Ensemble'),
-)
-PERFORMER_CATEGORIES = PERFORMER_SOLO_CATEGORIES + PERFORMER_ENSEMBLE_CATEGORIES
-
-PERFORMER_CATEGORIES_DICT = dict(PERFORMER_CATEGORIES)
-PERFORMER_SOLO_CATEGORIES_DICT = dict(PERFORMER_SOLO_CATEGORIES)
-PERFORMER_ENSEMBLE_CATEGORIES_DICT = dict(PERFORMER_ENSEMBLE_CATEGORIES)
 
 # Award Categories
 AWARD_CATEGORIES = (
@@ -120,7 +86,7 @@ class Entry(Model):
     awards_applying_for = ArrayField(
         CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES)
     )
-    instrument_category = CharField(choices=PERFORMER_CATEGORIES, max_length=4)
+    instrument_category = CharField(choices=usimc_rules.INSTRUMENT_CATEGORY_CHOICES, max_length=4)
     age_category = CharField(choices=AGE_CATEGORIES, max_length=1)
     submitted = BooleanField(default=False)
     created_at = DateTimeField(default=timezone.now)
