@@ -20,6 +20,26 @@
   Edit Application
 {% endblock %}
 {% block form %}
+  <div class="info-div">
+    <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <td colspan="3">Entry Information</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Instrument Category</td>
+          <td colspan="2">{{ entry_instrument_category }}</td>
+        </tr>
+        <tr>
+          <td>Age Category</td>
+          <td>{{ entry.age_category }}</td>
+          <td>below {{ entry_age_category_years }} years old</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="flex-start">
     <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
   </div>

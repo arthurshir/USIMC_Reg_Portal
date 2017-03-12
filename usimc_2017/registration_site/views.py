@@ -16,9 +16,10 @@ import django_excel as excel
 import csv
 import usimc_rules
 from django.http import JsonResponse
+import datetime
 
 PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
-EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday'])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'
@@ -143,8 +144,7 @@ class NewApplicationView(View):
         entry.save()
 
         # Ensemble
-        print usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT[instrument_category], usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values()
-        if usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT[instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values():
+        if usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values():
             models.EnsembleMember.objects.create(entry = entry)
             return redirect('registration_site:edit_ensemble_application', pk=entry.id)
         else:
@@ -169,7 +169,7 @@ def get_performer(user, pk):
 
 def edit_application_redirect(request, pk):
     entry = get_entry(request.user, pk)
-    if usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT[entry.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values():
+    if usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values():
         return redirect('registration_site:edit_ensemble_application', pk=entry.id)
     else:
         return redirect('registration_site:edit_solo_application', pk=entry.id)
@@ -189,6 +189,11 @@ class EditSoloApplicationView(View):
         self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
 
+        # Set other
+        self.context['entry'] = entry
+        self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
+        self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_solo_application.html', self.context)
@@ -204,9 +209,20 @@ class EditSoloApplicationView(View):
         self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
 
+        # Check all forms are valid
         if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(),]):
             return render(request, 'registration_site/edit_solo_application.html', self.context)
         else:
+            # Birthday validation
+            years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+            birthday = self.context['lead_competitor_form'].cleaned_data['birthday']
+            cutoff = usimc_rules.get_age_measurement_date()
+            cutoff = cutoff.replace(year=cutoff.year - years).date() # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
+            if birthday < cutoff:
+                self.context['lead_competitor_form'].add_error('birthday',
+                    "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+                return render(request, 'registration_site/edit_solo_application.html', self.context)
+
             # Update single instance objects
             self.context['lead_competitor_form'].save()
             self.context['teacher_form'].save()
@@ -243,6 +259,11 @@ class EditEnsembleApplicationView(View):
         self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry)
         self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all())
 
+        # Set other
+        self.context['entry'] = entry
+        self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
+        self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
         return render(request, 'registration_site/edit_ensemble_application.html', self.context)
@@ -262,6 +283,23 @@ class EditEnsembleApplicationView(View):
         if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), self.context['ensemble_member_formset'].is_valid()]):
             return render(request, 'registration_site/edit_ensemble_application.html', self.context)
         else:
+            # Validate birthdays
+            invalid_birthday_detected = False
+            forms_to_check = [self.context['lead_competitor_form']]
+            forms_to_check += self.context['ensemble_member_formset'].forms
+            for form in forms_to_check:
+                years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+                birthday = form.cleaned_data['birthday']
+                print birthday
+                cutoff = usimc_rules.get_age_measurement_date()
+                cutoff = cutoff.replace(year=cutoff.year - years).date() # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
+                if birthday < cutoff:
+                    invalid_birthday_detected = True
+                    form.add_error('birthday',
+                        "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+            if invalid_birthday_detected:
+                return render(request, 'registration_site/edit_ensemble_application.html', self.context)
+
             # Update single instance objects
             self.context['lead_competitor_form'].save()
             self.context['teacher_form'].save()

@@ -53,6 +53,7 @@ class EnsembleMemberForm(forms.ModelForm):
     birthday = forms.DateField(
         widget=forms.SelectDateWidget(
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
+            years=range(1980, 2017),
         ),
     )
 
@@ -60,6 +61,7 @@ class EnsembleMemberForm(forms.ModelForm):
     helper.form_class = 'form-horizontal'
     helper.field_template = 'bootstrap3/layout/inline_field.html'
     helper.form_method = 'POST'
+
 
 class LoginForm(forms.Form):
     email = forms.CharField()

@@ -2,6 +2,7 @@ import json
 import os
 from pprint import pprint
 import string
+import datetime
 
 # Define folder paths
 folder_path = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +23,6 @@ INSTRUMENT_SOLO_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_SOLO_CATEGORY_CHOICES)
 INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES)
 INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
 
-print INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES
-print INSTRUMENT_SOLO_CATEGORY_CHOICES
-
 # Basic retrieval functions
 def print_data():
   pprint(data)
@@ -33,10 +31,17 @@ def get_instrument_category(instrument):
   print data['instrument_categories'][instrument]
 
 def get_instrument_category_age_rules(instrument):
-  return map(
-    lambda age_tuple: (string.lowercase[age_tuple[0]].upper(), age_tuple[1]),
-    list(enumerate(data['instrument_categories'][instrument]['age_groups']))
-    )
+  # print data['instrument_categories'][instrument]['age_groups']
+  # for index, age in enumerate(data['instrument_categories'][instrument]['age_groups']):
+  #   print index, age
+
+  return dict( (data['age_group_names'][index], age) for index, age in enumerate(data['instrument_categories'][instrument]['age_groups']))
+
+def get_age_measurement_date_epoch():
+  return data['age_measurement_cutoff_date']
+
+def get_age_measurement_date():
+  return datetime.datetime.fromtimestamp(data['age_measurement_date'])
 
 def get_instrument_category_choices():
   return map(

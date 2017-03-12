@@ -20,7 +20,26 @@
   Edit Application
 {% endblock %}
 {% block form %}
-
+  <div class="info-div">
+    <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <td colspan="3">Entry Information</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Instrument Category</td>
+          <td colspan="2">{{ entry_instrument_category }}</td>
+        </tr>
+        <tr>
+          <td>Age Category</td>
+          <td>{{ entry.age_category }}</td>
+          <td>below {{ entry_age_category_years }} years old</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="flex-start">
     <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
   </div>
@@ -44,21 +63,56 @@
                   {% for form in ensemble_member_formset.forms %}
                   <tr>
                       <td>
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
                         {{ form.id }}
                         {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                       </td>
                       <td>
                         {{ form.first_name.label_tag }}
+                        {% for error in form.first_name.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.first_name }}
                         {{ form.last_name.label_tag }}
+                        {% for error in form.last_name.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.last_name }}
                         {{ form.email.label_tag }}
+                        {% for error in email.label_tag.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.email }}
                         {{ form.phone_number.label_tag }}
+                        {% for error in form.phone_number.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.phone_number }}
                         {{ form.instrument.label_tag }}
+                        {% for error in form.instrument.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.instrument }}
                         {{ form.birthday.label_tag }}
+                        {% for error in form.birthday.errors %}
+                          <div class="alert alert-danger">
+                            <strong>{{error|escape}}</strong>
+                          </div>
+                        {% endfor %}
                         {{ form.birthday }}
                       </td>
                   </tr>
