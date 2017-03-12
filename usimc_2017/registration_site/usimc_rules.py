@@ -23,6 +23,10 @@ INSTRUMENT_SOLO_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_SOLO_CATEGORY_CHOICES)
 INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES)
 INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
 
+KEY_PRICING_YES_CMTANC = 'per_contestant_yes_cmtanc'
+KEY_PRICING_NO_CMTANC = 'per_contestant_no_cmtanc'
+KEY_PRICING_YES_INTERNATIONAL = 'per_contestant_yes_international'
+
 # Basic retrieval functions
 def print_data():
   pprint(data)
@@ -48,5 +52,8 @@ def get_instrument_category_choices():
     lambda x: str(x),
     data['instrument_categories'].keys()
     )
+
+def get_instrument_category_prices(instrument):
+  return data['instrument_categories'][instrument]['pricing']
 
 # print get_instrument_category_choices()

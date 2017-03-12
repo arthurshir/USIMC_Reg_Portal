@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import django_excel as excel
 import csv
 import usimc_rules
+import usimc_data
 from django.http import JsonResponse
 import datetime
 
@@ -179,9 +180,10 @@ class EditSoloApplicationView(View):
     context = {}
 
     def update_forms_and_formsets(self, request):
-        # Retrieve user and entry
+        # Retrieve user and entry, and other
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
+        pricing_dict = usimc_rules.get_instrument_category_prices(entry.instrument_category)
 
         # Set forms
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
@@ -193,6 +195,7 @@ class EditSoloApplicationView(View):
         self.context['entry'] = entry
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
         self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+        self.context['calculated_price'] = usimc_rules.get_instrument_category_prices(entry.instrument_category)
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
@@ -221,6 +224,16 @@ class EditSoloApplicationView(View):
             if birthday < cutoff:
                 self.context['lead_competitor_form'].add_error('birthday',
                     "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+                return render(request, 'registration_site/edit_solo_application.html', self.context)
+
+            # CMTANC code validation
+            cmtanc_codes = usimc_data.get_cmtanc_codes()
+            input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
+            print input_cmtanc_code, cmtanc_codes
+            print input_cmtanc_code in cmtanc_codes
+            if (input_cmtanc_code and input_cmtanc_code not in cmtanc_codes):
+                print "invalid code"
+                self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')
                 return render(request, 'registration_site/edit_solo_application.html', self.context)
 
             # Update single instance objects
@@ -416,7 +429,6 @@ class AdminLoginView(View):
         else:
             messages.warning(request, 'Form not Valid?', extra_tags='login')
             return redirect('registration_site:login')
-
 
 class DownloadEntriesView(View ):
 
