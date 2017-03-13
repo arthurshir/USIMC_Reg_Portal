@@ -19,7 +19,7 @@ import usimc_data
 from django.http import JsonResponse
 import datetime
 
-PieceFormset = modelformset_factory(models.Piece, max_num=3, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
+PieceFormset = modelformset_factory(models.Piece, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
 EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
@@ -134,8 +134,9 @@ class NewApplicationView(View):
         awards_applying_for = form.cleaned_data['awards_applying_for']
         instrument_category = form.cleaned_data['instrument_category']
         age_category = form.cleaned_data['age_category']
+        is_not_international = form.cleaned_data['is_not_international']
         usimc_user = get_usimc_user(request.user)
-        entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
+        entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user, is_not_international=is_not_international)
 
         # Create Initial Relations
         entry.teacher = models.Teacher.objects.create()
@@ -183,7 +184,6 @@ class EditSoloApplicationView(View):
         # Retrieve user and entry, and other
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
-        pricing_dict = usimc_rules.get_instrument_category_prices(entry.instrument_category)
 
         # Set forms
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
@@ -195,7 +195,7 @@ class EditSoloApplicationView(View):
         self.context['entry'] = entry
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
         self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
-        self.context['calculated_price'] = usimc_rules.get_instrument_category_prices(entry.instrument_category)
+        self.context['calculated_price'] = entry.calculate_price()
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
@@ -276,6 +276,7 @@ class EditEnsembleApplicationView(View):
         self.context['entry'] = entry
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
         self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+        self.context['calculated_price'] = entry.calculate_price()
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)

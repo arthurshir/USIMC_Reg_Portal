@@ -6,6 +6,12 @@
     "D",
     "E"
   ],
+  "awards": {
+    "young_artist_award": "Young Artist Award",
+    "chinese_award": "Chinese Award",
+    "bach_award": "Bach Award",
+    "jv_award": "J.V. Award"
+  },
   "age_measurement_date": 1496275200,
   "instrument_categories": { 
     "piano": {

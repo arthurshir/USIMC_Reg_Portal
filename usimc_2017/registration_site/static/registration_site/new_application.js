@@ -4,7 +4,10 @@ $(document).ready(function() {
   $.getJSON( "/static/registration_site/rules.json", function( data ) {
     rules = data;
     console.log(rules);
+    // $('#id_instrument_category').value = $('#id_instrument_category').value;
   });
+
+
 
   // When instrument is chosen, set available options accordingly
   $('#id_instrument_category').change(function() {

@@ -37,6 +37,10 @@
           <td>{{ entry.age_category }}</td>
           <td>below {{ entry_age_category_years }} years old</td>
         </tr>
+        <tr>
+          <td>Price</td>
+          <td colspan="2">${{ calculated_price }} for {{ entry.ensemble_members.all|length|add:1 }} contestants</td>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -23,6 +23,10 @@ INSTRUMENT_SOLO_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_SOLO_CATEGORY_CHOICES)
 INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES)
 INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
 
+AGE_CATEGORY_CHOICES = tuple(((str(x), str(x)) for x in data['age_group_names']))
+
+AWARD_CHOICES = tuple(((str(x), data['awards'][x]) for x in data['awards']))
+
 KEY_PRICING_YES_CMTANC = 'per_contestant_yes_cmtanc'
 KEY_PRICING_NO_CMTANC = 'per_contestant_no_cmtanc'
 KEY_PRICING_YES_INTERNATIONAL = 'per_contestant_yes_international'

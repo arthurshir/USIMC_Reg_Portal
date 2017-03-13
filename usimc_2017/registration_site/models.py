@@ -8,44 +8,6 @@ import datetime
 import usimc_rules
 
 #
-# Choices
-#
-
-
-# Award Choices
-CHINESE_AWARD = 'C'
-JV_AWARD = 'J'
-BACH_AWARD = 'B'
-YOUNG_ARIST_AWARD = 'Y'
-
-# Age Choices
-CATEGORY_A = 'A'
-CATEGORY_B = 'B'
-CATEGORY_C = 'C'
-CATEGORY_D = 'D'
-CATEGORY_E = 'E'
-
-
-# Award Categories
-AWARD_CATEGORIES = (
-    (YOUNG_ARIST_AWARD, 'Young Artist Award'),
-    (CHINESE_AWARD, 'Chinese Award'),
-    (BACH_AWARD, 'Bach Award'),
-    (JV_AWARD, 'J.V. Award'),
-)
-AWARD_CATEGORIES_DICT = dict(AWARD_CATEGORIES)
-
-# Age Categories
-AGE_CATEGORIES = (
-    (CATEGORY_A, 'A'),
-    (CATEGORY_B, 'B'),
-    (CATEGORY_C, 'C'),
-    (CATEGORY_D, 'D'),
-    (CATEGORY_E, 'E'),
-)
-AGE_CATEGORIES_DICT = dict(AGE_CATEGORIES)
-
-#
 # Custom Fields
 #
 class AutoDateTimeField(DateTimeField):
@@ -84,13 +46,14 @@ class Entry(Model):
     # Attribs
 
     awards_applying_for = ArrayField(
-        CharField( max_length=1, verbose_name='Awards Applying For', choices=AWARD_CATEGORIES)
+        CharField( max_length=20, verbose_name='Awards Applying For', choices=usimc_rules.AWARD_CHOICES)
     )
     instrument_category = CharField(choices=usimc_rules.INSTRUMENT_CATEGORY_CHOICES, max_length=100)
-    age_category = CharField(choices=AGE_CATEGORIES, max_length=1)
-    submitted = BooleanField(default=False)
+    age_category = CharField(choices=usimc_rules.AGE_CATEGORY_CHOICES, max_length=1)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
+    submitted = BooleanField(default=False)
+    is_not_international = BooleanField(default=False)
     
     # Relations
     parent_contact = OneToOneField('ParentContact', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Parent Contact")
@@ -98,10 +61,30 @@ class Entry(Model):
     lead_performer = OneToOneField('Person', null=True, on_delete=CASCADE, related_name="entry", verbose_name='Lead Performer')
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
     # Pieces Performing -- Pieces Foreign Key
-    # Applicants -- Ensember Members Foreign Key
+    # Applicants -- Ensemble Members Foreign Key
 
     # Managers
     objects = EntryManager()
+
+    # Functions
+    def calculate_price(self):
+        price_per_competitor = 0
+        total = 0
+        pricing_dict = usimc_rules.get_instrument_category_prices(self.instrument_category)
+        # If International
+        if not self.is_not_international:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_INTERNATIONAL]
+        # If CMTANC
+        elif self.teacher.cmtanc_code:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_CMTANC]
+        # If not CMTANC
+        else:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
+        total = price_per_competitor
+        # if len(self.ensemble_members.all()):
+        print len(self.ensemble_members.all())*price_per_competitor, total
+        total += len(self.ensemble_members.all())*price_per_competitor
+        return total
 
     class Meta:
         default_related_name =  'entries'

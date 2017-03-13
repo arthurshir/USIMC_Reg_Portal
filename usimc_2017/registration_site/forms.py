@@ -1,5 +1,6 @@
 from django import forms
 from . import models
+import usimc_rules
 
 from crispy_forms.helper import *
 from crispy_forms.layout import *
@@ -8,9 +9,12 @@ from crispy_forms.layout import *
 class EntryForm(forms.ModelForm):
     class Meta:
         model = models.Entry
-        fields = ['awards_applying_for', 'instrument_category', 'age_category']
+        fields = ['awards_applying_for', 'instrument_category', 'age_category', 'is_not_international']
+        labels = {
+            'is_not_international': 'Does at least one of your competitors live in the United States'
+            }
 
-    awards_applying_for = forms.MultipleChoiceField(choices=models.AWARD_CATEGORIES, widget=forms.CheckboxSelectMultiple)
+    awards_applying_for = forms.MultipleChoiceField(choices=usimc_rules.AWARD_CHOICES, widget=forms.CheckboxSelectMultiple)
 
 class ParentContactForm(forms.ModelForm):
     class Meta:
