@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'registration_site',
     'crispy_forms',
     'django_excel',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,5 @@ LOGIN_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+# https://github.com/stefanfoulis/django-phonenumber-field
+# PHONENUMBER_DB_FORMAT = 'NATIONAL'

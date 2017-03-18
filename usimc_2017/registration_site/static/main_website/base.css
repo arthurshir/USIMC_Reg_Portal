@@ -1,3 +1,39 @@
+.side-bar {
+  width: 260px;
+  background-color: #54577F;
+  padding: 20px; }
+
+.form-section-header {
+  font-size: 20px;
+  margin-left: 2px;
+  font-weight: 200; }
+
+.form-section-subheader {
+  font-size: 14px;
+  margin: 0px;
+  font-weight: 200; }
+
+.application-input {
+  border: 1px solid #959595;
+  height: 30px;
+  width: 100%;
+  padding-left: 4px;
+  padding-right: 4px;
+  line-height: 22px; }
+
+textarea:focus, input:focus {
+  outline: none; }
+
+.spacer {
+  height: 10px; }
+
+.application-column {
+  padding: 3px; }
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px; }
+
 .btn-add {
   flex: 1; }
 
@@ -85,7 +121,8 @@ footer {
   min-height: calc(100% - 70px - 36px); }
 
 html * {
-  font-family: 'Fira Sans' !important; }
+  font-family: 'Fira Sans' !important;
+  font-weight: 300; }
 
 .form-horizontal {
   margin: 0px; }

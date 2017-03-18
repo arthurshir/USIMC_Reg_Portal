@@ -1,5 +1,9 @@
 @import "stylesheets/constants";
 @import "stylesheets/components/containers";
+@import "stylesheets/components/text";
+@import "stylesheets/components/input";
+@import "stylesheets/components/spacers";
+@import "stylesheets/components/bootstrap_defaults";
 @import "stylesheets/components/buttons";
 @import "stylesheets/components/flex";
 
@@ -71,6 +75,7 @@ footer {
 
 html * {
   font-family: 'Fira Sans' !important;
+  font-weight: 300;
 }
 
 .form-horizontal {

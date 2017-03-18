@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 import datetime
 import usimc_rules
+from phonenumber_field.modelfields import PhoneNumberField
 
 #
 # Custom Fields
@@ -96,8 +97,8 @@ class ParentContact(Model):
     # Attributes
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email Address')
-    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+    email = EmailField(null=True, blank=True, verbose_name='Email')
+    phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
@@ -115,7 +116,7 @@ class Piece(Model):
     length = IntegerField(verbose_name='Length', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
-    is_chinese = BooleanField(default=False, verbose_name='is Chinese Piece')
+    is_chinese = BooleanField(default=False, verbose_name='This is a Chinese Piece')
 
 
     # Relations
@@ -131,7 +132,7 @@ class Teacher(Model):
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
     email = EmailField(null=True, blank=True, verbose_name='Email')
-    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
+    phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
 
     created_at = DateTimeField(default=timezone.now)
@@ -142,8 +143,6 @@ class Person(Model):
     # Attributes
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = EmailField(null=True, blank=True, verbose_name='Email')
-    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
     instrument = CharField(null=True, blank=True, max_length=200)
     address = CharField(null=True, blank=True, max_length=200)
     city = CharField(null=True, blank=True, max_length=200)
@@ -163,8 +162,6 @@ class EnsembleMember(Model):
     # Attributes
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = EmailField(null=True, blank=True, verbose_name='Email')
-    phone_number = IntegerField(null=True, blank=True, verbose_name='Phone Number')
     instrument = CharField(null=True, blank=True, max_length=200)
     birthday = DateTimeField(null=True, blank=True)
 

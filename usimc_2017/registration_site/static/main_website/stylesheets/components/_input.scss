@@ -1,0 +1,12 @@
+.application-input {
+  border: 1px solid #959595;  
+  height: 30px;
+  width: 100%;
+  padding-left: 4px;
+  padding-right: 4px;
+  line-height: 22px;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}

@@ -18,9 +18,10 @@ import usimc_rules
 import usimc_data
 from django.http import JsonResponse
 import datetime
+import phonenumbers
 
 PieceFormset = modelformset_factory(models.Piece, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
-EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'email', 'phone_number', 'instrument', 'birthday'])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'
@@ -218,7 +219,7 @@ class EditSoloApplicationView(View):
         else:
             # Birthday validation
             years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
-            birthday = self.context['lead_competitor_form'].cleaned_data['birthday']
+            birthday = self.context['lead_competitor_form'].cleaned_data['birthday'].date()
             cutoff = usimc_rules.get_age_measurement_date()
             cutoff = cutoff.replace(year=cutoff.year - years).date() # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
             if birthday < cutoff:

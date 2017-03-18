@@ -19,7 +19,11 @@
 {% block form_title %}
   Edit Application
 {% endblock %}
+{% block side-bar %}
+<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
+{% endblock %}
 {% block form %}
+<div class="flex-space-between flex-column">
   <div class="info-div">
     <table id="table" class="table table-hover table-mc-light-blue">
       <thead>
@@ -44,55 +48,121 @@
       </tbody>
     </table>
   </div>
-  <div class="flex-start">
-    <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
-  </div>
-  <div style="height: 20px"></div>
-  <form action="." method="post">
+  <form class="form-inline" action="." method="post">
     {% csrf_token %}
-    <div class="flex-column flex-center" style="max-width: 800px;">
-      <form id="myForm" method="post" action="">
-          <h3>Parent</h3>
-          {{ contact_form|crispy }}
-
-          <h3>Teacher</h3>
-          {{ teacher_form|crispy }}
-
-          <h3>Competitor</h3>
-          {{ lead_competitor_form|crispy }}
-          
-          <h3>Pieces</h3>
-          <table id="piece-table" border="0" cellpadding="0" cellspacing="0">
-              <tbody>
-                  {% for form in piece_formset.forms %}
-                  <tr>
-                      <td>
-                        {{ form.id }}
-                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                      </td>
-                      <td>
-                        {{ form.title.label_tag }}
-                        {{ form.title }}
-                        {{ form.opus.label_tag }}
-                        {{ form.opus }}
-                        {{ form.movement.label_tag }}
-                        {{ form.movement }}
-                        {{ form.composer.label_tag }}
-                        {{ form.composer }}
-                        {{ form.length.label_tag }}
-                        {{ form.length }}
-                        {{ form.is_chinese.label_tag }}
-                        {{ form.is_chinese }}
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-          <div>
-            {{ piece_formset.management_form }}
+    <div class="flex-column flex-center" style="max-width: 550px;">
+      <div>
+        <div>
+          <div class="form-section-header">Parent Contact</div>
+          {{ contact_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{contact_form.first_name}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{ contact_form.last_name }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.email }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.phone_number }}
+            </div>
           </div>
-          <input type="submit" value="Save" class="btn btn-success">
-      </form>
+          <div style="height: 10px"></div>
+        </div> <!-- parent encosing div -->
+
+        <div class="teacher-div">
+          <div class="form-section-header">Teacher</div>
+          {{ teacher_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{teacher_form.first_name}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{teacher_form.last_name}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.email}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.cmtanc_code}}
+            </div>
+          </div>
+          <div style="height: 10px"></div>
+        </div> <!-- teacher enclosing div -->
+
+        <div class="teacher-div">
+          <div class="form-section-header">Competitor</div>
+          {{ lead_competitor_form.id }}
+          <div class="row">
+            <div class="col-md-12 application-column">
+              <div class="form-section-subheader">Name</div>
+            </div>
+            <div class="col-md-6 application-column">
+              {{ lead_competitor_form.first_name }}
+            </div>
+            <div class="col-md-6 application-column">
+              {{ lead_competitor_form.last_name }}
+            </div>
+            <div class="col-md-12 application-column">
+              <div class="form-section-subheader">Address</div>
+            </div>
+            <div class="col-md-12 application-column">
+              {{ lead_competitor_form.address }}
+            </div>
+            <div class="col-md-5 application-column">
+              {{ lead_competitor_form.city }}
+            </div>
+            <div class="col-md-2 application-column">
+              {{ lead_competitor_form.state }}
+            </div>
+            <div class="col-md-2 application-column">
+              {{ lead_competitor_form.zip_code }}
+            </div>
+            <div class="col-md-3 application-column">
+              {{ lead_competitor_form.country }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ lead_competitor_form.birthday }}
+            </div>
+          </div>
+          <div style="height: 10px"></div>
+        </div> <!-- competitor enclosing div -->
+        
+        <h3>Pieces</h3>
+        <table id="piece-table" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+                {% for form in piece_formset.forms %}
+                <tr>
+                    <td>
+                      {{ form.id }}
+                      {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                    </td>
+                    <td>
+                      {{ form.title.label_tag }}
+                      {{ form.title }}
+                      {{ form.opus.label_tag }}
+                      {{ form.opus }}
+                      {{ form.movement.label_tag }}
+                      {{ form.movement }}
+                      {{ form.composer.label_tag }}
+                      {{ form.composer }}
+                      {{ form.length.label_tag }}
+                      {{ form.length }}
+                      {{ form.is_chinese.label_tag }}
+                      {{ form.is_chinese }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div>
+          {{ piece_formset.management_form }}
+        </div>
+        <input type="submit" value="Save" class="btn btn-success">
+      </div> <!-- content div -->
     </div>
   </form>
+</div>
 {% endblock %}

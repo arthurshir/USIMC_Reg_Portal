@@ -15,18 +15,24 @@
 
 <!-- Main Content -->
 {% block content %}
-<div class="wrapper">
-  <div class="centered-wrapper">
-    <h3>{% block form_title %}{% endblock %}</h3>
-    <div style="height: 10px;"></div>
-    {% if messages %}
-      <div class="messages">
-          {% for message in messages %}
-              <div {% if message.tags %} class="alert alert-warning"{% endif %}>{{ message }}</div>
-          {% endfor %}
-      </div>
-    {% endif %}
-    {% block form %}{% endblock %}
-  </div>  
+<div class="flex-row flex-stretch">
+  <div class="side-bar">
+    {% block side-bar %}
+    {% endblock %}
+  </div>
+  <div class="wrapper" style="flex-grow: 1;">
+    <div class="centered-wrapper">
+      <h3>{% block form_title %}{% endblock %}</h3>
+      <div style="height: 10px;"></div>
+      {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-warning"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        </div>
+      {% endif %}
+      {% block form %}{% endblock %}
+    </div>  
+  </div>
 </div>
 {% endblock %}
