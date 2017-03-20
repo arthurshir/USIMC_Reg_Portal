@@ -6,3 +6,15 @@
     
   }
 }
+
+.information-container {
+  border: 1px solid #000000;
+  width: 100%;
+  padding: 12px 8px 12px 8px;
+  font-weight: 200;
+  font-size: 14px;
+}
+
+.application-form-div {
+  max-width: $application-max-width; 
+}

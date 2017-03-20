@@ -26,6 +26,7 @@ INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
 AGE_CATEGORY_CHOICES = tuple(((str(x), str(x)) for x in data['age_group_names']))
 
 AWARD_CHOICES = tuple(((str(x), data['awards'][x]) for x in data['awards']))
+AWARD_CHOICES_DICT = dict(AWARD_CHOICES)
 
 KEY_PRICING_YES_CMTANC = 'per_contestant_yes_cmtanc'
 KEY_PRICING_NO_CMTANC = 'per_contestant_no_cmtanc'

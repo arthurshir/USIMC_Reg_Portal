@@ -59,6 +59,14 @@ class PieceForm(forms.ModelForm):
     class Meta:
         model = models.Piece
         fields = ['title', 'opus', 'movement', 'composer', 'length', 'is_chinese']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Title', 'class': 'application-input'}),
+            'opus': forms.TextInput(attrs={'placeholder': 'Opus', 'class': 'application-input'}),
+            'movement': forms.TextInput(attrs={'placeholder': 'Movement', 'class': 'application-input'}),
+            'composer': forms.TextInput(attrs={'placeholder': 'Composer', 'class': 'application-input'}),
+            'length': forms.TextInput(attrs={'placeholder': 'Length', 'class': 'application-input'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'application-input'}),
+        }
 
 class PersonForm(forms.ModelForm):
     class Meta:
@@ -128,6 +136,11 @@ class EnsembleMemberForm(forms.ModelForm):
     class Meta:
         model = models.EnsembleMember
         fields = ['first_name', 'last_name', 'instrument', 'birthday']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'application-input'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'application-input'}),
+            'instrument': forms.TextInput(attrs={'placeholder': 'Instrument', 'class': 'application-input'}),
+        }
     birthday = forms.DateField(
         widget=forms.SelectDateWidget(
             empty_label=("Choose Year", "Choose Month", "Choose Day"),

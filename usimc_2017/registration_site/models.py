@@ -68,6 +68,10 @@ class Entry(Model):
     objects = EntryManager()
 
     # Functions
+    def awards_string(self):
+        award_strings = map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
+        return reduce((lambda x, y: x + ', ' + y), award_strings )
+
     def calculate_price(self):
         price_per_competitor = 0
         total = 0
@@ -83,9 +87,39 @@ class Entry(Model):
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
         total = price_per_competitor
         # if len(self.ensemble_members.all()):
-        print len(self.ensemble_members.all())*price_per_competitor, total
         total += len(self.ensemble_members.all())*price_per_competitor
         return total
+
+    def is_ensemble(self):
+        return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values()
+
+    def calculate_price_string(self):
+        num_ensemble = len(self.ensemble_members.all()) + 1
+        price_string = ''
+        if num_ensemble > 1:
+            price_string = str(num_ensemble) + ' Contestants x '
+        else:
+            price_string = str(num_ensemble) + ' Contestant at '   
+        price_per_competitor = 0
+        pricing_dict = usimc_rules.get_instrument_category_prices(self.instrument_category)
+        # If International
+        if not self.is_not_international:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_INTERNATIONAL]
+        # If CMTANC
+        elif self.teacher.cmtanc_code:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_CMTANC]
+        # If not CMTANC
+        else:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
+        price_string += '$' + str(price_per_competitor) + ' per contestant\n( for awards: ' + self.awards_string()
+        if not self.is_not_international:
+            price_string += ' for international entry )'
+        else:
+            if self.teacher.cmtanc_code:
+                price_string += ' with CMTANC discount )'
+            else:
+                price_string += ' without CMTANC discount )'
+        return price_string
 
     class Meta:
         default_related_name =  'entries'

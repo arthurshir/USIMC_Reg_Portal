@@ -9,3 +9,13 @@
   margin: 0px;
   font-weight: 200;
 }
+
+.paragraph-bold {
+  font-weight: 400;
+}
+
+#piece-form-number {
+  width: 20px;
+  height: $form-input-height;
+  line-height: $form-input-height;
+}

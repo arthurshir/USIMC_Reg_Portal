@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $(function() {
-      $('#piece-table tbody tr').formset({
+      $('.piece-form').formset({
           prefix: 'pieces',
           formCssClass: 'dynamic-formset1'
       });

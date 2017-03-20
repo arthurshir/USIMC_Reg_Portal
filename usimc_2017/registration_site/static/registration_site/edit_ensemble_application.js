@@ -1,11 +1,11 @@
 $(document).ready(function(){
   $(function() {
-      $('#ensemble-member-table tbody tr').formset({
+      $('.competitor-form').formset({
           prefix: 'ensemble_member',
-          formCssClass: 'dynamic-formset1'
+          formCssClass: 'dynamic-formset2'
       });
 
-      $('#piece-table tbody tr').formset({
+      $('.piece-form').formset({
           prefix: 'pieces',
           formCssClass: 'dynamic-formset1'
       });

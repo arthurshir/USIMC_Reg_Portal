@@ -17,148 +17,219 @@
 
 <!-- Main Content -->
 {% block form_title %}
-  Edit Application
+<div style="height: 14px"></div>
+{% endblock %}
+{% block side-bar %}
+<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
 {% endblock %}
 {% block form %}
-  <div class="info-div">
-    <table id="table" class="table table-hover table-mc-light-blue">
-      <thead>
-        <tr>
-          <td colspan="3">Entry Information</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Instrument Category</td>
-          <td colspan="2">{{ entry_instrument_category }}</td>
-        </tr>
-        <tr>
-          <td>Age Category</td>
-          <td>{{ entry.age_category }}</td>
-          <td>below {{ entry_age_category_years }} years old</td>
-        </tr>
-        <tr>
-          <td>Price</td>
-          <td colspan="2">${{ calculated_price }} for {{ entry.ensemble_members.all|length|add:1 }} contestants</td>
-        </tr>
-      </tbody>
-    </table>
+<div class="flex-start flex-column">
+  <div class="form-section-header">Entry Details</div>
+  <div class="information-container">
+    <span>
+      <span class="paragraph-bold">Awards competing for:</span> {{ entry_award_categories }}<br>
+    </span>
+    <span>
+      <span class="paragraph-bold">Instrument category:</span> {{ entry_instrument_category }}<br>
+    </span>
+    <span>
+      <span class="paragraph-bold">Age category:</span> {{ entry.age_category }}, below {{ entry_age_category_years }} years old<br>
+    </span>
   </div>
-  <div class="flex-start">
-    <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
+  <div style="height: 14px"></div>
+  <div class="form-section-header">Pricing</div>
+  <div class="information-container">
+    <span class="paragraph-bold">{{ calculated_price_string }}<br></span>
+    <span class="paragraph-bold">Total = ${{ calculated_price }}<br></span>
   </div>
-  <div style="height: 20px"></div>
-  <form action="." method="post">
+  <div style="height: 14px"></div>
+  <form class="form-inline" action="." method="post">
     {% csrf_token %}
-    <div class="flex-column flex-center" style="max-width: 800px;">
-      <form id="myForm" method="post" action="">
-          <h3>Parent</h3>
-          {{ contact_form|crispy }}
-
-          <h3>Teacher</h3>
-          {{ teacher_form|crispy }}
-
-          <h3>Competitor</h3>
-          {{ lead_competitor_form|crispy }}
-
-          <h3>Performers</h3>
-          <table id="ensemble-member-table" border="0" cellpadding="0" cellspacing="0">
-              <tbody>
-                  {% for form in ensemble_member_formset.forms %}
-                  <tr>
-                      <td>
-                        {% for error in form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                <strong>{{ error|escape }}</strong>
-                            </div>
-                        {% endfor %}
-                        {{ form.id }}
-                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                      </td>
-                      <td>
-                        {{ form.first_name.label_tag }}
-                        {% for error in form.first_name.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.first_name }}
-                        {{ form.last_name.label_tag }}
-                        {% for error in form.last_name.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.last_name }}
-                        {{ form.email.label_tag }}
-                        {% for error in email.label_tag.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.email }}
-                        {{ form.phone_number.label_tag }}
-                        {% for error in form.phone_number.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.phone_number }}
-                        {{ form.instrument.label_tag }}
-                        {% for error in form.instrument.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.instrument }}
-                        {{ form.birthday.label_tag }}
-                        {% for error in form.birthday.errors %}
-                          <div class="alert alert-danger">
-                            <strong>{{error|escape}}</strong>
-                          </div>
-                        {% endfor %}
-                        {{ form.birthday }}
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-          <div>
-            {{ ensemble_member_formset.management_form }}
+    <div class="flex-column flex-center">
+      <div>
+        <div>
+          <div class="form-section-header">Parent Contact</div>
+          {{ teacher_form.non_field_errors }}
+          {{ contact_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{ contact_form.first_name.errors }}
+              {{ contact_form.first_name}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{ contact_form.last_name.errors }}
+              {{ contact_form.last_name }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.email.errors }}
+              {{ contact_form.email }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.phone_number.errors }}
+              {{ contact_form.phone_number }}
+            </div>
           </div>
+          <div style="height: 14px"></div>
+        </div> <!-- parent encosing div -->
 
-          <h3>Pieces</h3>
-          <table id="piece-table" border="0" cellpadding="0" cellspacing="0">
-              <tbody>
-                  {% for form in piece_formset.forms %}
-                  <tr>
-                      <td>
-                        {{ form.id }}
-                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                      </td>
-                      <td>
-                        {{ form.title.label_tag }}
-                        {{ form.title }}
-                        {{ form.opus.label_tag }}
-                        {{ form.opus }}
-                        {{ form.movement.label_tag }}
-                        {{ form.movement }}
-                        {{ form.composer.label_tag }}
-                        {{ form.composer }}
-                        {{ form.length.label_tag }}
-                        {{ form.length }}
-                        {{ form.is_chinese.label_tag }}
-                        {{ form.is_chinese }}
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-          <div>
-            {{ piece_formset.management_form }}
+        <div class="teacher-div">
+          <div class="form-section-header">Teacher</div>
+          {{ teacher_form.non_field_errors }}
+          {{ teacher_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{teacher_form.first_name.errors}}
+              {{teacher_form.first_name}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{teacher_form.last_name.errors}}
+              {{teacher_form.last_name}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.email.errors}}
+              {{teacher_form.email}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.cmtanc_code.errors}}
+              {{teacher_form.cmtanc_code}}
+            </div>
           </div>
-          <input type="submit" value="Save" class="btn btn-success">
-      </form>
-    </div>
+          <div style="height: 14px"></div>
+        </div> <!-- teacher enclosing div -->
+
+        <div class="teacher-div">
+          <div class="form-section-header">Competitors</div>
+          {{ lead_competitor_form.non_field_errors }}
+          {{ lead_competitor_form.id }}
+          <div class="flex-row">
+            <div id="piece-form-number">1</div>
+            <div class="row">
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Name</div>
+              </div>
+              <div class="col-md-6 application-column">
+                {{ lead_competitor_form.first_name.errors }}
+                {{ lead_competitor_form.first_name }}
+              </div>
+              <div class="col-md-6 application-column">
+                {{ lead_competitor_form.last_name.errors }}
+                {{ lead_competitor_form.last_name }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Address</div>
+              </div>
+              <div class="col-md-12 application-column">
+                {{ lead_competitor_form.address.errors }}
+                {{ lead_competitor_form.address }}
+              </div>
+              <div class="col-md-5 application-column">
+                {{ lead_competitor_form.city.errors }}
+                {{ lead_competitor_form.city }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ lead_competitor_form.state.errors }}
+                {{ lead_competitor_form.state }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ lead_competitor_form.zip_code.errors }}
+                {{ lead_competitor_form.zip_code }}
+              </div>
+              <div class="col-md-3 application-column">
+                {{ lead_competitor_form.country.errors }}
+                {{ lead_competitor_form.country }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Birthday</div>
+              </div>
+              <div class="col-md-12 application-column">
+                {{ lead_competitor_form.birthday.errors }}
+                {{ lead_competitor_form.birthday }}
+              </div>
+            </div>
+          </div>
+          {{ ensemble_member_formset.non_field_errors }}
+          {{ ensemble_member_formset.id }}
+          {% for form in ensemble_member_formset.forms %}
+          <div class="flex-row competitor-form">
+            <div id="piece-form-number">1</div>
+            {{ form.id }}
+            {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+            <div class="row">
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Name</div>
+              </div>
+              <div class="col-md-6 application-column">
+                {{ form.first_name.errors }}
+                {{ form.first_name }}
+              </div>
+              <div class="col-md-6 application-column">
+                {{ form.last_name.errors }}
+                {{ form.last_name }}
+              </div>
+              <div class="col-md-12 application-column">
+                {{ form.instrument.errors }}
+                {{ form.instrument }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Birthday</div>
+              </div>
+              <div class="col-md-12 application-column">
+                {{ form.birthday.errors }}
+                {{ form.birthday }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {{ ensemble_member_formset.management_form }}
+          <div style="height: 14px"></div>
+        </div> <!-- competitor enclosing div -->
+
+        <div class="piece-div">
+          <div class="form-section-header">Pieces</div>
+          {{ piece_formset.non_field_errors }}
+          {% for form in piece_formset.forms %}
+            <div class="flex-row piece-form">
+              <div id="piece-form-number">1</div>
+              {{ form.id }}
+              {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+              <div class="row">
+                <div class="col-md-8 application-column">
+                  {{ form.title.errors }}
+                  {{ form.title }}
+                </div>
+                <div class="col-md-2 application-column">
+                  {{ form.opus.errors }}
+                  {{ form.opus }}
+                </div>
+                <div class="col-md-2 application-column">
+                  {{ form.movement.errors }}
+                  {{ form.movement }}
+                </div>
+                <div class="col-md-8 application-column">
+                  {{ form.composer.errors }}
+                  {{ form.composer }}
+                </div>
+                <div class="col-md-4 application-column">
+                  {{ form.length.errors }}
+                  {{ form.length }}
+                </div>
+                <div class="col-md-12 application-column">
+                  {{ form.is_chinese.errors }}
+                  {{ form.is_chinese }}
+                  checkmark if this is a chinese piece
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          {{ piece_formset.management_form }}
+          <div style="height: 14px"></div>
+        </div> <!-- piece div -->
+        <div style="height: 14px"></div>
+        <input type="submit" value="Save">
+        <div style="height: 14px"></div>
+      </div> <!-- empty div -->
+    </div> <!-- flex-column flex-center -->
+
   </form>
+</div>
 {% endblock %}
