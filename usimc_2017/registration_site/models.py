@@ -68,9 +68,17 @@ class Entry(Model):
     objects = EntryManager()
 
     # Functions
+    def award_strings(self):
+        return map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
+
     def awards_string(self):
-        award_strings = map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
-        return reduce((lambda x, y: x + ', ' + y), award_strings )
+        return reduce((lambda x, y: x + ', ' + y), self.award_strings() )
+
+    def instrument_category_string(self):
+        return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category]
+
+    def age_category_years(self):
+        return usimc_rules.get_instrument_category_age_rules(self.instrument_category)[self.age_category]
 
     def price_per_competitor_per_award(self):
         price_per_competitor = 0

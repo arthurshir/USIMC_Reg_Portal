@@ -1,5 +1,8 @@
 .side-bar {
-  width: 260px;
+  display: flex;
+  flex-direction: column;
+
+  width: $side-bar-width;
   background-color: $primary-brand-color;
   padding: 20px;
   .content {
@@ -17,4 +20,16 @@
 
 .application-form-div {
   max-width: $application-max-width; 
+}
+
+#awards-column {
+  max-width: 300px;
+}
+
+#created-at-column {
+  max-width: 124px;
+}
+
+.panel-default {
+  border-radius: 0px;
 }

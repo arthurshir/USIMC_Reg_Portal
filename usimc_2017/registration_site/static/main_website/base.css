@@ -1,5 +1,7 @@
 .side-bar {
-  width: 260px;
+  display: flex;
+  flex-direction: column;
+  width: 150px;
   background-color: #ECECEC;
   padding: 20px; }
 
@@ -12,6 +14,15 @@
 
 .application-form-div {
   max-width: 550px; }
+
+#awards-column {
+  max-width: 300px; }
+
+#created-at-column {
+  max-width: 124px; }
+
+.panel-default {
+  border-radius: 0px; }
 
 .form-section-header {
   font-size: 20px;
@@ -45,6 +56,11 @@ textarea:focus, input:focus {
 .spacer {
   height: 10px; }
 
+.horizontal-line {
+  height: 1px;
+  background-color: black;
+  margin: 8px 30px 8px 30px; }
+
 .application-column {
   padding: 3px; }
 
@@ -55,6 +71,10 @@ textarea:focus, input:focus {
 .btn-add {
   flex: 1; }
 
+.btn-default {
+  border-radius: 0px;
+  font-weight: 400; }
+
 .flex-column {
   display: flex;
   flex-direction: column; }
@@ -64,6 +84,14 @@ textarea:focus, input:focus {
   flex-direction: row; }
 
 .flex-center {
+  display: flex;
+  align-items: center; }
+
+.flex-justify-content-center {
+  display: flex;
+  justify-content: center; }
+
+.flex-align-items-center {
   display: flex;
   align-items: center; }
 
@@ -142,6 +170,9 @@ footer {
 html * {
   font-family: 'Fira Sans' !important;
   font-weight: 300; }
+
+strong {
+  font-weight: 500; }
 
 .form-horizontal {
   margin: 0px; }

@@ -35,6 +35,8 @@ class IndexView(View):
     def get(self, request):
         if request.user.is_authenticated():
             return redirect('registration_site:dashboard')
+        else:
+            return redirect('registration_site:login')
         return render(request, 'registration_site/home_page.html', self.context)
 
 class LogoutView(View):
@@ -196,7 +198,7 @@ class EditSoloApplicationView(View):
         self.context['entry'] = entry
         self.context['entry_award_categories'] = entry.awards_string()
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
-        self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+        self.context['entry_age_category_years'] = entry.age_category_years()
         self.context['calculated_price'] = entry.calculate_price()
         self.context['calculated_price_string'] = entry.calculate_price_string()
 
@@ -387,7 +389,23 @@ class ApplicationListView(View):
 
     def get(self, request):
         usimc_user = get_usimc_user(request.user)
+        self.context['user'] = request.user
         self.context['entries'] = usimc_user.entry.all().order_by('created_at')
+
+        unsubmitted_entries = usimc_user.entry.all().filter(submitted=False).order_by('created_at')
+        unsubmitted_entries_formatted = []
+        for entry in unsubmitted_entries:
+            unsubmitted_entries_formatted.append({
+            "awards": reduce((lambda x, y: x + ',\n' + y), entry.award_strings()),
+            "instrument_category": entry.instrument_category_string(),
+            "age_category": entry.age_category + ",\nbelow " + str(entry.age_category_years()) + " years old",
+            "created_at": entry.created_at,
+            "submitted": "Submitted" if entry.submitted else "Not Submitted",
+            "pk": entry.pk
+            })
+        self.context['unsubmitted_entries_formatted'] = unsubmitted_entries_formatted
+
+
         return render(request, 'registration_site/application_list.html', self.context)
 
     @method_decorator(login_required)
