@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 class EntryForm(forms.ModelForm):
     class Meta:
         model = models.Entry
-        fields = ['awards_applying_for', 'instrument_category', 'age_category', 'is_not_international']
+        fields = ['is_not_international', 'instrument_category', 'age_category', 'awards_applying_for']
         labels = {
             'is_not_international': 'Does at least one of your competitors live in the United States'
             }

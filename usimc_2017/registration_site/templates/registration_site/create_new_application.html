@@ -16,11 +16,12 @@
 
 <!-- Main Content -->
 {% block form_title %}
-  Step 1. Choose Categories
+  <h3>Create a New Competition Entry</h3>
 {% endblock %}
 {% block form %}
   <form action="." method="post">
     {% csrf_token %}
+    International Status
     {{ form|crispy }}
     <div style="height: 10px;"></div>
     <div class="nav-panel">

@@ -6,7 +6,7 @@ import datetime
 
 # Define folder paths
 folder_path = os.path.dirname(os.path.abspath(__file__))
-json_path = os.path.join(folder_path, 'static/registration_site/data.json')
+json_path = os.path.join(folder_path, 'rules/data.json')
 
 # Save data
 with open(json_path) as json_data:
