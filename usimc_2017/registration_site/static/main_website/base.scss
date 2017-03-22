@@ -23,48 +23,6 @@
   overflow: scroll;
 }
 
-.navbar {
-  min-height: $nav-height !important;
-  background-color: $secondary-brand-color;
-  .navbar-brand{
-    padding: 10px;
-    .navbar-wrapper {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      .navbar-brand-title {
-        margin-left: 10px;
-        display: flex;
-        flex-direction: column;
-        span#title{
-          color: white;
-          font-size: 22px;
-          font-weight: 300;
-        }
-        span#subtitle{
-          color: white;
-          font-size: 15px;
-          font-weight: 200;
-        }
-      }
-    }
-  }
-}
-
-footer {
-  background-color: $primary-brand-color;
-  color: $footer-text-color;
-  position:fixed;
-  width: 100%;
-  height: $footer-height;
-  bottom:0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-weight: 200;
-  padding: 10px;
-}
-
 .centered-wrapper {
   display: flex;
   flex: 1;

@@ -17,13 +17,16 @@
 {% block content %}
 <div class="centered-wrapper">
   <div class="flex-column">
-    <div class="flex-align-items-center flex-justify-content-center">
-      <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
-      <div style="width: 10px;"></div>
-      <a class="btn btn-default" href="{% url 'registration_site:logout' %}" type="button">Log out</a>
-    </div>
-    <div class="flex-align-items-center flex-justify-content-center">
-      <h4>Logged in as {{ user.email }}</h4>
+    <div>
+      <div style="height: 40px;"></div>
+      <div class="flex-align-items-center flex-justify-content-center">
+        <h4>Logged in as {{ user.email }}</h4>
+      </div>
+      <div class="flex-align-items-center flex-justify-content-center">
+        <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
+        <div style="width: 10px;"></div>
+        <a class="btn btn-default" href="{% url 'registration_site:logout' %}" type="button">Log out</a>
+      </div>
     </div>
     <div class="horizontal-line"></div>
     <div style="height: 10px;"></div>

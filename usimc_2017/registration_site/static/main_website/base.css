@@ -12,6 +12,10 @@
   font-weight: 200;
   font-size: 14px; }
 
+.panel-body {
+  padding: 15px 12px 10px 12px;
+  border: 1px solid #959595; }
+
 .application-form-div {
   max-width: 550px; }
 
@@ -23,6 +27,41 @@
 
 .panel-default {
   border-radius: 0px; }
+
+.navbar {
+  min-height: 70px !important;
+  background-color: #9C0D38; }
+  .navbar .navbar-brand {
+    padding: 10px; }
+    .navbar .navbar-brand .navbar-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center; }
+      .navbar .navbar-brand .navbar-wrapper .navbar-brand-title {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#title {
+          color: white;
+          font-size: 22px;
+          font-weight: 300; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#subtitle {
+          color: white;
+          font-size: 15px;
+          font-weight: 200; }
+
+footer {
+  background-color: #ECECEC;
+  color: black;
+  position: fixed;
+  width: 100%;
+  height: 36px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: 200;
+  padding: 10px; }
 
 .form-section-header {
   font-size: 20px;
@@ -42,16 +81,27 @@
   height: 30px;
   line-height: 30px; }
 
-.application-input {
+a {
+  color: #9C0D38; }
+
+.text-centered {
+  text-align: center; }
+
+.application-input, .textinput {
   border: 1px solid #959595;
   height: 30px;
   width: 100%;
+  border-radius: 0px;
   padding-left: 4px;
   padding-right: 4px;
   line-height: 22px; }
 
 textarea:focus, input:focus {
   outline: none; }
+
+.textinput {
+  padding-left: 6px;
+  padding-right: 6px; }
 
 .spacer {
   height: 10px; }
@@ -74,6 +124,13 @@ textarea:focus, input:focus {
 .btn-default {
   border-radius: 0px;
   font-weight: 400; }
+
+.btn-submit {
+  border: none;
+  border-radius: 0px;
+  font-weight: 400;
+  color: white;
+  background-color: #9C0D38; }
 
 .flex-column {
   display: flex;
@@ -123,41 +180,6 @@ textarea:focus, input:focus {
   flex-direction: column;
   flex: 1;
   overflow: scroll; }
-
-.navbar {
-  min-height: 70px !important;
-  background-color: #9C0D38; }
-  .navbar .navbar-brand {
-    padding: 10px; }
-    .navbar .navbar-brand .navbar-wrapper {
-      display: flex;
-      flex-direction: row;
-      align-items: center; }
-      .navbar .navbar-brand .navbar-wrapper .navbar-brand-title {
-        margin-left: 10px;
-        display: flex;
-        flex-direction: column; }
-        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#title {
-          color: white;
-          font-size: 22px;
-          font-weight: 300; }
-        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#subtitle {
-          color: white;
-          font-size: 15px;
-          font-weight: 200; }
-
-footer {
-  background-color: #ECECEC;
-  color: black;
-  position: fixed;
-  width: 100%;
-  height: 36px;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-weight: 200;
-  padding: 10px; }
 
 .centered-wrapper {
   display: flex;

@@ -168,9 +168,10 @@ class LoginForm(forms.Form):
         	Div('password', css_class="container-fluid"),
     	),
         ButtonHolder(
-            Submit('submit', 'Submit', css_class='btn btn-default')
+            Submit('submit', 'Log in', css_class='btn btn-submit')
         ),
         HTML("""
+            <div style="height:5px;"></div>
             <a href="{% url 'registration_site:register' %}">or register</a>
         """),
     )
@@ -192,9 +193,10 @@ class RegistrationForm(forms.Form):
             Div('password2', css_class="container-fluid"),
         ),
         ButtonHolder(
-            Submit('submit', 'Submit', css_class='btn btn-default')
+            Submit('submit', 'Register', css_class='btn btn-submit')
         ),
         HTML("""
+            <div style="height:5px;"></div>
             <a href="{% url 'registration_site:login' %}">or log in</a>
         """),
     )

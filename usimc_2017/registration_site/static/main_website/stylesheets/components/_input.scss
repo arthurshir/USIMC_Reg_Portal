@@ -1,7 +1,8 @@
 .application-input {
-  border: 1px solid #959595;  
+  border: 1px solid $input-border-color;  
   height: 30px;
   width: 100%;
+  border-radius: 0px;
   padding-left: 4px;
   padding-right: 4px;
   line-height: 22px;
@@ -9,4 +10,10 @@
 
 textarea:focus, input:focus{
     outline: none;
+}
+
+.textinput {
+  @extend .application-input; 
+  padding-left: 6px;
+  padding-right: 6px;
 }
