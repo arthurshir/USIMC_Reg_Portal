@@ -12,26 +12,6 @@
   width: 50px;
 }
 
-.content {
-  margin-top: $nav-height;
-  margin-bottom: $footer-height;
-  min-height: calc(100% - #{$nav-height} - #{$footer-height});
-
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: scroll;
-}
-
-.centered-wrapper {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  min-height: calc(100% - #{$nav-height} - #{$footer-height});
-}
-
 html * {
   font-family: 'Fira Sans' !important;
   font-weight: 300;

@@ -32,7 +32,7 @@
 }
 
 #instrument-category-column {
-  max-width: 300px;
+  max-width: 200px;
 }
 
 #created-at-column {
@@ -42,6 +42,35 @@
 .panel-default {
   border-radius: 0px;
 }
+
+.content {
+  margin-top: $nav-height;
+  margin-bottom: $footer-height;
+  min-height: calc(100% - #{$nav-height} - #{$footer-height});
+
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: scroll;
+}
+
+.centered-align-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100% - #{$nav-height} - #{$footer-height});
+}
+
+.centered-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100% - #{$nav-height} - #{$footer-height});
+}
+
 
 .navbar {
   min-height: $nav-height !important;

@@ -23,13 +23,37 @@
   max-width: 300px; }
 
 #instrument-category-column {
-  max-width: 300px; }
+  max-width: 200px; }
 
 #created-at-column {
   max-width: 124px; }
 
 .panel-default {
   border-radius: 0px; }
+
+.content {
+  margin-top: 70px;
+  margin-bottom: 36px;
+  min-height: calc(100% - 70px - 36px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: scroll; }
+
+.centered-align-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100% - 70px - 36px); }
+
+.centered-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100% - 70px - 36px); }
 
 .navbar {
   min-height: 70px !important;
@@ -177,23 +201,6 @@ textarea:focus, input:focus {
 #small_logo {
   height: 50px;
   width: 50px; }
-
-.content {
-  margin-top: 70px;
-  margin-bottom: 36px;
-  min-height: calc(100% - 70px - 36px);
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: scroll; }
-
-.centered-wrapper {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  min-height: calc(100% - 70px - 36px); }
 
 html * {
   font-family: 'Fira Sans' !important;
