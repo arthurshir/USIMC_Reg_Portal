@@ -87,6 +87,9 @@ a {
 .text-centered {
   text-align: center; }
 
+strong {
+  font-weight: 400; }
+
 .application-input, .textinput {
   border: 1px solid #959595;
   height: 30px;
@@ -128,7 +131,7 @@ textarea:focus, input:focus {
 .btn-submit {
   border: none;
   border-radius: 0px;
-  font-weight: 400;
+  font-weight: 200;
   color: white;
   background-color: #9C0D38; }
 
@@ -192,9 +195,6 @@ textarea:focus, input:focus {
 html * {
   font-family: 'Fira Sans' !important;
   font-weight: 300; }
-
-strong {
-  font-weight: 500; }
 
 .form-horizontal {
   margin: 0px; }
