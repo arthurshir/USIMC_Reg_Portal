@@ -163,7 +163,7 @@ class ParentContact(Model):
     updated_at = AutoDateTimeField(default=timezone.now)
 
     def basic_information_string(self):
-        return self.first_name + ' ' + self.last_name + ', ' + self.email + ', ' + self.phone_number
+        return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number)
 
     class Meta:
         default_related_name = 'parent_contact'
