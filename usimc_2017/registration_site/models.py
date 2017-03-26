@@ -41,7 +41,7 @@ class USIMCUser(Model):
 
 class Charge(Model):
     usimc_user = ForeignKey('USIMCUser', on_delete=CASCADE, related_name="charges", verbose_name="USIMC User")
-    entry = OneToOneField('Entry', on_delete=CASCADE, related_name="charge", verbose_name="Entry")
+    entry = ForeignKey('Entry', on_delete=CASCADE, related_name="charge", verbose_name="Entry")
     charge_id = CharField(max_length=200)
     charge_amount = IntegerField()
     charge_customer = CharField(max_length=200)
@@ -125,7 +125,7 @@ class Entry(Model):
 
     def calculate_price(self):
         # Price per competitor & award * (number of competitors) * (number of awards)
-        return self.price_per_competitor_per_award() * (len(self.ensemble_members.all()) + 1) * len(self.awards_applying_for)
+        return self.price_per_competitor_per_award() * (len(self.ensemble_members.all()) + 1) * len(self.awards_applying_for) * 100
 
     def is_ensemble(self):
         return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values()
@@ -140,7 +140,7 @@ class Entry(Model):
             output += '\n'
         output += 'x ' + str(len(self.ensemble_members.all()) + 1) + (' Contestants\n' if (len(self.ensemble_members.all()) + 1) > 1 else ' Contestant\n')
         output += 'x ' + str(len(self.awards_applying_for)) + (' Awards\n' if len(self.awards_applying_for) > 1 else ' Award\n')
-        output += 'Total = $' + str(self.calculate_price())
+        output += 'Total = $' + str(self.calculate_price()/100)
         return output
 
     def basic_information_string(self):

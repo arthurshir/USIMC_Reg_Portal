@@ -404,13 +404,12 @@ stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
 class PaymentView(View):
     context = {}
 
-    def update_entry_context(self, request):
+    def get(self, request, *args, **kwargs):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
         self.context['entry'] = entry
-
-    def get(self, request, *args, **kwargs):
-        self.update_entry_context(request)
+        self.context['calculated_price'] = entry.calculate_price()
+        self.context['calculated_price_string'] = entry.calculate_price_string()
         return render(request, 'registration_site/payment.html', self.context)
 
     def post(self, request, *args, **kwargs):
