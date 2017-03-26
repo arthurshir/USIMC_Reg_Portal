@@ -50,7 +50,7 @@ def get_age_measurement_date_epoch():
   return data['age_measurement_cutoff_date']
 
 def get_age_measurement_date():
-  return datetime.datetime.fromtimestamp(data['age_measurement_date'])
+  return datetime.date.fromtimestamp(data['age_measurement_date'])
 
 def get_instrument_category_choices():
   return map(

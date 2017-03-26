@@ -9,6 +9,7 @@ from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
+from django.core.mail import send_mail
 from . import forms
 from . import models
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,6 +19,7 @@ import usimc_rules
 import usimc_data
 from django.http import JsonResponse
 import datetime
+import pytz
 import phonenumbers
 
 PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length',])
@@ -229,9 +231,9 @@ class EditSoloApplicationView(View):
             # Birthday validation
             if self.context['lead_competitor_form'].cleaned_data['birthday']:
                 years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
-                birthday = self.context['lead_competitor_form'].cleaned_data['birthday'].date()
+                birthday = self.context['lead_competitor_form'].cleaned_data['birthday']
                 cutoff = usimc_rules.get_age_measurement_date()
-                cutoff = cutoff.replace(year=cutoff.year - years).date() # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
+                cutoff = cutoff.replace(year=cutoff.year - years)
                 if birthday < cutoff:
                     self.context['lead_competitor_form'].add_error('birthday',
                         "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
@@ -344,7 +346,7 @@ class EditEnsembleApplicationView(View):
                 if form.cleaned_data['birthday']:
                     birthday = form.cleaned_data['birthday']
                     cutoff = usimc_rules.get_age_measurement_date()
-                    cutoff = cutoff.replace(year=cutoff.year - years).date() # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
+                    cutoff = cutoff.replace(year=cutoff.year - years) # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
                     if birthday < cutoff:
                         form.add_error('birthday',
                             "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
@@ -442,6 +444,14 @@ class PaymentView(View):
 
         if charge.paid:
             entry.submitted = True
+            entry.save()
+            send_mail(
+                'USIMC Entry Confirmation',
+                entry.basic_information_string(),
+                'usimc2017tech@gmail.com',
+                [entry.parent_contact.email],
+                fail_silently=True,
+            )
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         else:
             self.context['payment_error_message'] = charge.failure_message
@@ -457,7 +467,9 @@ def payment_confirmation(request, *args, **kwargs):
     entry = get_entry(request.user, kwargs['pk'])
     entry.save()
     context['entry'] = entry
-    return render(request, 'registration_site/payment_confirmation.html')
+    context['email'] = entry.parent_contact.email
+    print entry.parent_contact.email
+    return render(request, 'registration_site/payment_confirmation.html', context)
 
 class EditPerformersView(View):
     context = {}

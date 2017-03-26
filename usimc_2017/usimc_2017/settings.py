@@ -138,3 +138,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # https://github.com/stefanfoulis/django-phonenumber-field
 # PHONENUMBER_DB_FORMAT = 'NATIONAL'
+
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'usimc2017tech'
+EMAIL_HOST_PASSWORD = 'arthurtacotruck'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
