@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.views import View
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
 from . import forms
@@ -20,7 +20,7 @@ from django.http import JsonResponse
 import datetime
 import phonenumbers
 
-PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'is_chinese',])
+PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length',])
 EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
@@ -28,6 +28,11 @@ ensemble_member_formset_prefix = 'ensemble_member'
 lead_competitor_form_prefix = 'competitor'
 teacher_form_prefix = 'teacher'
 parent_contact_form_prefix = 'contact'
+
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)
 
 class IndexView(View):
     context = {}
@@ -294,6 +299,7 @@ class EditEnsembleApplicationView(View):
         # Retrieve user and entry
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
+        go_to_review_page = request.POST.get("submit-form") != None
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -343,11 +349,116 @@ class EditEnsembleApplicationView(View):
                         form.add_error('birthday',
                             "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
 
-            return render(request, 'registration_site/edit_ensemble_application.html', self.context)
+            self.update_forms_and_formsets(request)
+
+            if go_to_review_page:
+                print self.kwargs
+                return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
+            else:
+                return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(EditEnsembleApplicationView, self).dispatch(*args, **kwargs)
+
+class ReviewSubmissionView(View):
+    context = {}
+
+    def update_entry_context(self, request):
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+        self.context['entry'] = entry
+        self.context['entry_award_categories'] = entry.awards_string()
+        self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
+        self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+        self.context['calculated_price'] = entry.calculate_price()
+        self.context['calculated_price_string'] = entry.calculate_price_string()
+        self.context['parent_contact'] = entry.parent_contact.basic_information_string()
+        self.context['teacher'] = entry.parent_contact.basic_information_string()
+        self.context['ensemble_members'] = [ x.basic_information_string() for x in entry.ensemble_members.all() ]
+        self.context['pieces'] = [ x.basic_information_string() for x in entry.pieces.all() ]
+
+
+    def get(self, request, *args, **kwargs):
+        self.update_entry_context(request)
+        return render(request, 'registration_site/review_submission.html', self.context)
+
+    def post(self, request, *args, **kwargs):
+        return render(request, 'registration_site/review_submission.html', self.context)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ReviewSubmissionView, self).dispatch(*args, **kwargs)
+
+
+#
+# Stripe Payment
+#
+
+# Set your secret key: remember to change this to your live secret key in production
+# See your keys here: https://dashboard.stripe.com/account/apikeys
+import stripe
+stripe.api_key = "sk_test_BQokikJOvBiI2HlWgH4olfQ2"
+
+
+class PaymentView(View):
+    context = {}
+
+    def update_entry_context(self, request):
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+        self.context['entry'] = entry
+
+    def get(self, request, *args, **kwargs):
+        self.update_entry_context(request)
+        return render(request, 'registration_site/payment.html', self.context)
+
+    def post(self, request, *args, **kwargs):
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Token is created using Stripe.js or Checkout!
+        # Get the payment token submitted by the form:
+        token = request.POST['stripeToken'] # Using Flask
+
+        # Charge the user's card:
+        charge = stripe.Charge.create(
+          amount=entry.calculate_price(),
+          currency="usd",
+          description=entry.basic_information_string(),
+          source=token,
+        )
+
+        usimc_charge = models.Charge()
+        usimc_charge.usimc_user = usimc_user
+        usimc_charge.entry = entry
+        usimc_charge.charge_id = charge.id
+        usimc_charge.charge_amount = charge.amount
+        usimc_charge.charge_customer = xstr(charge.customer)
+        usimc_charge.charge_description = xstr(charge.description)
+        usimc_charge.charge_failure_message = xstr(charge.failure_message)
+        usimc_charge.charge_paid = charge.paid
+        usimc_charge.charge_receipt_email = xstr(charge.receipt_email)
+        usimc_charge.save()
+
+        if charge.paid:
+            entry.submitted = True
+            return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
+        else:
+            self.context['payment_error_message'] = charge.failure_message
+            return render(request, 'registration_site/payment.html', self.context)
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PaymentView, self).dispatch(*args, **kwargs)
+
+def payment_confirmation(request, *args, **kwargs):
+    context = {}
+    usimc_user = get_usimc_user(request.user)
+    entry = get_entry(request.user, kwargs['pk'])
+    entry.save()
+    context['entry'] = entry
+    return render(request, 'registration_site/payment_confirmation.html')
 
 class EditPerformersView(View):
     context = {}
@@ -388,22 +499,26 @@ class ApplicationListView(View):
     context['entries'] = []
 
     def get(self, request):
+
+        def format_entries(entries):
+            entries_formatted = []
+            for entry in entries:
+                entries_formatted.append({
+                "awards": reduce((lambda x, y: x + ',\n' + y), entry.award_strings()),
+                "instrument_category": entry.instrument_category_string(),
+                "age_category": entry.age_category + ",\nbelow " + str(entry.age_category_years()) + " years old",
+                "created_at": entry.created_at,
+                "submitted": "Submitted" if entry.submitted else "Not Submitted",
+                "pk": entry.pk
+                })
+            return entries_formatted
+
+
         usimc_user = get_usimc_user(request.user)
         self.context['user'] = request.user
         self.context['entries'] = usimc_user.entry.all().order_by('created_at')
-
-        unsubmitted_entries = usimc_user.entry.all().filter(submitted=False).order_by('created_at')
-        unsubmitted_entries_formatted = []
-        for entry in unsubmitted_entries:
-            unsubmitted_entries_formatted.append({
-            "awards": reduce((lambda x, y: x + ',\n' + y), entry.award_strings()),
-            "instrument_category": entry.instrument_category_string(),
-            "age_category": entry.age_category + ",\nbelow " + str(entry.age_category_years()) + " years old",
-            "created_at": entry.created_at,
-            "submitted": "Submitted" if entry.submitted else "Not Submitted",
-            "pk": entry.pk
-            })
-        self.context['unsubmitted_entries_formatted'] = unsubmitted_entries_formatted
+        self.context['unsubmitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=False).order_by('created_at'))
+        self.context['submitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=True).order_by('created_at'))
 
 
         return render(request, 'registration_site/application_list.html', self.context)

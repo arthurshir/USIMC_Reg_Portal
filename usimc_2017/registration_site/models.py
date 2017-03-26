@@ -13,7 +13,16 @@ from phonenumber_field.modelfields import PhoneNumberField
 #
 class AutoDateTimeField(DateTimeField):
     def pre_save(self, model_instance, add):
-        return datetime.datetime.now()
+        return datetime.datetime.utcnow()
+
+#
+# Helper Functions
+#
+
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)
 
 #
 # User Model
@@ -25,6 +34,23 @@ class USIMCUser(Model):
     updated_at = AutoDateTimeField(default=timezone.now)
     is_admin = BooleanField(default=False)
     # Foreign Key Entry
+
+#
+# Payment
+#
+
+class Charge(Model):
+    usimc_user = ForeignKey('USIMCUser', on_delete=CASCADE, related_name="charges", verbose_name="USIMC User")
+    entry = OneToOneField('Entry', on_delete=CASCADE, related_name="charge", verbose_name="Entry")
+    charge_id = CharField(max_length=200)
+    charge_amount = IntegerField()
+    charge_customer = CharField(max_length=200)
+    charge_description = CharField(max_length=500)
+    charge_failure_message = CharField(max_length=500)
+    charge_paid = BooleanField()
+    charge_receipt_email = CharField(max_length=500)
+
+
 
 #
 # Entry Model & Related Models
@@ -61,8 +87,8 @@ class Entry(Model):
     teacher = OneToOneField('Teacher', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Teacher")
     lead_performer = OneToOneField('Person', null=True, on_delete=CASCADE, related_name="entry", verbose_name='Lead Performer')
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
-    # Pieces Performing -- Pieces Foreign Key
-    # Applicants -- Ensemble Members Foreign Key
+    # pieces -- Pieces Foreign Key
+    # ensemble_members -- Ensemble Members Foreign Key
 
     # Managers
     objects = EntryManager()
@@ -79,6 +105,9 @@ class Entry(Model):
 
     def age_category_years(self):
         return usimc_rules.get_instrument_category_age_rules(self.instrument_category)[self.age_category]
+
+    def age_category_string(self):
+        return xstr(self.age_category) + ', below ' + xstr(self.age_category_years()) + ' years old'
 
     def price_per_competitor_per_award(self):
         price_per_competitor = 0
@@ -114,6 +143,9 @@ class Entry(Model):
         output += 'Total = $' + str(self.calculate_price())
         return output
 
+    def basic_information_string(self):
+        return 'USIMC entry ID:' + xstr(self.pk) + ',  Category: ' + self.instrument_category_string() + ", Age Category: " + self.age_category_string()
+
     class Meta:
         default_related_name =  'entries'
 
@@ -130,6 +162,9 @@ class ParentContact(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
+    def basic_information_string(self):
+        return self.first_name + ' ' + self.last_name + ', ' + self.email + ', ' + self.phone_number
+
     class Meta:
         default_related_name = 'parent_contact'
 
@@ -143,11 +178,12 @@ class Piece(Model):
     length = IntegerField(verbose_name='Length', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
-    is_chinese = BooleanField(default=False, verbose_name='This is a Chinese Piece')
-
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Piece')
+
+    def basic_information_string(self):
+        return xstr(self.title) + ', opus: ' + xstr(self.opus) + ', movement: ' + xstr(self.movement) + ', composer: ' + xstr(self.composer)
 
     class Meta:
         default_related_name = 'pieces'
@@ -161,6 +197,9 @@ class Teacher(Model):
     email = EmailField(null=True, blank=True, verbose_name='Email')
     phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
+
+    def basic_information_string(self):
+        return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
@@ -181,6 +220,12 @@ class Person(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
+    def basic_information_string(self):
+        output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
+        output += 'Address:\n' + xstr(self.address) + ', ' + xstr(self.city) + ' ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country) + '\n'
+        output += 'Birthday:\n' + xstr(birthday)
+        return output
+
     class Meta:
         default_related_name = 'lead_performer'
 
@@ -197,6 +242,11 @@ class EnsembleMember(Model):
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Ensemble Member')
+
+    def basic_information_string(self):
+        output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
+        output += 'Birthday:\n' + str(self.birthday)
+        return output
 
     class Meta:
         default_related_name = 'ensemble_members'

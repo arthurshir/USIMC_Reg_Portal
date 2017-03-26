@@ -39,8 +39,7 @@
   <div style="height: 14px"></div>
   <div class="form-section-header">Pricing</div>
   <div class="information-container">
-    <span class="paragraph-bold">{{ calculated_price_string }}<br></span>
-    <span class="paragraph-bold">Total = ${{ calculated_price }}<br></span>
+    <span class="paragraph-bold">{{ calculated_price_string|linebreaksbr }}</span>
   </div>
   <div style="height: 14px"></div>
   <form class="form-inline" action="." method="post">
@@ -102,7 +101,7 @@
           {{ lead_competitor_form.non_field_errors }}
           {{ lead_competitor_form.id }}
           <div class="flex-row">
-            <div id="piece-form-number">1</div>
+            <div id="piece-form-number">-</div>
             <div class="row">
               <div class="col-md-12 application-column">
                 <div class="form-section-subheader">Name</div>
@@ -151,7 +150,7 @@
           {{ ensemble_member_formset.id }}
           {% for form in ensemble_member_formset.forms %}
           <div class="flex-row competitor-form">
-            <div id="piece-form-number">1</div>
+            <div id="piece-form-number">-</div>
             {{ form.id }}
             {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
             <div class="row">
@@ -189,7 +188,7 @@
           {{ piece_formset.non_field_errors }}
           {% for form in piece_formset.forms %}
             <div class="flex-row piece-form">
-              <div id="piece-form-number">1</div>
+              <div id="piece-form-number">-</div>
               {{ form.id }}
               {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
               <div class="row">
@@ -225,7 +224,8 @@
           <div style="height: 14px"></div>
         </div> <!-- piece div -->
         <div style="height: 14px"></div>
-        <input class="btn btn-submit" type="submit" value="Save">
+        <input class="btn btn-default" type="submit" name="save-form" value="Save">
+        <input class="btn btn-submit" type="submit" name="submit-form" value="Submit">
         <div style="height: 14px"></div>
       </div> <!-- empty div -->
     </div> <!-- flex-column flex-center -->

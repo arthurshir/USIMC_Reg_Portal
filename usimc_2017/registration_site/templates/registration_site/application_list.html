@@ -32,7 +32,7 @@
     <div style="height: 5px;"></div>
     <div style="height: 10px;"></div>
     <!-- Unsubmitted and Submitted Applications -->
-    {% if unsubmitted_entries_formatted|length == 0 and unsubmitted_entries_formatted|length == 0 %}
+    {% if unsubmitted_entries_formatted|length == 0 and submitted_entries_formatted|length == 0 %}
       <h3 style="padding-left: 8px;">No Applications in Progress</h3>
     {% else %}
       <!-- Unsubmitted Applications -->
@@ -60,7 +60,7 @@
                 <td data-title="Submitted">{{ entry.submitted }}</td>
                 <td><a href="{% url 'registration_site:edit_application_redirect' pk=entry.pk %}">Edit</a></td>
                 <td><a href="{% url 'registration_site:delete_application' pk=entry.pk %}">Delete</a></td>
-                <td><button class="btn btn-default">Submit</button></td>
+                <td><a class="btn btn-submit" href="{% url 'registration_site:review_submission' pk=entry.pk %}">Submit</a></td>
               </tr>
             {% endfor %}
             <tr>
@@ -68,7 +68,7 @@
         </table>
       {% endif %}
       <!-- Submitted Applications -->
-      {% if unsubmitted_entries_formatted|length == 0 %}
+      {% if submitted_entries_formatted|length == 0 %}
         <h3 style="padding-left: 8px;">No Submitted Applications</h3>
       {% else %}
         <h3 style="padding-left: 8px;">Submitted Applications</h3>
@@ -83,7 +83,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for entry in unsubmitted_entries_formatted %}
+            {% for entry in submitted_entries_formatted %}
               <tr>
                 <td data-title="Awards" id="awards-column">{{ entry.awards|linebreaksbr }}</td>
                 <td data-title="Instrument" id="instrument-category-column">{{ entry.instrument_category }}</td>

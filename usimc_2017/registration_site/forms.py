@@ -58,7 +58,7 @@ class ParentContactForm(forms.ModelForm):
 class PieceForm(forms.ModelForm):
     class Meta:
         model = models.Piece
-        fields = ['title', 'opus', 'movement', 'composer', 'length', 'is_chinese']
+        fields = ['title', 'opus', 'movement', 'composer', 'length',]
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Title', 'class': 'application-input'}),
             'opus': forms.TextInput(attrs={'placeholder': 'Opus', 'class': 'application-input'}),
