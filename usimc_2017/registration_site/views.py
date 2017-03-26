@@ -217,6 +217,7 @@ class EditSoloApplicationView(View):
         # Retrieve user and entry
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
+        go_to_review_page = request.POST.get("submit-form") != None
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -263,8 +264,11 @@ class EditSoloApplicationView(View):
                 instance.save() 
 
             # Refresh with new forms
-            self.update_forms_and_formsets(request)
-            return render(request, 'registration_site/edit_solo_application.html', self.context)
+            if go_to_review_page:
+                return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
+            else:
+                self.update_forms_and_formsets(request)
+                return render(request, 'registration_site/edit_solo_application.html', self.context)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -354,7 +358,6 @@ class EditEnsembleApplicationView(View):
             self.update_forms_and_formsets(request)
 
             if go_to_review_page:
-                print self.kwargs
                 return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
             else:
                 return render(request, 'registration_site/edit_ensemble_application.html', self.context)
