@@ -7,14 +7,32 @@ from crispy_forms.layout import *
 import phonenumbers
 from django.core.exceptions import ValidationError
 
+def base_input_attrs(placeholder, required = False):
+    attrs = {'placeholder': placeholder, 'class': 'application-input', 'data-parsley-trigger': 'change'}
+    if required:
+        attrs['required'] = ''
+    return attrs    
+def text_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    return forms.TextInput(attrs=attrs)
+def email_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    attrs['type'] = 'email'
+    return forms.TextInput(attrs=attrs)
+def phone_number_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    return forms.TextInput(attrs=attrs)
+def cmtanc_birthday_input_widget():
+    return forms.SelectDateWidget(
+        empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        years=range(1980, 2017),
+        attrs={'data-parsley-trigger': 'change', 'required': '', 'data-parsley-birthday': ''},
+        )
 
 class EntryForm(forms.ModelForm):
     class Meta:
         model = models.Entry
-        fields = ['is_not_international', 'instrument_category', 'age_category', 'awards_applying_for']
-        labels = {
-            'is_not_international': 'Does at least one of your competitors live in the United States'
-            }
+        fields = ['instrument_category', 'age_category', 'awards_applying_for']
 
     awards_applying_for = forms.MultipleChoiceField(choices=usimc_rules.AWARD_CHOICES, widget=forms.CheckboxSelectMultiple)
 
@@ -23,10 +41,10 @@ class ParentContactForm(forms.ModelForm):
         model = models.ParentContact
         fields = ['first_name', 'last_name', 'email', 'phone_number',]
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'application-input'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'application-input'}),
-            'email': forms.TextInput(attrs={'placeholder': 'Email', 'class': 'application-input'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'application-input'}),
+            'first_name': text_input_widget(placeholder='First Name', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name', required=True ),
+            'email': email_input_widget(placeholder='Email', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number', required=True ),
         }
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
@@ -58,14 +76,14 @@ class ParentContactForm(forms.ModelForm):
 class PieceForm(forms.ModelForm):
     class Meta:
         model = models.Piece
-        fields = ['title', 'opus', 'movement', 'composer', 'length',]
+        fields = ['title', 'opus', 'movement', 'composer', 'length', 'youtube_link',]
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Title', 'class': 'application-input'}),
-            'opus': forms.TextInput(attrs={'placeholder': 'Opus', 'class': 'application-input'}),
-            'movement': forms.TextInput(attrs={'placeholder': 'Movement', 'class': 'application-input'}),
-            'composer': forms.TextInput(attrs={'placeholder': 'Composer', 'class': 'application-input'}),
-            'length': forms.TextInput(attrs={'placeholder': 'Length', 'class': 'application-input'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'application-input'}),
+            'title': text_input_widget(placeholder='Title', required=True ),
+            'opus': text_input_widget(placeholder='Opus' ),
+            'movement': text_input_widget(placeholder='Movement' ),
+            'composer': text_input_widget(placeholder='Composer', required=True ),
+            'youtube_link': text_input_widget(placeholder='Youtube Link (Only needed for Young Artist Award Entry)' ),
+            'length': text_input_widget(placeholder='Length' ),
         }
 
 class PersonForm(forms.ModelForm):
@@ -73,18 +91,15 @@ class PersonForm(forms.ModelForm):
         model = models.Person
         fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'birthday']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'application-input'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last_name','class': 'application-input'}),
-            'instrument': forms.TextInput(attrs={'placeholder': 'Instrument','class': 'application-input'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Address','class': 'application-input'}),
-            'city': forms.TextInput(attrs={'placeholder': 'City','class': 'application-input'}),
-            'state': forms.TextInput(attrs={'placeholder': 'State','class': 'application-input'}),
-            'zip_code': forms.TextInput(attrs={'placeholder': 'Zip_code','class': 'application-input'}),
-            'country': forms.TextInput(attrs={'placeholder': 'Country','class': 'application-input'}),
-            'birthday': forms.SelectDateWidget(
-                empty_label=("Choose Year", "Choose Month", "Choose Day"),
-                years=range(1980, 2017),
-            ),
+            'first_name': text_input_widget(placeholder='First Name', required=True ),
+            'last_name': text_input_widget(placeholder='Last_name', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument', required=True ),
+            'address': text_input_widget(placeholder='Address', required=True ),
+            'city': text_input_widget(placeholder='City', required=True ),
+            'state': text_input_widget(placeholder='State', required=True ),
+            'zip_code': text_input_widget(placeholder='Zip_code', required=True ),
+            'country': text_input_widget(placeholder='Country', required=True ),
+            'birthday': cmtanc_birthday_input_widget(),
         }
 
     helper = FormHelper()
@@ -111,11 +126,11 @@ class TeacherForm(forms.ModelForm):
         model = models.Teacher
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'cmtanc_code',]
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'application-input'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'application-input'}),
-            'email': forms.TextInput(attrs={'placeholder': 'Email', 'class': 'application-input'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'application-input'}),
-            'cmtanc_code': forms.TextInput(attrs={'placeholder': 'CMTANC Code', 'class': 'application-input'}),
+            'first_name': text_input_widget(placeholder='First Name', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name', required=True ),
+            'email': email_input_widget(placeholder='Email', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number', required=True ),
+            'cmtanc_code': text_input_widget(placeholder='CMTANC Code' ),
         }
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
@@ -137,16 +152,11 @@ class EnsembleMemberForm(forms.ModelForm):
         model = models.EnsembleMember
         fields = ['first_name', 'last_name', 'instrument', 'birthday']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'application-input'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'application-input'}),
-            'instrument': forms.TextInput(attrs={'placeholder': 'Instrument', 'class': 'application-input'}),
+            'first_name': text_input_widget(placeholder='First Name', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument', required=True ),
+            'birthday': cmtanc_birthday_input_widget(),
         }
-    birthday = forms.DateField(
-        widget=forms.SelectDateWidget(
-            empty_label=("Choose Year", "Choose Month", "Choose Day"),
-            years=range(1980, 2017),
-        ),
-    )
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'

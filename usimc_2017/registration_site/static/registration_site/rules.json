@@ -19,7 +19,6 @@
         "clarinet",
         "vocal",
         "chinese_traditional_instrument_zither",
-        "chinese_traditional_instrument_zither",
         "chinese_traditional_instrument_bowed_strings",
         "chinese_traditional_instrument_plucked_string",
         "chinese_traditional_instrument_woodwinds",
@@ -56,7 +55,6 @@
         "clarinet",
         "vocal",
         "chinese_traditional_instrument_zither",
-        "chinese_traditional_instrument_zither",
         "chinese_traditional_instrument_bowed_strings",
         "chinese_traditional_instrument_plucked_string",
         "chinese_traditional_instrument_woodwinds",
@@ -68,7 +66,7 @@
       ]
     }
   },
-  "age_measurement_date": 1496275200,
+  "age_measurement_date": 1496300400,
   "instrument_categories": { 
     "piano": {
       "name": "Piano",

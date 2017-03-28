@@ -4,7 +4,10 @@
 
 <!-- Head -->
 {% block head %}
-<script src="{% static 'registration_site/jquery.formset.js' %}"></script>
+<script src="{% static 'shared/jquery.formset.js' %}"></script>
+<script src="{% static 'shared/parsley.js' %}"></script>
+<script src="{% static 'shared/cmtanc_rules.js' %}"></script>
+<script src="{% static 'shared/cmtanc_parsley_validators.js' %}"></script>
 <script src="{% static 'registration_site/edit_solo_application.js' %}"></script>
 {% endblock %}
 
@@ -20,9 +23,7 @@
 <div style="height: 14px"></div>
 {% endblock %}
 {% block side-bar %}
-<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back to<br>Entry List</a>
-<hr>
-<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back to List</a>
+<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Cancel</a>
 {% endblock %}
 {% block form %}
 <div class="flex-start flex-column">
@@ -43,8 +44,13 @@
   <div class="information-container">
     <span class="paragraph-bold">{{ calculated_price_string|linebreaksbr }}</span>
   </div>
+  <div class="bs-callout bs-callout-warning hidden">
+    <div style="height: 14px"></div>
+    <h4>Fix your form</h4>
+    <p>See message below to fix your submission</p>
+  </div>
   <div style="height: 14px"></div>
-  <form class="form-inline" action="." method="post">
+  <form class="form-inline" id="application-form" action="." method="post", data-parsley-validate="">
     {% csrf_token %}
     <div class="flex-column flex-center">
       <div>
@@ -141,8 +147,10 @@
               <div class="form-section-subheader">Birthday</div>
             </div>
             <div class="col-md-12 application-column">
-              {{ lead_competitor_form.birthday.errors }}
-              {{ lead_competitor_form.birthday }}
+              <div class="input-group">
+                {{ lead_competitor_form.birthday.errors }}
+                {{ lead_competitor_form.birthday }}
+              </div>
             </div>
           </div>
           <div style="height: 14px"></div>
@@ -179,9 +187,8 @@
                   {{ form.length }}
                 </div>
                 <div class="col-md-12 application-column">
-                  {{ form.is_chinese.errors }}
-                  {{ form.is_chinese }}
-                  checkmark if this is a chinese piece
+                  {{ form.youtube_link.errors }}
+                  {{ form.youtube_link }}
                 </div>
               </div>
             </div>
@@ -190,7 +197,6 @@
           <div style="height: 14px"></div>
         </div> <!-- piece div -->
         <div style="height: 14px"></div>
-        <input class="btn btn-default" type="submit" name="save-form" value="Save">
         <input class="btn btn-submit" type="submit" name="submit-form" value="Submit">
         <div style="height: 14px"></div>
       </div> <!-- empty div -->

@@ -16,17 +16,16 @@
 
 <!-- Main Content -->
 {% block form_title %}
-  <h3>Create a New Competition Entry</h3>
+  <h3>New USIMC Entry</h3>
 {% endblock %}
 {% block form %}
   <form action="." method="post">
     {% csrf_token %}
-    International Status
     {{ form|crispy }}
     <div style="height: 10px;"></div>
     <div class="nav-panel">
       <a href="{% url 'registration_site:dashboard' %}" type="button" class="btn btn-default">Cancel</a>
-      <input type="submit" value="Create" class="btn btn-success">
+      <input type="submit" value="Next" class="btn btn-success">
     </div>
   </form>
 {% endblock %}

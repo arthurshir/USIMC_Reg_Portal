@@ -22,7 +22,7 @@ import datetime
 import pytz
 import phonenumbers
 
-PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length',])
+PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'youtube_link'])
 EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'birthday'])
 
 piece_formset_prefix = 'pieces'
@@ -144,9 +144,8 @@ class NewApplicationView(View):
         awards_applying_for = form.cleaned_data['awards_applying_for']
         instrument_category = form.cleaned_data['instrument_category']
         age_category = form.cleaned_data['age_category']
-        is_not_international = form.cleaned_data['is_not_international']
         usimc_user = get_usimc_user(request.user)
-        entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user, is_not_international=is_not_international)
+        entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
 
         # Create Initial Relations
         entry.teacher = models.Teacher.objects.create()
@@ -386,6 +385,8 @@ class ReviewSubmissionView(View):
 
     def get(self, request, *args, **kwargs):
         self.update_entry_context(request)
+        if self.context['entry'].submitted:
+            return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         return render(request, 'registration_site/review_submission.html', self.context)
 
     def post(self, request, *args, **kwargs):
@@ -412,6 +413,8 @@ class PaymentView(View):
     def get(self, request, *args, **kwargs):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
+        if entry.submitted:
+            return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         self.context['entry'] = entry
         self.context['calculated_price'] = entry.calculate_price()
         self.context['calculated_price_string'] = entry.calculate_price_string()
@@ -532,7 +535,7 @@ class ApplicationListView(View):
         self.context['user'] = request.user
         self.context['entries'] = usimc_user.entry.all().order_by('created_at')
         self.context['unsubmitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=False).order_by('created_at'))
-        self.context['submitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=True).order_by('created_at'))
+        self.context['submitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=True).order_by('-created_at'))
 
 
         return render(request, 'registration_site/application_list.html', self.context)

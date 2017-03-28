@@ -15,17 +15,17 @@ with open(json_path) as json_data:
 # Define Constants
 RAW_JSON = data
 
-INSTRUMENT_SOLO_CATEGORY_CHOICES = tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if not v['ensemble']))
-INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES = tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if v['ensemble']))
-INSTRUMENT_CATEGORY_CHOICES = tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems()))
-
+INSTRUMENT_SOLO_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if not v['ensemble'])))
+INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if v['ensemble'])))
+INSTRUMENT_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems())))
 INSTRUMENT_SOLO_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_SOLO_CATEGORY_CHOICES)
 INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES)
 INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
 
-AGE_CATEGORY_CHOICES = tuple(((str(x), str(x)) for x in data['age_group_names']))
+AGE_CATEGORY_CHOICES = sorted(tuple(((str(x), str(x)) for x in data['age_group_names'])))
+AGE_CATEGORY_CHOICES_DICT = dict(AGE_CATEGORY_CHOICES)
 
-AWARD_CHOICES = tuple(((str(x), data['awards'][x]['name']) for x in data['awards']))
+AWARD_CHOICES = sorted(tuple(((str(x), data['awards'][x]['name']) for x in data['awards'])), reverse=True)
 AWARD_CHOICES_DICT = dict(AWARD_CHOICES)
 
 KEY_PRICING_YES_CMTANC = 'per_contestant_yes_cmtanc'

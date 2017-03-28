@@ -80,7 +80,7 @@ class Entry(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
     submitted = BooleanField(default=False)
-    is_not_international = BooleanField(default=False)
+    is_not_international = BooleanField(default=True)
     
     # Relations
     parent_contact = OneToOneField('ParentContact', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Parent Contact")
@@ -175,6 +175,7 @@ class Piece(Model):
     opus = CharField(max_length=200, verbose_name='Opus', blank=True, null=True)
     movement = CharField(max_length=200, verbose_name='Movement', blank=True, null=True)
     composer = CharField(max_length=200, verbose_name='Composer', blank=True, null=True)
+    youtube_link = CharField(max_length=200, verbose_name='Youtube Link (Only needed for Young Artist Award Entry)', blank=True, null=True)
     length = IntegerField(verbose_name='Length', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
