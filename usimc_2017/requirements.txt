@@ -16,6 +16,7 @@ gunicorn==19.6.0
 idna==2.2
 ipaddress==1.0.18
 Markdown==2.6.8
+mod-wsgi==4.5.15
 phonenumberslite==8.3.3
 psycopg2==2.6.2
 pyasn1==0.2.2

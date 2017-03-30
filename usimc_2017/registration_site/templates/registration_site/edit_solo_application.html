@@ -55,25 +55,34 @@
     <div class="flex-column flex-center">
       <div>
         <div>
+
+          <div class="form-section-header">International Status</div>
+          <label for="question">Does at least one of your competitors live in the United States?</label>
+          <select name="lives-in-united-states" text= required="" placeholder="---">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+          <div style="height: 14px"></div>
+
           <div class="form-section-header">Parent Contact</div>
           {{ teacher_form.non_field_errors }}
           {{ contact_form.id }}
           <div class="row">
             <div class="col-md-6 application-column">
-              {{ contact_form.first_name.errors }}
               {{ contact_form.first_name}}
+              {{ contact_form.first_name.errors }}
             </div>
             <div class="col-md-6 application-column">
-              {{ contact_form.last_name.errors }}
               {{ contact_form.last_name }}
+              {{ contact_form.last_name.errors }}
             </div>
             <div class="col-md-12 application-column">
-              {{ contact_form.email.errors }}
               {{ contact_form.email }}
+              {{ contact_form.email.errors }}
             </div>
             <div class="col-md-12 application-column">
-              {{ contact_form.phone_number.errors }}
               {{ contact_form.phone_number }}
+              {{ contact_form.phone_number.errors }}
             </div>
           </div>
           <div style="height: 14px"></div>
@@ -85,20 +94,20 @@
           {{ teacher_form.id }}
           <div class="row">
             <div class="col-md-6 application-column">
-              {{teacher_form.first_name.errors}}
               {{teacher_form.first_name}}
+              {{teacher_form.first_name.errors}}
             </div>
             <div class="col-md-6 application-column">
-              {{teacher_form.last_name.errors}}
               {{teacher_form.last_name}}
+              {{teacher_form.last_name.errors}}
             </div>
             <div class="col-md-12 application-column">
-              {{teacher_form.email.errors}}
               {{teacher_form.email}}
+              {{teacher_form.email.errors}}
             </div>
             <div class="col-md-12 application-column">
-              {{teacher_form.cmtanc_code.errors}}
               {{teacher_form.cmtanc_code}}
+              {{teacher_form.cmtanc_code.errors}}
             </div>
           </div>
           <div style="height: 14px"></div>
@@ -113,43 +122,43 @@
               <div class="form-section-subheader">Name</div>
             </div>
             <div class="col-md-6 application-column">
-              {{ lead_competitor_form.first_name.errors }}
               {{ lead_competitor_form.first_name }}
+              {{ lead_competitor_form.first_name.errors }}
             </div>
             <div class="col-md-6 application-column">
-              {{ lead_competitor_form.last_name.errors }}
               {{ lead_competitor_form.last_name }}
+              {{ lead_competitor_form.last_name.errors }}
             </div>
             <div class="col-md-12 application-column">
               <div class="form-section-subheader">Address</div>
             </div>
             <div class="col-md-12 application-column">
-              {{ lead_competitor_form.address.errors }}
               {{ lead_competitor_form.address }}
+              {{ lead_competitor_form.address.errors }}
             </div>
             <div class="col-md-5 application-column">
-              {{ lead_competitor_form.city.errors }}
               {{ lead_competitor_form.city }}
+              {{ lead_competitor_form.city.errors }}
             </div>
             <div class="col-md-2 application-column">
-              {{ lead_competitor_form.state.errors }}
               {{ lead_competitor_form.state }}
+              {{ lead_competitor_form.state.errors }}
             </div>
             <div class="col-md-2 application-column">
-              {{ lead_competitor_form.zip_code.errors }}
               {{ lead_competitor_form.zip_code }}
+              {{ lead_competitor_form.zip_code.errors }}
             </div>
             <div class="col-md-3 application-column">
-              {{ lead_competitor_form.country.errors }}
               {{ lead_competitor_form.country }}
+              {{ lead_competitor_form.country.errors }}
             </div>
             <div class="col-md-12 application-column">
               <div class="form-section-subheader">Birthday</div>
             </div>
             <div class="col-md-12 application-column">
               <div class="input-group">
-                {{ lead_competitor_form.birthday.errors }}
                 {{ lead_competitor_form.birthday }}
+                {{ lead_competitor_form.birthday.errors }}
               </div>
             </div>
           </div>
@@ -167,28 +176,28 @@
               {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
               <div class="row">
                 <div class="col-md-8 application-column">
-                  {{ form.title.errors }}
                   {{ form.title }}
+              {{ form.title.errors }}
                 </div>
                 <div class="col-md-2 application-column">
-                  {{ form.opus.errors }}
                   {{ form.opus }}
+              {{ form.opus.errors }}
                 </div>
                 <div class="col-md-2 application-column">
-                  {{ form.movement.errors }}
                   {{ form.movement }}
+              {{ form.movement.errors }}
                 </div>
                 <div class="col-md-8 application-column">
-                  {{ form.composer.errors }}
                   {{ form.composer }}
+              {{ form.composer.errors }}
                 </div>
                 <div class="col-md-4 application-column">
-                  {{ form.length.errors }}
                   {{ form.length }}
+              {{ form.length.errors }}
                 </div>
                 <div class="col-md-12 application-column">
-                  {{ form.youtube_link.errors }}
                   {{ form.youtube_link }}
+              {{ form.youtube_link.errors }}
                 </div>
               </div>
             </div>

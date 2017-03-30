@@ -40,10 +40,6 @@ def get_instrument_category(instrument):
   print data['instrument_categories'][instrument]
 
 def get_instrument_category_age_rules(instrument):
-  # print data['instrument_categories'][instrument]['age_groups']
-  # for index, age in enumerate(data['instrument_categories'][instrument]['age_groups']):
-  #   print index, age
-
   return dict( (data['age_group_names'][index], age) for index, age in enumerate(data['instrument_categories'][instrument]['age_groups']))
 
 def get_age_measurement_date_epoch():
@@ -60,5 +56,3 @@ def get_instrument_category_choices():
 
 def get_instrument_category_prices(instrument):
   return data['instrument_categories'][instrument]['pricing']
-
-# print get_instrument_category_choices()

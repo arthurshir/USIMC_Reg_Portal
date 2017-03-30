@@ -200,6 +200,11 @@ class EditSoloApplicationView(View):
         self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
 
+    def load_entry_context(self, request):
+        # Retrieve user and entry, and other
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
         # Set other
         self.context['entry'] = entry
         self.context['entry_award_categories'] = entry.awards_string()
@@ -210,6 +215,7 @@ class EditSoloApplicationView(View):
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
+        self.load_entry_context(request)
         return render(request, 'registration_site/edit_solo_application.html', self.context)
 
     def post(self, request, *args, **kwargs):
@@ -217,6 +223,7 @@ class EditSoloApplicationView(View):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
         go_to_review_page = request.POST.get("submit-form") != None
+        self.load_entry_context(request)
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -228,6 +235,9 @@ class EditSoloApplicationView(View):
         if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(),]):
             return render(request, 'registration_site/edit_solo_application.html', self.context)
         else:
+
+            validations_passed = True
+
             # Birthday validation
             if self.context['lead_competitor_form'].cleaned_data['birthday']:
                 years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
@@ -235,6 +245,7 @@ class EditSoloApplicationView(View):
                 cutoff = usimc_rules.get_age_measurement_date()
                 cutoff = cutoff.replace(year=cutoff.year - years)
                 if birthday < cutoff:
+                    validations_passed = False
                     self.context['lead_competitor_form'].add_error('birthday',
                         "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
                     return render(request, 'registration_site/edit_solo_application.html', self.context)
@@ -245,9 +256,8 @@ class EditSoloApplicationView(View):
             print input_cmtanc_code, cmtanc_codes
             print input_cmtanc_code in cmtanc_codes
             if (input_cmtanc_code and input_cmtanc_code not in cmtanc_codes):
-                print "invalid code"
+                validations_passed = False
                 self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')
-                return render(request, 'registration_site/edit_solo_application.html', self.context)
 
             # Update single instance objects
             self.context['lead_competitor_form'].save()
@@ -261,6 +271,9 @@ class EditSoloApplicationView(View):
             for instance in instances:
                 instance.entry = entry
                 instance.save() 
+
+            if not validations_passed:
+                return render(request, 'registration_site/edit_solo_application.html', self.context)
 
             # Refresh with new forms
             if go_to_review_page:
@@ -288,7 +301,13 @@ class EditEnsembleApplicationView(View):
         self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry)
         self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all())
 
+    def load_entry_context(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
         # Set other
+        self.context['lives_in_united_states'] = "1" if entry.is_not_international else "0"
         self.context['entry'] = entry
         self.context['entry_award_categories'] = entry.awards_string()
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
@@ -298,6 +317,7 @@ class EditEnsembleApplicationView(View):
 
     def get(self, request, *args, **kwargs):
         self.update_forms_and_formsets(request)
+        self.load_entry_context(request)
         return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
     def post(self, request, *args, **kwargs):
@@ -305,6 +325,7 @@ class EditEnsembleApplicationView(View):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
         go_to_review_page = request.POST.get("submit-form") != None
+        self.load_entry_context(request)
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -312,6 +333,10 @@ class EditEnsembleApplicationView(View):
         self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
         self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
+
+        print 'lives in US', request.POST.get('lives_in_united_states') == "1"
+        entry.is_not_international = request.POST.get('lives-in-united-states') == "1"
+        entry.save()
 
         if not all([self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), self.context['ensemble_member_formset'].is_valid()]):
             return render(request, 'registration_site/edit_ensemble_application.html', self.context)
@@ -340,6 +365,11 @@ class EditEnsembleApplicationView(View):
             # Refresh with new forms and render
             # self.update_forms_and_formsets(request) # TODO: Find out if you actually do need this
 
+            validations_passed = True
+
+            # Validate file
+            print "PROOF OF AGE", request.POST.get('proof_of_age')
+
             # Validate birthdays
             invalid_birthday_detected = False
             forms_to_check = [self.context['lead_competitor_form']]
@@ -351,8 +381,21 @@ class EditEnsembleApplicationView(View):
                     cutoff = usimc_rules.get_age_measurement_date()
                     cutoff = cutoff.replace(year=cutoff.year - years) # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
                     if birthday < cutoff:
+                        validations_passed = False
                         form.add_error('birthday',
                             "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+
+            # CMTANC code validation
+            cmtanc_codes = usimc_data.get_cmtanc_codes()
+            input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
+            print input_cmtanc_code, cmtanc_codes
+            print input_cmtanc_code in cmtanc_codes
+            if (input_cmtanc_code and input_cmtanc_code not in cmtanc_codes):
+                validations_passed = False
+                self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
+
+            if not validations_passed:
+                return render(request, 'registration_site/edit_ensemble_application.html', self.context)
 
             self.update_forms_and_formsets(request)
 
@@ -455,7 +498,7 @@ class PaymentView(View):
                 'USIMC Entry Confirmation',
                 entry.basic_information_string(),
                 'usimc2017tech@gmail.com',
-                [entry.parent_contact.email],
+                [entry.parent_contact.email, 'info@usimc.org'],
                 fail_silently=True,
             )
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
