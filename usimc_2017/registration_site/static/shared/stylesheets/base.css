@@ -1,57 +1,242 @@
-/*
-Error: File to import not found or unreadable: stylesheets/constants.
-       Load path: /Users/arthurshir/Documents/Contracting/Ling_Registration_Portal/usimc_2017
-        on line 1 of ./registration_site/static/shared/stylesheets/base.scss
+.side-bar {
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  background-color: #ECECEC;
+  padding: 20px; }
 
-1: @import "stylesheets/constants";
-2: @import "stylesheets/components/containers";
-3: @import "stylesheets/components/text";
-4: @import "stylesheets/components/input";
-5: @import "stylesheets/components/spacers";
-6: @import "stylesheets/components/bootstrap_defaults";
+.information-container {
+  border: 1px solid #000000;
+  width: 100%;
+  padding: 12px 8px 12px 8px;
+  font-weight: 200;
+  font-size: 14px; }
 
-Backtrace:
-./registration_site/static/shared/stylesheets/base.scss:1
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/import_node.rb:67:in `rescue in import'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/import_node.rb:45:in `import'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/import_node.rb:28:in `imported_file'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/import_node.rb:37:in `css_import?'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:313:in `visit_import'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `block in with_base'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:115:in `with_frame'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/stack.rb:79:in `with_base'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:160:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `map'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:52:in `visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:169:in `block in visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:168:in `visit_children'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `block in visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:188:in `visit_root'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/base.rb:36:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:159:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/visitors/perform.rb:8:in `visit'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/root_node.rb:36:in `css_tree'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/engine.rb:381:in `_render_with_sourcemap'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/engine.rb:298:in `render_with_sourcemap'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:209:in `each'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:473:in `on_file_changed'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/lib/sass/plugin/compiler.rb:331:in `block in watch'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:252:in `call'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:252:in `on_change'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/listener.rb:290:in `block in initialize_adapter'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapters/polling.rb:48:in `call'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapters/polling.rb:48:in `poll_changed_directories'
-/Library/Ruby/Gems/2.0.0/gems/sass-3.4.23/vendor/listen/lib/listen/adapter.rb:299:in `block in start_poller'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: File to import not found or unreadable: stylesheets/constants.\A        Load path: /Users/arthurshir/Documents/Contracting/Ling_Registration_Portal/usimc_2017\A         on line 1 of ./registration_site/static/shared/stylesheets/base.scss\A \A 1: @import \"stylesheets/constants\";\A 2: @import \"stylesheets/components/containers\";\A 3: @import \"stylesheets/components/text\";\A 4: @import \"stylesheets/components/input\";\A 5: @import \"stylesheets/components/spacers\";\A 6: @import \"stylesheets/components/bootstrap_defaults\";"; }
+.panel-body {
+  padding: 15px 12px 10px 12px;
+  border: 1px solid #959595; }
+
+.application-form-div {
+  max-width: 550px; }
+
+#awards-column {
+  max-width: 300px; }
+
+#instrument-category-column {
+  max-width: 200px; }
+
+#created-at-column {
+  max-width: 124px; }
+
+.panel-default {
+  border-radius: 0px; }
+
+.content {
+  margin-top: 70px;
+  margin-bottom: 36px;
+  min-height: calc(100% - 70px - 36px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: scroll; }
+
+.centered-align-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100% - 70px - 36px); }
+
+.centered-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: calc(100% - 70px - 36px); }
+
+.navbar {
+  min-height: 70px !important;
+  background-color: #9C0D38; }
+  .navbar .navbar-brand {
+    padding: 10px; }
+    .navbar .navbar-brand .navbar-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center; }
+      .navbar .navbar-brand .navbar-wrapper .navbar-brand-title {
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#title {
+          color: white;
+          font-size: 22px;
+          font-weight: 300; }
+        .navbar .navbar-brand .navbar-wrapper .navbar-brand-title span#subtitle {
+          color: white;
+          font-size: 15px;
+          font-weight: 200; }
+
+footer {
+  background-color: #ECECEC;
+  color: black;
+  position: fixed;
+  width: 100%;
+  height: 36px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: 200;
+  padding: 10px; }
+
+.form-section-header {
+  font-size: 20px;
+  margin-left: 2px;
+  font-weight: 200; }
+
+.form-section-subheader {
+  font-size: 14px;
+  margin: 0px;
+  font-weight: 200; }
+
+.paragraph-bold {
+  font-weight: 400; }
+
+#piece-form-number {
+  width: 20px;
+  height: 30px;
+  line-height: 30px; }
+
+a {
+  color: #9C0D38; }
+
+.text-centered {
+  text-align: center; }
+
+strong {
+  font-weight: 400; }
+
+.application-input, .textinput {
+  border: 1px solid #959595;
+  height: 30px;
+  width: 100%;
+  border-radius: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
+  line-height: 22px; }
+
+textarea:focus, input:focus {
+  outline: none; }
+
+.textinput {
+  padding-left: 6px;
+  padding-right: 6px; }
+
+input.parsley-success,
+select.parsley-success,
+textarea.parsley-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border: 1px solid #D6E9C6; }
+
+input.parsley-error,
+select.parsley-error,
+textarea.parsley-error,
+.errorlist {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border: 1px solid #EED3D7; }
+
+.parsley-errors-list {
+  margin: 2px 0 3px;
+  padding: 0;
+  list-style-type: none;
+  font-size: 0.9em;
+  line-height: 0.9em;
+  opacity: 0;
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in; }
+
+.parsley-errors-list.filled {
+  opacity: 1; }
+
+.spacer {
+  height: 10px; }
+
+.horizontal-line {
+  height: 1px;
+  background-color: black;
+  margin: 8px 30px 8px 30px; }
+
+.application-column {
+  padding: 3px; }
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px; }
+
+.btn-add {
+  flex: 1; }
+
+.btn-default {
+  border-radius: 0px;
+  font-weight: 400; }
+
+.btn-submit {
+  border: none;
+  border-radius: 0px;
+  font-weight: 200;
+  color: white;
+  background-color: #9C0D38; }
+
+.flex-column {
+  display: flex;
+  flex-direction: column; }
+
+.flex-row {
+  display: flex;
+  flex-direction: row; }
+
+.flex-center {
+  display: flex;
+  align-items: center; }
+
+.flex-justify-content-center {
+  display: flex;
+  justify-content: center; }
+
+.flex-align-items-center {
+  display: flex;
+  align-items: center; }
+
+.flex-stretch {
+  display: flex;
+  align-items: stretch; }
+
+.flex-stretch {
+  display: flex;
+  align-items: stretch; }
+
+.flex-start {
+  display: flex;
+  align-items: flex-start; }
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between; }
+
+#small_logo {
+  height: 50px;
+  width: 50px; }
+
+html * {
+  font-family: 'Fira Sans' !important;
+  font-weight: 300; }
+
+.form-horizontal {
+  margin: 0px; }
+
+/*# sourceMappingURL=base.css.map */

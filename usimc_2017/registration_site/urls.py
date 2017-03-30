@@ -10,21 +10,20 @@ urlpatterns = [
     # Home Page
     url(r'^$', views.IndexView.as_view(), name='index'),
 
-    # Regular Users
+    # Auth
     url(r'^login/', views.LoginView.as_view(), name='login'),
     url(r'^register/', views.RegisterView.as_view(), name='register'),
     url(r'^logout/', views.LogoutView.as_view(), name='logout'),
+    # Application Management
     url(r'^dashboard/$', views.ApplicationListView.as_view(), name='dashboard'),
     url(r'^dashboard/new/', views.NewApplicationView.as_view(), name='new_application'),
-    url(r'^dashboard/redirect/(?P<pk>\d+)/edit/$', views.edit_application_redirect, name='edit_application_redirect'),
-    url(r'^dashboard/ensemble/(?P<pk>\d+)/edit/$', views.EditEnsembleApplicationView.as_view(), name='edit_ensemble_application'),
-    url(r'^dashboard/solo/(?P<pk>\d+)/edit/$', views.EditSoloApplicationView.as_view(), name='edit_solo_application'),
+    url(r'^dashboard/list/', views.ApplicationListView.as_view(), name='application_list'),
+    url(r'^dashboard/delete/(?P<pk>\d+)/$', views.DeleteApplicationView.as_view(), name='delete_application'),
+    # Application Submission
+    url(r'^dashboard/(?P<pk>\d+)/edit/$', views.EditApplicationView.as_view(), name='edit_application'),
     url(r'^dashboard/submission/review/(?P<pk>\d+)/$', views.ReviewSubmissionView.as_view(), name='review_submission'),
     url(r'^dashboard/submission/pay/(?P<pk>\d+)/$', views.PaymentView.as_view(), name='pay'),
     url(r'^dashboard/submission/confirmation/(?P<pk>\d+)/$', views.payment_confirmation, name='payment_confirmation'),
-    url(r'^dashboard/performers/', views.EditPerformersView.as_view(), name='edit_performers'),
-    url(r'^dashboard/list/', views.ApplicationListView.as_view(), name='application_list'),
-    url(r'^dashboard/delete/(?P<pk>\d+)/$', views.DeleteApplicationView.as_view(), name='delete_application'),
     
     # Admin Users
     url(r'^admin/login/', views.AdminLoginView.as_view(), name='admin_register'),

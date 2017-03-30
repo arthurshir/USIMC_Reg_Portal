@@ -1,4 +1,4 @@
-{% extends 'registration_site/application_form.html' %}
+{% extends 'registration_site/application_submission/application_form.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
@@ -8,7 +8,11 @@
 <script src="{% static 'shared/parsley.js' %}"></script>
 <script src="{% static 'shared/cmtanc_rules.js' %}"></script>
 <script src="{% static 'shared/cmtanc_parsley_validators.js' %}"></script>
+{% if is_ensemble_application %}
 <script src="{% static 'registration_site/edit_ensemble_application.js' %}"></script>
+{% else %}
+<script src="{% static 'registration_site/edit_solo_application.js' %}"></script>
+{% endif %}
 {% endblock %}
 
 <!-- Title -->
@@ -50,12 +54,6 @@
     <div class="flex-column flex-center">
       <div>
         <div>
-<!-- 
-          <div class="form-section-header">Proof of Age</div>
-          <label for="question">Proof of age (photocopy of either driver’s license, passport or birth certificate) -- Please provide a file smaller than 5Mb:</label>
-          <input type="file" name="proof-of-age" required="" data-parsley-max-file-size="5">
-          <div style="height: 14px"></div>
- -->
 
           <div class="form-section-header">International Status</div>
           <label for="question">Does at least one of your competitors live in the United States?</label>
@@ -164,6 +162,11 @@
               </div>
             </div>
           </div>
+          <div style="height: 14px"></div>
+        </div>
+
+        {% if is_ensemble_application %}
+        <div class="competitor=div">
           {{ ensemble_member_formset.non_field_errors }}
           {{ ensemble_member_formset.id }}
           {% for form in ensemble_member_formset.forms %}
@@ -199,7 +202,8 @@
           {% endfor %}
           {{ ensemble_member_formset.management_form }}
           <div style="height: 14px"></div>
-        </div> <!-- competitor enclosing div -->
+        </div>
+        {% endif %}
 
         <div class="piece-div">
           <div class="form-section-header">Pieces</div>
