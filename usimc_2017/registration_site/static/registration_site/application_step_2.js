@@ -8,14 +8,10 @@ $(document).ready(function(){
 
 
   $(document).on("click", 'a', function(event){
-    console.log($(document).find('a'));
-    alert("test");
-    event.preventDefault()
     $("#application-form").parsley().reset();
   });
 
   $(".competitor-div").on("click", "a", function(){
-    alert("test");      
     update_pricing();
   });
 
