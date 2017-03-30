@@ -328,6 +328,7 @@ class PaymentView(View):
         return render(request, 'registration_site/application_submission/payment.html', self.context)
 
     def post(self, request, *args, **kwargs):
+        user = request.user
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
 
@@ -362,7 +363,7 @@ class PaymentView(View):
                 'USIMC Entry Confirmation',
                 entry.basic_information_string(),
                 'usimc2017tech@gmail.com',
-                [entry.parent_contact.email, 'info@usimc.org'],
+                [user.username, 'info@usimc.org'],
                 fail_silently=True,
             )
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
