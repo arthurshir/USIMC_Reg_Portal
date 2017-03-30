@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
+from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404, reverse
@@ -71,10 +72,6 @@ class LoginView(View):
         else:
             messages.warning(request, 'Form not Valid?', extra_tags='login')
             return redirect('registration_site:login')
-
-def redirect_register_view_error(request, message):
-    messages.warning(request, message, extra_tags='register')
-    return redirect('registration_site:register')
 
 class RegisterView(View):
     context = {}
@@ -273,11 +270,12 @@ class EditApplicationView(View):
 
         # Set other
         self.context['entry'] = entry
+        self.context['entry_num_award_categories'] = len(entry.awards_applying_for)
         self.context['entry_award_categories'] = entry.awards_string()
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
         self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
         self.context['calculated_price'] = entry.calculate_price()
-        self.context['calculated_price_string'] = entry.calculate_price_string()
+        self.context['calculated_price_string'] = entry.create_pricing_string()
         self.context['is_ensemble_application'] = entry.is_ensemble()
 
     @method_decorator(login_required)
@@ -295,7 +293,7 @@ class ReviewSubmissionView(View):
         self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
         self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
         self.context['calculated_price'] = entry.calculate_price()
-        self.context['calculated_price_string'] = entry.calculate_price_string()
+        self.context['calculated_price_string'] = entry.create_pricing_string()
         self.context['parent_contact'] = entry.parent_contact.basic_information_string()
         self.context['teacher'] = entry.parent_contact.basic_information_string()
         self.context['ensemble_members'] = [ x.basic_information_string() for x in entry.ensemble_members.all() ]
@@ -324,7 +322,7 @@ class PaymentView(View):
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         self.context['entry'] = entry
         self.context['calculated_price'] = entry.calculate_price()
-        self.context['calculated_price_string'] = entry.calculate_price_string()
+        self.context['calculated_price_string'] = entry.create_pricing_string()
         return render(request, 'registration_site/application_submission/payment.html', self.context)
 
     def post(self, request, *args, **kwargs):
@@ -359,9 +357,33 @@ class PaymentView(View):
         if charge.paid:
             entry.submitted = True
             entry.save()
+
+            email_context = {}  
+            email_context['entry'] = entry
+            email_context['awards_string'] = entry.awards_string()
+            email_context['age_category_string'] = entry.age_category_string()
+            email_context['instrument_category_string'] = entry.instrument_category_string()
+            email_context['is_not_international_string'] = entry.is_not_international_string()
+            email_context['lead_performer_birthday_string'] = entry.lead_performer.birthday_string()
+            email_context['lead_performer_home_address_string'] = entry.lead_performer.home_address_string()
+            email_context['ensemble_members'] = map(lambda x: {
+                    'first_name': x.first_name,
+                    'last_name': x.last_name,
+                    'instrument': x.instrument,
+                    'birthday_string': x.birthday_string()
+                    }, entry.ensemble_members.all())
+            email_context['pieces'] = map(lambda x: {
+                    'title': x.title,
+                    'opus': xstr(x.opus),
+                    'movement': xstr(x.movement),
+                    'composer': x.composer,
+                    'youtube_link': xstr(x.youtube_link),
+                    'length': xstr(x.length)
+                    }, entry.pieces.all())
+            msg_plain = render_to_string('registration_site/application_submission/confirmation_email.txt', email_context)
             send_mail(
                 'USIMC Entry Confirmation',
-                entry.basic_information_string(),
+                msg_plain,
                 'usimc2017tech@gmail.com',
                 [user.username, 'info@usimc.org'],
                 fail_silently=True,
@@ -541,9 +563,21 @@ class DownloadEntriesView(View ):
 
         return response
 
+
+## REST API
+
+def redirect_register_view_error(request, message):
+    messages.warning(request, message, extra_tags='register')
+    return redirect('registration_site:register')
+
 def rules_json(request) :
     return JsonResponse(usimc_rules.RAW_JSON)
 
+def create_pricing_string(request):
+    entry = get_entry(request.user, request.GET['pk'])
+    num_ensemble_members = int(request.GET['num_ensemble_members'])
+    num_awards = int(request.GET['num_awards'])
+    return HttpResponse(entry.create_pricing_string_with_custom_values(num_ensemble_members, num_awards))
 
 ## Helper Functions
 def xstr(s):

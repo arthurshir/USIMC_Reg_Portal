@@ -1,4 +1,3 @@
-
 $(function () {
   // Birthday Validator
   window.Parsley.addValidator('birthday', {
@@ -35,10 +34,3 @@ $(function () {
   });
 
 });
-      // mincheck: {
-      //   validateMultiple: function validateMultiple(values, requirement) {
-      //     return values.length >= requirement;
-      //   },
-      //   requirementType: 'integer',
-      //   priority: 30
-      // },

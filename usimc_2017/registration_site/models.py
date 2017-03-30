@@ -104,6 +104,9 @@ class Entry(Model):
     def instrument_category_string(self):
         return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category]
 
+    def is_not_international_string(self):
+        return 'No, U.S. Entry' if self.is_not_international else 'International Entry'
+
     def age_category_years(self):
         return usimc_rules.get_instrument_category_age_rules(self.instrument_category)[self.age_category]
 
@@ -124,14 +127,21 @@ class Entry(Model):
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
         return price_per_competitor
 
+    def calculate_price_with_custom_values(self, num_ensemble_members, num_awards):
+        # Price per competitor & award * (number of competitors) * (number of awards)
+        return self.price_per_competitor_per_award() * (num_ensemble_members + 1) * num_awards * 100        
+
     def calculate_price(self):
         # Price per competitor & award * (number of competitors) * (number of awards)
-        return self.price_per_competitor_per_award() * (len(self.ensemble_members.all()) + 1) * len(self.awards_applying_for) * 100
+        return self.calculate_price_with_custom_values(len(self.ensemble_members.all()), len(self.awards_applying_for))
 
     def is_ensemble(self):
         return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values()
 
-    def calculate_price_string(self):
+    def create_pricing_string(self):
+        return self.create_pricing_string_with_custom_values(len(self.ensemble_members.all()), len(self.awards_applying_for))
+
+    def create_pricing_string_with_custom_values(self, num_ensemble_members, num_awards):
         output = '$' + str(self.price_per_competitor_per_award()) + ' per contestant per award '
         if not self.is_not_international:
             output += ' for international entry\n'
@@ -139,10 +149,11 @@ class Entry(Model):
             output += ' for CMTANC member\n'
         else:
             output += '\n'
-        output += 'x ' + str(len(self.ensemble_members.all()) + 1) + (' Contestants\n' if (len(self.ensemble_members.all()) + 1) > 1 else ' Contestant\n')
-        output += 'x ' + str(len(self.awards_applying_for)) + (' Awards\n' if len(self.awards_applying_for) > 1 else ' Award\n')
-        output += 'Total = $' + str(self.calculate_price()/100)
+        output += 'x ' + str(num_ensemble_members + 1) + (' Contestants\n' if (num_ensemble_members + 1) > 1 else ' Contestant\n')
+        output += 'x ' + str(num_awards) + (' Awards\n' if num_awards > 1 else ' Award\n')
+        output += 'Total = $' + str(self.calculate_price_with_custom_values(num_ensemble_members, num_awards)/100)
         return output
+
 
     def basic_information_string(self):
         return 'USIMC entry ID:' + xstr(self.pk) + ',  Category: ' + self.instrument_category_string() + ", Age Category: " + self.age_category_string()
@@ -225,8 +236,14 @@ class Person(Model):
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
         output += 'Address:\n' + xstr(self.address) + ', ' + xstr(self.city) + ' ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country) + '\n'
-        output += 'Birthday:\n' + xstr(birthday)
+        output += 'Birthday:\n' + xstr(self.birthday)
         return output
+
+    def birthday_string(self):
+        return xstr(self.birthday)
+
+    def home_address_string(self):
+        return xstr(self.address) + ', ' + xstr(self.city) + ', ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country)
 
     class Meta:
         default_related_name = 'lead_performer'
@@ -244,6 +261,9 @@ class EnsembleMember(Model):
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Ensemble Member')
+
+    def birthday_string(self):
+        return xstr(self.birthday)
 
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'

@@ -8,10 +8,12 @@
 <script src="{% static 'shared/parsley.js' %}"></script>
 <script src="{% static 'shared/cmtanc_rules.js' %}"></script>
 <script src="{% static 'shared/cmtanc_parsley_validators.js' %}"></script>
+<script src="{% static 'registration_site/application_step_2.js' %}"></script>
+<script src="{% static 'shared/helper_functions.js' %}"></script>
 {% if is_ensemble_application %}
-<script src="{% static 'registration_site/edit_ensemble_application.js' %}"></script>
+<script src="{% static 'registration_site/application_step_2_ensemble.js' %}"></script>
 {% else %}
-<script src="{% static 'registration_site/edit_solo_application.js' %}"></script>
+<script src="{% static 'registration_site/application_step_2_solo.js' %}"></script>
 {% endif %}
 {% endblock %}
 
@@ -30,6 +32,12 @@
 <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
 {% endblock %}
 {% block form %}
+
+<div id="entry_info_div" style="display: none;">
+  <input name="pk" value="{{entry.pk}}">
+  <input name="num_award_categories" value="{{entry_num_award_categories}}">
+</div>
+
 <div class="flex-start flex-column">
   <div class="form-section-header">Entry Details</div>
   <div class="information-container">
@@ -46,7 +54,9 @@
   <div style="height: 14px"></div>
   <div class="form-section-header">Pricing</div>
   <div class="information-container">
-    <span class="paragraph-bold">{{ calculated_price_string|linebreaksbr }}</span>
+    <div id="pricing_string"/>
+      <span class="paragraph-bold">{{ calculated_price_string|linebreaksbr }}</span>
+    </div>
   </div>
   <div style="height: 14px"></div>
   <form class="form-inline" id="application-form" action="." method="post">
@@ -112,7 +122,7 @@
           <div style="height: 14px"></div>
         </div> <!-- teacher enclosing div -->
 
-        <div class="teacher-div">
+        <div class="lead-competitor-div">
           <div class="form-section-header">Competitors</div>
           {{ lead_competitor_form.non_field_errors }}
           {{ lead_competitor_form.id }}
@@ -129,6 +139,10 @@
               <div class="col-md-6 application-column">
                 {{ lead_competitor_form.last_name }}
                 {{ lead_competitor_form.last_name.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                {{ lead_competitor_form.instrument }}
+                {{ lead_competitor_form.instrument.errors }}
               </div>
               <div class="col-md-12 application-column">
                 <div class="form-section-subheader">Address</div>
@@ -166,7 +180,7 @@
         </div>
 
         {% if is_ensemble_application %}
-        <div class="competitor=div">
+        <div class="competitor-div">
           {{ ensemble_member_formset.non_field_errors }}
           {{ ensemble_member_formset.id }}
           {% for form in ensemble_member_formset.forms %}

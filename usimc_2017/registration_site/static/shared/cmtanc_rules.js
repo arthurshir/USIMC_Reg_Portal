@@ -1,5 +1,4 @@
 
-
 // Collect rules
 var rules;
 $.getJSON( "/static/registration_site/rules.json", function( data ) {
@@ -38,5 +37,19 @@ function cutoff_birthday_for_instrument_category_and_age_group(instrument_catego
 }
 
 function validate_birthday_for_instrument_category_and_age_group(birthday, instrument_category, age_group_name) {
-  return birthday < cutoff_birthday_for_instrument_category_and_age_group(instrument_category, age_group_name)
+  return birthday < cutoff_birthday_for_instrument_category_and_age_group(instrument_category, age_group_name);
 }
+
+function pricing_for_instrument_category_for_pricing_type_per_contestant_per_awards(instrument_category, pricing_type) {
+  return rules['instrument_categories'][instrument_category]['pricing'][pricing_type];
+}
+
+function calculate_pricing(instrument_category, num_awards, num_competitors, pricing_type) {
+  var per_contestant_per_award = pricing_for_instrument_category_for_pricing_type_per_contestant_per_awards(instrument_category, pricing_type);
+  return per_contestant_per_award*num_awards*num_competitors;
+}
+
+// constants
+const PRICING_TYPE_YES_CMTANC = "per_contestant_yes_cmtanc";
+const PRICING_TYPE_NO_CMTANC = "per_contestant_no_cmtanc";
+const PRICING_TYPE_YES_INTERNATIONAL = "per_contestant_yes_international";
