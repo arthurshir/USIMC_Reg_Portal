@@ -216,7 +216,7 @@ class EditApplicationView(View):
                         form.add_error('birthday',
                             "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
             input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
-            if (input_cmtanc_code and input_cmtanc_code not in usimc_data.get_cmtanc_codes()):
+            if not entry.validate_cmtanc_code(input_cmtanc_code):
                 special_cases_valid = False
                 self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
