@@ -199,24 +199,26 @@ class EditApplicationView(View):
             ensemble_formset_valid = self.context['ensemble_member_formset'].is_valid()
         validity_array = [ self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), ensemble_formset_valid ]
 
-        # Validate special cases -- Birthday & CMTANC
-        competitor_forms = [self.context['lead_competitor_form']]
-        if entry.is_ensemble():
-            competitor_forms += self.context['ensemble_member_formset'].forms
-        for form in competitor_forms:
-            years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
-            if form.cleaned_data['birthday']:
-                birthday = form.cleaned_data['birthday']
-                cutoff = usimc_rules.get_age_measurement_date()
-                cutoff = cutoff.replace(year=cutoff.year - years) # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
-                if birthday < cutoff:
-                    special_cases_valid = False
-                    form.add_error('birthday',
-                        "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
-        input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
-        if (input_cmtanc_code and input_cmtanc_code not in usimc_data.get_cmtanc_codes()):
-            special_cases_valid = False
-            self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
+        # If you're only saving, just allow to validate
+        if not request.POST.get('save-form'):
+            # Validate special cases -- Birthday & CMTANC
+            competitor_forms = [self.context['lead_competitor_form']]
+            if entry.is_ensemble():
+                competitor_forms += self.context['ensemble_member_formset'].forms
+            for form in competitor_forms:
+                years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+                if form.cleaned_data['birthday']:
+                    birthday = form.cleaned_data['birthday']
+                    cutoff = usimc_rules.get_age_measurement_date()
+                    cutoff = cutoff.replace(year=cutoff.year - years) # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
+                    if birthday < cutoff:
+                        special_cases_valid = False
+                        form.add_error('birthday',
+                            "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+            input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
+            if (input_cmtanc_code and input_cmtanc_code not in usimc_data.get_cmtanc_codes()):
+                special_cases_valid = False
+                self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
         # Redirect if not all valid
         validity_array.append(special_cases_valid)
@@ -245,6 +247,9 @@ class EditApplicationView(View):
                 for instance in instances:
                     instance.entry = entry
                     instance.save() 
+
+            if request.POST.get('save-form'):
+                return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))                
 
             return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
 
@@ -298,6 +303,7 @@ class ReviewSubmissionView(View):
         self.context['teacher'] = entry.parent_contact.basic_information_string()
         self.context['ensemble_members'] = [ x.basic_information_string() for x in entry.ensemble_members.all() ]
         self.context['pieces'] = [ x.basic_information_string() for x in entry.pieces.all() ]
+        self.context['complete_description_string'] = entry.complete_description_string()
 
     def get(self, request, *args, **kwargs):
         self.update_entry_context(request)
@@ -357,33 +363,9 @@ class PaymentView(View):
         if charge.paid:
             entry.submitted = True
             entry.save()
-
-            email_context = {}  
-            email_context['entry'] = entry
-            email_context['awards_string'] = entry.awards_string()
-            email_context['age_category_string'] = entry.age_category_string()
-            email_context['instrument_category_string'] = entry.instrument_category_string()
-            email_context['is_not_international_string'] = entry.is_not_international_string()
-            email_context['lead_performer_birthday_string'] = entry.lead_performer.birthday_string()
-            email_context['lead_performer_home_address_string'] = entry.lead_performer.home_address_string()
-            email_context['ensemble_members'] = map(lambda x: {
-                    'first_name': x.first_name,
-                    'last_name': x.last_name,
-                    'instrument': x.instrument,
-                    'birthday_string': x.birthday_string()
-                    }, entry.ensemble_members.all())
-            email_context['pieces'] = map(lambda x: {
-                    'title': x.title,
-                    'opus': xstr(x.opus),
-                    'movement': xstr(x.movement),
-                    'composer': x.composer,
-                    'youtube_link': xstr(x.youtube_link),
-                    'length': xstr(x.length)
-                    }, entry.pieces.all())
-            msg_plain = render_to_string('registration_site/application_submission/confirmation_email.txt', email_context)
             send_mail(
                 'USIMC Entry Confirmation',
-                msg_plain,
+                entry.confirmation_email_string(),
                 'usimc2017tech@gmail.com',
                 [user.username, 'info@usimc.org'],
                 fail_silently=True,
@@ -577,7 +559,8 @@ def create_pricing_string(request):
     entry = get_entry(request.user, request.GET['pk'])
     num_ensemble_members = int(request.GET['num_ensemble_members'])
     num_awards = int(request.GET['num_awards'])
-    return HttpResponse(entry.create_pricing_string_with_custom_values(num_ensemble_members, num_awards))
+    is_not_international = (request.GET['is_not_international']) == '1'
+    return HttpResponse(entry.create_pricing_string_with_custom_values(num_ensemble_members, num_awards, is_not_international, entry.teacher.cmtanc_code))
 
 ## Helper Functions
 def xstr(s):

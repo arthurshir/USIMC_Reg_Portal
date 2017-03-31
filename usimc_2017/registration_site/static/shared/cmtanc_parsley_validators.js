@@ -5,9 +5,6 @@ $(function () {
       en: 'This value is required'
     },
     validate: function(value, requirements, instance) {
-      console.log(value);
-      console.log(requirements);
-      console.log(instance);
       if ('' == value || 0 == value)
           return false;
       return true;

@@ -44,7 +44,7 @@ function pricing_for_instrument_category_for_pricing_type_per_contestant_per_awa
   return rules['instrument_categories'][instrument_category]['pricing'][pricing_type];
 }
 
-function calculate_pricing(instrument_category, num_awards, num_competitors, pricing_type) {
+function calculate_pricing(instrument_category, num_awards, num_competitors, pricing_type, is_not_international) {
   var per_contestant_per_award = pricing_for_instrument_category_for_pricing_type_per_contestant_per_awards(instrument_category, pricing_type);
   return per_contestant_per_award*num_awards*num_competitors;
 }

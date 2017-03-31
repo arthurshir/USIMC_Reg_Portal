@@ -15,43 +15,7 @@
 {% block content %}
 <h2>Reviewing Submission</h2>
 <div class="information-container">
-  <span>
-    <span class="paragraph-bold">Awards competing for:</span> {{ entry_award_categories }}<br>
-  </span>
-  <span>
-    <span class="paragraph-bold">Instrument category:</span> {{ entry_instrument_category }}<br>
-  </span>
-  <span>
-    <span class="paragraph-bold">Age category:</span> {{ entry.age_category }}, below {{ entry_age_category_years }} years old<br>
-  </span>
-  <span>
-    <span class="paragraph-bold">Pricing:<br></span>
-    {{ calculated_price_string|linebreaksbr }}
-  </span>
-  <span>
-    <span class="paragraph-bold">Parent:<br></span>
-    {{ parent_contact|linebreaksbr }}
-  </span>
-  <span>
-    <span class="paragraph-bold">Teacher:<br></span>
-    {{ teacher|linebreaksbr }}
-  </span>
-  <span>
-    <span class="paragraph-bold">Ensemble Members:<br></span>
-    {% for ensemble_member in ensemble_members %}
-      <span class="paragraph-bold">-</span>
-      {{ ensemble_member|linebreaksbr }}
-      <br>
-    {% endfor %}
-  </span>
-  <span>
-    <span class="paragraph-bold">Pieces:<br></span>
-    {% for piece in pieces %}
-      <span class="paragraph-bold">-</span>
-      {{ piece|linebreaksbr }}
-      <br>
-    {% endfor %}
-  </span>
+  {{ complete_description_string|linebreaksbr }}
 </div>
 <div class="flex-row">
   <a class="btn btn-default" href="{% url 'registration_site:edit_application' pk=entry.pk %}">Back</a>

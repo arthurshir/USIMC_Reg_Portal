@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.template.loader import render_to_string
 from django.db.models import *
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
@@ -50,7 +51,8 @@ class Charge(Model):
     charge_paid = BooleanField()
     charge_receipt_email = CharField(max_length=500)
 
-
+    class Meta:
+        default_related_name =  'charges'
 
 #
 # Entry Model & Related Models
@@ -90,6 +92,7 @@ class Entry(Model):
     usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
     # pieces -- Pieces Foreign Key
     # ensemble_members -- Ensemble Members Foreign Key
+    # charges -- Ensemble Members Foreign Key
 
     # Managers
     objects = EntryManager()
@@ -127,36 +130,99 @@ class Entry(Model):
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
         return price_per_competitor
 
-    def calculate_price_with_custom_values(self, num_ensemble_members, num_awards):
+    def price_per_competitor_per_award_with_custom_values(self, is_not_international, cmtanc_code):
+        price_per_competitor = 0
+        pricing_dict = usimc_rules.get_instrument_category_prices(self.instrument_category)
+        # If International
+        if not is_not_international:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_INTERNATIONAL]
+        # If CMTANC
+        elif cmtanc_code:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_CMTANC]
+        # If not CMTANC
+        else:
+            price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
+        return price_per_competitor
+
+    def calculate_price_with_custom_values(self, num_ensemble_members, num_awards, is_not_international, cmtanc_code):
         # Price per competitor & award * (number of competitors) * (number of awards)
-        return self.price_per_competitor_per_award() * (num_ensemble_members + 1) * num_awards * 100        
+        return self.price_per_competitor_per_award_with_custom_values(is_not_international, cmtanc_code) * (num_ensemble_members + 1) * num_awards * 100        
 
     def calculate_price(self):
         # Price per competitor & award * (number of competitors) * (number of awards)
-        return self.calculate_price_with_custom_values(len(self.ensemble_members.all()), len(self.awards_applying_for))
+        return self.price_per_competitor_per_award() * (len(self.ensemble_members.all()) + 1) * len(self.awards_applying_for) * 100
 
     def is_ensemble(self):
         return usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[self.instrument_category] in usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT.values()
 
     def create_pricing_string(self):
-        return self.create_pricing_string_with_custom_values(len(self.ensemble_members.all()), len(self.awards_applying_for))
+        return self.create_pricing_string_with_custom_values(len(self.ensemble_members.all()), len(self.awards_applying_for), self.is_not_international)
 
-    def create_pricing_string_with_custom_values(self, num_ensemble_members, num_awards):
-        output = '$' + str(self.price_per_competitor_per_award()) + ' per contestant per award '
+    def create_pricing_string(self):
+        output = '$' + str(self.price_per_competitor_per_award()) + ' per contestant, per award category '
         if not self.is_not_international:
             output += ' for international entry\n'
         elif self.teacher.cmtanc_code:
-            output += ' for CMTANC member\n'
+            output += ' (coached by Active CMTANC members)\n' if self.is_ensemble() else ' (students of Active CMTANC members)\n'
         else:
-            output += '\n'
-        output += 'x ' + str(num_ensemble_members + 1) + (' Contestants\n' if (num_ensemble_members + 1) > 1 else ' Contestant\n')
-        output += 'x ' + str(num_awards) + (' Awards\n' if num_awards > 1 else ' Award\n')
-        output += 'Total = $' + str(self.calculate_price_with_custom_values(num_ensemble_members, num_awards)/100)
+            output += ' (coached by Non-CMTANC members)\n' if self.is_ensemble() else ' (students of Non-CMTANC members)\n'
+        output += 'x ' + str(len(self.ensemble_members.all()) + 1) + (' Contestants\n' if (len(self.ensemble_members.all()) + 1) > 1 else ' Contestant\n')
+        output += 'x ' + str(len(self.awards_applying_for)) + (' Awards\n' if len(self.awards_applying_for) > 1 else ' Award\n')
+        output += 'Total = $' + str(self.calculate_price()/100) + '\n'
+        output += 'See http://usimc.org/rules-en.html for pricing details'
         return output
 
+    def create_pricing_string_with_custom_values(self, num_ensemble_members, num_awards, is_not_international, cmtanc_code):
+        output = '$' + str(self.price_per_competitor_per_award_with_custom_values(is_not_international, cmtanc_code)) + ' per contestant, per award category '
+        if not is_not_international:
+            output += ' for international entry\n'
+        elif cmtanc_code:
+            output += ' (coached by Active CMTANC members)\n' if self.is_ensemble() else ' (students of Active CMTANC members)\n'
+        else:
+            output += ' (coached by Non-CMTANC members)\n' if self.is_ensemble() else ' (students of Non-CMTANC members)\n'
+        output += 'x ' + str(num_ensemble_members + 1) + (' Contestants\n' if (num_ensemble_members + 1) > 1 else ' Contestant\n')
+        output += 'x ' + str(num_awards) + (' Awards\n' if num_awards > 1 else ' Award\n')
+        output += 'Total = $' + str(self.calculate_price_with_custom_values(num_ensemble_members, num_awards, is_not_international, cmtanc_code)/100) + '\n'
+        output += 'See http://usimc.org/rules-en.html for pricing details'
+        return output
 
     def basic_information_string(self):
         return 'USIMC entry ID:' + xstr(self.pk) + ',  Category: ' + self.instrument_category_string() + ", Age Category: " + self.age_category_string()
+
+    def complete_description_string(self):
+        context = {}  
+        context['entry'] = self
+        context['is_cmtanc_member_string'] = 'Yes' if self.teacher.cmtanc_code else 'No'
+        context['awards_string'] = self.awards_string()
+        context['age_category_string'] = self.age_category_string()
+        context['instrument_category_string'] = self.instrument_category_string()
+        context['is_not_international_string'] = self.is_not_international_string()
+        context['lead_performer_birthday_string'] = self.lead_performer.birthday_string()
+        context['lead_performer_home_address_string'] = self.lead_performer.home_address_string()
+        context['ensemble_members'] = map(lambda x: {
+                'first_name': x.first_name,
+                'last_name': x.last_name,
+                'instrument': x.instrument,
+                'birthday_string': x.birthday_string()
+                }, self.ensemble_members.all())
+        context['pieces'] = map(lambda x: {
+                'title': x.title,
+                'opus': xstr(x.opus),
+                'movement': xstr(x.movement),
+                'composer': x.composer,
+                'youtube_link': xstr(x.youtube_link),
+                'length': xstr(x.length)
+                }, self.pieces.all())
+        return render_to_string('registration_site/application_submission/entry_complete_description.txt', context)
+
+    def confirmation_email_string(self):
+        context = {}  
+        context['entry'] = self
+        context['complete_description_string'] = self.complete_description_string()
+        context['price'] = '$' + xstr(self.calculate_price()/100)
+        context['pricing_string'] = self.create_pricing_string()
+        context['charge_date'] = xstr(self.updated_at)
+        return render_to_string('registration_site/application_submission/confirmation_email.txt', context)
 
     class Meta:
         default_related_name =  'entries'

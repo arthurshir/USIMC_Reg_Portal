@@ -8,7 +8,7 @@ import phonenumbers
 from django.core.exceptions import ValidationError
 
 def base_input_attrs(placeholder, required = False):
-    attrs = {'placeholder': placeholder, 'class': 'application-input', 'data-parsley-trigger': 'change'}
+    attrs = {'placeholder': placeholder, 'class': 'application-input'}
     if required:
         attrs['required'] = ''
     return attrs    
@@ -41,10 +41,10 @@ class ParentContactForm(forms.ModelForm):
         model = models.ParentContact
         fields = ['first_name', 'last_name', 'email', 'phone_number',]
         widgets = {
-            'first_name': text_input_widget(placeholder='First Name', required=True ),
-            'last_name': text_input_widget(placeholder='Last Name', required=True ),
-            'email': email_input_widget(placeholder='Email', required=True ),
-            'phone_number': phone_number_input_widget(placeholder='Phone Number', required=True ),
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'email': email_input_widget(placeholder='Email*', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number*', required=True ),
         }
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
@@ -78,10 +78,10 @@ class PieceForm(forms.ModelForm):
         model = models.Piece
         fields = ['title', 'opus', 'movement', 'composer', 'length', 'youtube_link',]
         widgets = {
-            'title': text_input_widget(placeholder='Title', required=True ),
+            'title': text_input_widget(placeholder='Title*', required=True ),
             'opus': text_input_widget(placeholder='Opus' ),
             'movement': text_input_widget(placeholder='Movement' ),
-            'composer': text_input_widget(placeholder='Composer', required=True ),
+            'composer': text_input_widget(placeholder='Composer*', required=True ),
             'youtube_link': text_input_widget(placeholder='Youtube Link (Only needed for Young Artist Award Entry)' ),
             'length': text_input_widget(placeholder='Length' ),
         }
@@ -91,14 +91,14 @@ class PersonForm(forms.ModelForm):
         model = models.Person
         fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'birthday']
         widgets = {
-            'first_name': text_input_widget(placeholder='First Name', required=True ),
-            'last_name': text_input_widget(placeholder='Last_name', required=True ),
-            'instrument': text_input_widget(placeholder='Instrument', required=True ),
-            'address': text_input_widget(placeholder='Address', required=True ),
-            'city': text_input_widget(placeholder='City', required=True ),
-            'state': text_input_widget(placeholder='State', required=True ),
-            'zip_code': text_input_widget(placeholder='Zip_code', required=True ),
-            'country': text_input_widget(placeholder='Country', required=True ),
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last name*', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument*', required=True ),
+            'address': text_input_widget(placeholder='Address*', required=True ),
+            'city': text_input_widget(placeholder='City*', required=True ),
+            'state': text_input_widget(placeholder='State*', required=True ),
+            'zip_code': text_input_widget(placeholder='Zip code*', required=True ),
+            'country': text_input_widget(placeholder='Country*', required=True ),
             'birthday': cmtanc_birthday_input_widget(),
         }
 
@@ -126,10 +126,10 @@ class TeacherForm(forms.ModelForm):
         model = models.Teacher
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'cmtanc_code',]
         widgets = {
-            'first_name': text_input_widget(placeholder='First Name', required=True ),
-            'last_name': text_input_widget(placeholder='Last Name', required=True ),
-            'email': email_input_widget(placeholder='Email', required=True ),
-            'phone_number': phone_number_input_widget(placeholder='Phone Number', required=True ),
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'email': email_input_widget(placeholder='Email*', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number*', required=True ),
             'cmtanc_code': text_input_widget(placeholder='CMTANC Code' ),
         }
     helper = FormHelper()
@@ -152,9 +152,9 @@ class EnsembleMemberForm(forms.ModelForm):
         model = models.EnsembleMember
         fields = ['first_name', 'last_name', 'instrument', 'birthday']
         widgets = {
-            'first_name': text_input_widget(placeholder='First Name', required=True ),
-            'last_name': text_input_widget(placeholder='Last Name', required=True ),
-            'instrument': text_input_widget(placeholder='Instrument', required=True ),
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument*', required=True ),
             'birthday': cmtanc_birthday_input_widget(),
         }
 
@@ -200,7 +200,7 @@ class RegistrationForm(forms.Form):
         Div(
             Div('email', css_class="container-fluid"),
             Div('password', css_class="container-fluid"),
-            Div('password2', css_class="container-fluid"),
+            Div('confirm password', css_class="container-fluid"),
         ),
         ButtonHolder(
             Submit('submit', 'Register', css_class='btn btn-submit')
