@@ -7,7 +7,6 @@ Thank you for applying for the 2017 USIMC. Good luck! Here is your form you have
 Payment Information:
 {{ pricing_string }}
 PAID: {{ price }} on {{ charge_date }}
-See http://usimc.org/rules-en.html for pricing details
 
 Please either reply to this email or email info@usimc.org and cc usimc2017tech@gmail.com for any further questions.
 
