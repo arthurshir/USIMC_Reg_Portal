@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_excel',
     'phonenumber_field',
-    'stripe',
+#    'stripe',
 ]
 
 MIDDLEWARE = [
