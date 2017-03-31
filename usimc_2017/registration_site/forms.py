@@ -60,18 +60,6 @@ class ParentContactForm(forms.ModelForm):
         ),
     )
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
-        if phone_number:
-            phone_number = phonenumbers.parse(phone_number, "US")
-            if phonenumbers.is_valid_number(phone_number):
-                print phone_number.national_number
-                return phone_number.national_number
-            else:
-                raise ValidationError('Not in valid format')
-        else:
-            return phone_number
-
 
 class PieceForm(forms.ModelForm):
     class Meta:
@@ -90,7 +78,7 @@ class PieceForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = models.Person
-        fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'birthday']
+        fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'month', 'day', 'year']
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last name*', required=True ),
@@ -100,27 +88,10 @@ class PersonForm(forms.ModelForm):
             'state': text_input_widget(placeholder='State*', required=True ),
             'zip_code': text_input_widget(placeholder='Zip code*', required=True ),
             'country': text_input_widget(placeholder='Country*', required=True ),
-            'birthday': cmtanc_birthday_input_widget(),
+            'month': text_input_widget(placeholder='MM', required=True ),
+            'day': text_input_widget(placeholder='DD', required=True ),
+            'year': text_input_widget(placeholder='YYYY', required=True ),
         }
-
-    helper = FormHelper()
-    helper.form_class = 'form-horizontal'
-    helper.field_template = 'bootstrap3/layout/inline_field.html'
-    helper.form_method = 'POST'
-    helper.layout = Layout(
-        Div(
-            Div('first_name', css_class="col-md-6"),
-            Div('last_name', css_class="col-md-6"),
-            Div('instrument', css_class="col-md-12"),
-            Div('address', css_class="col-md-12"),
-            Div('city', css_class="col-md-6"),
-            Div('state', css_class="col-md-4"),
-            Div('zip_code', css_class="col-md-2"),
-            Div('country', css_class="col-md-12"),
-            Div('birthday', css_class="col-md-12"),
-            css_class="row"
-        ),
-    )
 
 class TeacherForm(forms.ModelForm):
     class Meta:
@@ -149,12 +120,14 @@ class TeacherForm(forms.ModelForm):
 class EnsembleMemberForm(forms.ModelForm):
     class Meta:
         model = models.EnsembleMember
-        fields = ['first_name', 'last_name', 'instrument', 'birthday']
+        fields = ['first_name', 'last_name', 'instrument', 'month', 'day', 'year']
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
             'instrument': text_input_widget(placeholder='Instrument*', required=True ),
-            'birthday': cmtanc_birthday_input_widget(),
+            'month': text_input_widget(placeholder='MM', required=True ),
+            'day': text_input_widget(placeholder='DD', required=True ),
+            'year': text_input_widget(placeholder='YYYY', required=True ),
         }
 
     helper = FormHelper()

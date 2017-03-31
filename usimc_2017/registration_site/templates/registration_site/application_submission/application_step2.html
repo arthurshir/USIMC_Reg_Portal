@@ -168,11 +168,19 @@
                 {{ lead_competitor_form.country.errors }}
               </div>
               <div class="col-md-12 application-column">
-                <div class="form-section-subheader">Birthday</div>
+                <div class="form-section-subheader">Birthday*</div>
               </div>
-              <div class="col-md-12 application-column">
-                {{ lead_competitor_form.birthday }}
-                {{ lead_competitor_form.birthday.errors }}
+              <div class="col-md-1 application-column">
+                {{ lead_competitor_form.month }}
+                {{ lead_competitor_form.month.errors }}
+              </div>
+              <div class="col-md-1 application-column">
+                {{ lead_competitor_form.day }}
+                {{ lead_competitor_form.day.errors }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ lead_competitor_form.year }}
+                {{ lead_competitor_form.year.errors }}
               </div>
             </div>
           </div>
@@ -205,11 +213,19 @@
                 {{ form.instrument.errors }}
               </div>
               <div class="col-md-12 application-column">
-                <div class="form-section-subheader">Birthday</div>
+                <div class="form-section-subheader">Birthday*</div>
               </div>
-              <div class="col-md-12 application-column">
-                {{ form.birthday }}
-                {{ form.birthday.errors }}
+              <div class="col-md-1 application-column">
+                {{ form.month }}
+                {{ form.month.errors }}
+              </div>
+              <div class="col-md-1 application-column">
+                {{ form.day }}
+                {{ form.day.errors }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ form.year }}
+                {{ form.year.errors }}
               </div>
             </div>
           </div>

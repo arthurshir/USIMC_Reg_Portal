@@ -213,13 +213,14 @@ class EditApplicationView(View):
         if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code): entry.teacher.cmtanc_code = input_cmtanc_code
         entry.teacher.save()
 
+        print 'before', entry.parent_contact.first_name, entry.parent_contact.last_name, entry.parent_contact.email 
         entry.parent_contact.first_name = _cf(self.context['contact_form']['first_name'].value())
         entry.parent_contact.last_name = _cf(self.context['contact_form']['last_name'].value())
         entry.parent_contact.email = _cf(self.context['contact_form']['email'].value())
         entry.parent_contact.phone_number = _cf(self.context['contact_form']['phone_number'].value())
+        print 'after', entry.parent_contact.first_name, entry.parent_contact.last_name, entry.parent_contact.email 
         entry.parent_contact.save()
 
-        self.context['lead_competitor_form'].is_valid()
         entry.lead_performer.first_name = _cf(self.context['lead_competitor_form']['first_name'].value())
         entry.lead_performer.last_name = _cf(self.context['lead_competitor_form']['last_name'].value())
         entry.lead_performer.instrument = _cf(self.context['lead_competitor_form']['instrument'].value())
@@ -228,29 +229,52 @@ class EditApplicationView(View):
         entry.lead_performer.state = _cf(self.context['lead_competitor_form']['state'].value())
         entry.lead_performer.zip_code = _cf(self.context['lead_competitor_form']['zip_code'].value())
         entry.lead_performer.country = _cf(self.context['lead_competitor_form']['country'].value())
-        entry.lead_performer.birthday = self.context['lead_competitor_form'].cleaned_data['birthday']
+        entry.lead_performer.month = _cf(self.context['lead_competitor_form']['month'].value())
+        entry.lead_performer.day = _cf(self.context['lead_competitor_form']['day'].value())
+        entry.lead_performer.year = _cf(self.context['lead_competitor_form']['year'].value())
         entry.lead_performer.save()
 
         if entry.is_ensemble():
             for form in self.context['ensemble_member_formset']:
                 contestant = None
-                if _cf(form['id'].value()):
-                    contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))  
+                if _cf(form['DELETE'].value()):
+                    contestants = models.EnsembleMember.objects.all().filter(pk=_cf(form['id'].value())) 
+                    if len(contestants) > 0:
+                        contestants[0].delete()
+
+                    del form
+                    continue
+                elif _cf(form['id'].value()):
+                    print _cf(form['id'].value())
+                    contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))
                 else:
                     contestant = models.EnsembleMember()
+                    form.is_valid()
+                    form.cleaned_data['id'] = contestant.pk
                 contestant.first_name = _cf(form['first_name'].value())
                 contestant.last_name = _cf(form['last_name'].value())
                 contestant.instrument = _cf(form['instrument'].value())
-                contestant.birthday = _cf(form['birthday'].value())
+                contestant.month = _cf(form['month'].value())
+                contestant.day = _cf(form['day'].value())
+                contestant.year = _cf(form['year'].value())
                 contestant.entry = entry
                 contestant.save()
 
         for form in self.context['piece_formset']:
             piece = None
-            if _cf(form['id'].value()):
+            if _cf(form['DELETE'].value()):
+                pieces = models.Piece.objects.all().filter(pk=_cf(form['id'].value()))
+                if len(pieces) > 0:
+                    pieces[0].delete()
+                del form
+                continue
+            elif _cf(form['id'].value()):
                 piece = models.Piece.objects.get(pk=_cf(form['id'].value()))
             else:
                 piece = models.Piece()
+                form.is_valid()
+                form.cleaned_data['id'] = piece.pk
+
             piece.title = _cf(form['title'].value())
             piece.opus = _cf(form['opus'].value())
             piece.movement = _cf(form['movement'].value())
@@ -260,20 +284,14 @@ class EditApplicationView(View):
             piece.seconds = _cf(form['seconds'].value())
             piece.entry = entry
             piece.save()
-        # Delete instances as needed
-        instances = self.context['piece_formset'].save(commit=False)
-        for instance in self.context['piece_formset'].deleted_objects:
-            instance.delete()
-        if entry.is_ensemble():
-            instances = self.context['ensemble_member_formset'].save(commit=False)
-            for instance in self.context['ensemble_member_formset'].deleted_objects:
-                instance.delete()
 
-        # Load forms with entry info
+        # Clean all to allow validation
+        self.clean_all_forms(request)
 
         # Add validation
         self.special_validation_messages(request)
-        if request.POST.get('submit-form'): self.blank_validation_messages(request)
+        if request.POST.get('submit-form'):
+            self.blank_validation_messages(request)
 
         print entry.validate()
         if request.POST.get('save-form') or not entry.validate():
@@ -281,27 +299,33 @@ class EditApplicationView(View):
 
         return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
 
+    def clean_all_forms(self, request):
+        entry = get_entry(request.user, self.kwargs['pk'])
+        self.context['piece_formset'].is_valid()
+        self.context['lead_competitor_form'].is_valid()
+        self.context['teacher_form'].is_valid()
+        self.context['contact_form'].is_valid()
+        if entry.is_ensemble():
+            self.context['ensemble_member_formset'].is_valid()
+
+
     def special_validation_messages(self, request):
         # Retrieve user and entry
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
 
-        # Validate data
-        ensemble_formset_valid = True
-        if entry.is_ensemble():
-            ensemble_formset_valid = self.context['ensemble_member_formset'].is_valid()
-        validity_array = [ self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), ensemble_formset_valid ]
         # Add Validation Messages
         competitor_forms = [self.context['lead_competitor_form']]
         if entry.is_ensemble():
             competitor_forms += self.context['ensemble_member_formset'].forms
         for form in competitor_forms:
-            if form.cleaned_data['birthday']:
-                if not entry.lead_performer.validate_birthday(form.cleaned_data['birthday']):
-                    form.add_error('birthday', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
-        input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
+            if all([_cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value()) ]):
+                birthday = models.string_to_date(_cf(form['month'].value()) + _cf(form['day'].value()) + _cf(form['year'].value()))
+                if not entry.lead_performer.validate_birthday(birthday):
+                    form.add_error('year', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+        input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
+        print 'input_cmtanc_code', input_cmtanc_code
         if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
-            special_cases_valid = False
             self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
     def blank_validation_messages(self, request):
@@ -334,14 +358,18 @@ class EditApplicationView(View):
         add_blank_error('lead_competitor_form', 'state', entry.lead_performer.state )
         add_blank_error('lead_competitor_form', 'zip_code', entry.lead_performer.zip_code )
         add_blank_error('lead_competitor_form', 'country', entry.lead_performer.country )
-        add_blank_error('lead_competitor_form', 'birthday', entry.lead_performer.birthday )
+        add_blank_error('lead_competitor_form', 'month', entry.lead_performer.month )
+        add_blank_error('lead_competitor_form', 'day', entry.lead_performer.day )
+        add_blank_error('lead_competitor_form', 'year', entry.lead_performer.year )
 
         if entry.is_ensemble():
             for form in self.context['ensemble_member_formset'].forms:
                 add_blank_error_form(form, 'first_name', _cf(form['first_name'].value()))
                 add_blank_error_form(form, 'last_name', _cf(form['last_name'].value()))
                 add_blank_error_form(form, 'instrument', _cf(form['instrument'].value()))
-                add_blank_error_form(form, 'birthday', _cf(form['birthday'].value()))
+                add_blank_error_form(form, 'month', _cf(form['month'].value()))
+                add_blank_error_form(form, 'day', _cf(form['day'].value()))
+                add_blank_error_form(form, 'year', _cf(form['year'].value()))
 
         for form in self.context['piece_formset']:
             add_blank_error_form(form, 'title', _cf(form['title'].value()))
@@ -359,8 +387,8 @@ class EditApplicationView(View):
         self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
         self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
-        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry)
-        self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all())
+        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+        self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all().order_by('created_at'))
 
         # Set html fields
         self.context['lives_in_united_states'] = "1" if entry.is_not_international else "0"
@@ -530,7 +558,7 @@ class ApplicationListView(View):
         usimc_user = get_usimc_user(request.user)
         self.context['user'] = request.user
         self.context['entries'] = usimc_user.entry.all().order_by('created_at')
-        self.context['unsubmitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=False).order_by('created_at'))
+        self.context['unsubmitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=False).order_by('-created_at'))
         self.context['submitted_entries_formatted'] = format_entries(usimc_user.entry.all().filter(submitted=True).order_by('-created_at'))
 
         return render(request, 'registration_site/application_management/application_list.html', self.context)
@@ -667,7 +695,7 @@ def get_performer(user, pk):
 ## Constants
 # Formset factories
 PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link'])
-EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'birthday'])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'month', 'day', 'year'])
 # Form prefixes
 piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'

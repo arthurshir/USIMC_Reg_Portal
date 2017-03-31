@@ -29,6 +29,12 @@ def xstr(s):
         return ''
     return str(s)
 
+def string_to_date(s):
+    try:
+        return datetime.datetime.strptime(s, "%d%m%Y").date()
+    except ValueError:
+        return None
+
 #
 # User Model
 #
@@ -104,6 +110,23 @@ class Entry(Model):
     # Functions
 
     def validate(self):
+
+        print "Pieces"
+        for piece in self.pieces.all():
+            print piece.validate()
+
+        print "EnsembleMember"
+        for ensemble_member in self.ensemble_members.all():
+            print ensemble_member.validate()
+
+        print (
+            self.parent_contact.validate(),
+            self.teacher.validate(),
+            self.lead_performer.validate(),
+            reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())),
+            (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
+            )
+
         return not not (
             self.parent_contact.validate() and
             self.teacher.validate() and
@@ -263,11 +286,10 @@ class ParentContact(Model):
     def validate(self):
         try:
             validate_email(self.email)
-            phone_number_valid = self.phone_number and phonenumbers.is_valid_number(phonenumbers.parse(self.phone_number, 'US'))
-        except ValidationError, phonenumbers.phonenumberutil.NumberParseException:
+        except ValidationError:
             return False
         else:
-            return not not (phone_number_valid and self.first_name and self.last_name)
+            return not not (self.phone_number and self.first_name and self.last_name)
 
 
     def basic_information_string(self):
@@ -338,28 +360,38 @@ class Person(Model):
     state = CharField(null=True, blank=True, max_length=200)
     zip_code = CharField(null=True, blank=True, max_length=200)
     country = CharField(null=True, blank=True, max_length=200)
-    birthday = DateField(null=True, blank=True)
+    month = CharField(null=True, blank=True, max_length=2)
+    day = CharField(null=True, blank=True, max_length=2)
+    year = CharField(null=True, blank=True, max_length=4)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
+    def birthday(self):
+        if not (self.month and self.day and self.year):
+            return None
+        else:
+            return string_to_date(self.month + self.day + self.year)
+
     def validate_birthday(self, birthday):
+        if not birthday:
+            return False
         years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
         cutoff = usimc_rules.get_age_measurement_date()
         cutoff = cutoff.replace(year=cutoff.year - years)
         return birthday >= cutoff
 
     def validate(self):
-        return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday and self.validate_birthday(self.birthday))
+        return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday() and self.validate_birthday(self.birthday()))
 
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
         output += 'Address:\n' + xstr(self.address) + ', ' + xstr(self.city) + ' ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country) + '\n'
-        output += 'Birthday:\n' + xstr(self.birthday)
+        output += 'Birthday:\n' + xstr(self.birthday())
         return output
 
     def birthday_string(self):
-        return xstr(self.birthday)
+        return xstr(self.birthday())
 
     def home_address_string(self):
         return xstr(self.address) + ', ' + xstr(self.city) + ', ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country)
@@ -373,7 +405,9 @@ class EnsembleMember(Model):
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
     instrument = CharField(null=True, blank=True, max_length=200)
-    birthday = DateField(null=True, blank=True)
+    month = CharField(null=True, blank=True, max_length=2)
+    day = CharField(null=True, blank=True, max_length=2)
+    year = CharField(null=True, blank=True, max_length=4)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
@@ -381,21 +415,29 @@ class EnsembleMember(Model):
     # Relations
     entry = ForeignKey('Entry', verbose_name='Ensemble Member')
 
+    def birthday(self):
+        if not (self.month and self.day and self.year):
+            return None
+        else:
+            return string_to_date(self.month + self.day + self.year)
+
     def validate_birthday(self, birthday):
+        if not birthday:
+            return False
         years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
         cutoff = usimc_rules.get_age_measurement_date()
         cutoff = cutoff.replace(year=cutoff.year - years)
         return birthday >= cutoff
 
     def validate(self):
-        return not not (self.first_name and self.last_name and self.instrument and self.birthday and self.validate_birthday(self.birthday))
+        return not not (self.first_name and self.last_name and self.instrument and self.birthday() and self.validate_birthday(self.birthday()))
 
     def birthday_string(self):
-        return xstr(self.birthday)
+        return xstr(self.birthday())
 
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
-        output += 'Birthday:\n' + str(self.birthday)
+        output += 'Birthday:\n' + str(self.birthday())
         return output
 
     class Meta:
