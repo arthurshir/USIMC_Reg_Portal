@@ -83,8 +83,8 @@ class PieceForm(forms.ModelForm):
             'movement': text_input_widget(placeholder='Movement' ),
             'composer': text_input_widget(placeholder='Composer*', required=True ),
             'youtube_link': text_input_widget(placeholder='Youtube Link (Only needed for Young Artist Award Entry)' ),
-            'minutes': text_input_widget(placeholder='min', required=True ),
-            'seconds': text_input_widget(placeholder='sec', required=True ),
+            'minutes': text_input_widget(placeholder='min*', required=True ),
+            'seconds': text_input_widget(placeholder='sec*', required=True ),
         }
 
 class PersonForm(forms.ModelForm):
