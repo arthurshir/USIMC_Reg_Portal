@@ -241,16 +241,13 @@ class EditApplicationView(View):
                     contestants = models.EnsembleMember.objects.all().filter(pk=_cf(form['id'].value())) 
                     if len(contestants) > 0:
                         contestants[0].delete()
+                    del form
                     continue
                 elif _cf(form['id'].value()):
                     print _cf(form['id'].value())
                     contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))
                 else:
                     contestant = models.EnsembleMember()
-                    # Replace modelForm 
-                    form = forms.EnsembleMemberForm(instance=contestant)
-                    form.is_valid()
-                    # form.cleaned_data['id'] = contestant.pk
                 contestant.first_name = _cf(form['first_name'].value())
                 contestant.last_name = _cf(form['last_name'].value())
                 contestant.instrument = _cf(form['instrument'].value())
@@ -266,15 +263,12 @@ class EditApplicationView(View):
                 pieces = models.Piece.objects.all().filter(pk=_cf(form['id'].value()))
                 if len(pieces) > 0:
                     pieces[0].delete()
+                del form
                 continue
             elif _cf(form['id'].value()):
                 piece = models.Piece.objects.get(pk=_cf(form['id'].value()))
             else:
                 piece = models.Piece()
-                # Replace modelForm 
-                form = forms.PieceForm(instance=piece)
-                form.is_valid()
-                # form.cleaned_data['id'] = piece.pk
 
             piece.title = _cf(form['title'].value())
             piece.opus = _cf(form['opus'].value())

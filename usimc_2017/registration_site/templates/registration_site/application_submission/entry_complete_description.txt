@@ -31,4 +31,5 @@
     Movement: {{ piece.movement }}
     Composer: {{ piece.composer }}
     Youtube link: {{ piece.youtube_link }}
-    Length: {{ piece.length }}{% endfor %}
+    Length: {{ piece.length }}
+    {% endfor %}

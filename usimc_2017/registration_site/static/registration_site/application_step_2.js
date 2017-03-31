@@ -11,7 +11,7 @@ $(document).ready(function(){
   // });
 
   $(document).on("click", 'a', function(event){
-    $("#application-form").parsley().reset();
+    // $("#application-form").parsley().reset();
   });
 
   $(".competitor-div").on("click", "a", function(){
@@ -35,12 +35,8 @@ $(document).ready(function(){
   }
 
   $('#application-form').on("change", 'input', function(event){
-    $("#application-form").parsley().reset();
     update_pricing();
-  });
-
-  $('input.input, select').on('change', function(){
-    update_pricing();
+    $('[name="submit-form"]').attr("disabled",true);
   });
 
   function update_pricing() {
