@@ -33,8 +33,6 @@ class ModelValidationMethodTests(TestCase):
 
   def test_ensemble_memmber(self):
     """EnsembleMember validation method works as expected"""
-    user = User.objects.all()[0]
-    usimc_user = USIMCUser.objects.all()[0]
     entry = Entry.objects.all()[0]
 
     for ensemble_member in entry.ensemble_members.all():
@@ -52,8 +50,6 @@ class ModelValidationMethodTests(TestCase):
 
   def test_pieces(self):
     """Piece validation method works as expected"""
-    user = User.objects.all()[0]
-    usimc_user = USIMCUser.objects.all()[0]
     entry = Entry.objects.all()[0]
 
     for piece in entry.pieces.all():
@@ -71,8 +67,6 @@ class ModelValidationMethodTests(TestCase):
 
   def test_lead_competitor(self):
     """LeadCompetitor validation method works as expected"""
-    user = User.objects.all()[0]
-    usimc_user = USIMCUser.objects.all()[0]
     entry = Entry.objects.all()[0]
 
     self.assertEqual(entry.lead_performer.validate(), False)
@@ -86,13 +80,13 @@ class ModelValidationMethodTests(TestCase):
     entry.lead_performer.zip_code = 'Test value'
     entry.lead_performer.country = 'Test value'
     entry.lead_performer.birthday = timezone.now().date()
-    entry.save()
     self.assertEqual(entry.lead_performer.validate(), True)
+
+    print 'birthday', entry.lead_performer.birthday
+    entry.lead_performer.save()
 
   def test_teacher(self):
     """Teacher validation method works as expected"""
-    user = User.objects.all()[0]
-    usimc_user = USIMCUser.objects.all()[0]
     entry = Entry.objects.all()[0]
 
     self.assertEqual(entry.teacher.validate(), False)
@@ -100,18 +94,39 @@ class ModelValidationMethodTests(TestCase):
     entry.teacher.first_name = 'Test value'
     entry.teacher.last_name = 'Test value'
     entry.teacher.email = 'Test value'
-    entry.teacher.phone_number = 'Test value'
     self.assertEqual(entry.teacher.validate(), False)
 
     entry.teacher.email = 'test@gmail.com'
-    entry.teacher.phone_number = 'Test value'
-    self.assertEqual(entry.teacher.validate(), False)
-
-    entry.teacher.email = 'Test value'
-    entry.teacher.phone_number = '5106768998'
-    self.assertEqual(entry.teacher.validate(), False)
-
-    entry.teacher.email = 'test@gmail.com'
-    entry.teacher.phone_number = '5106768998'
     self.assertEqual(entry.teacher.validate(), True)
 
+    entry.teacher.save()
+
+  def test_parent_contact(self):
+    """ParentContact validation method works as expected"""
+    entry = Entry.objects.all()[0]
+
+    self.assertEqual(entry.parent_contact.validate(), False)
+
+    entry.parent_contact.first_name = 'Test value'
+    entry.parent_contact.last_name = 'Test value'
+    entry.parent_contact.email = 'Test value'
+    entry.parent_contact.phone_number = '5106768998'
+    self.assertEqual(entry.parent_contact.validate(), False)
+
+    #TODO: get phone number validation to work
+    entry.parent_contact.email = 'test@gmail.com'
+    self.assertEqual(entry.parent_contact.validate(), True)
+
+    entry.parent_contact.save()
+
+  def test_entry(self):
+    """Entry validation method works as expected"""
+    entry = Entry.objects.all()[0]
+
+    self.test_ensemble_memmber()
+    self.test_pieces()
+    self.test_lead_competitor()
+    self.test_teacher()
+    self.test_parent_contact()
+    
+    self.assertEqual(entry.validate(), True)

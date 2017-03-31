@@ -104,7 +104,13 @@ class Entry(Model):
     # Functions
 
     def validate(self):
-        return not not (self.parent_contact.validate() and self.teacher.validate() and self.lead_performer.validate() and reduce((lambda x, y: x.validate() and y.validate()), pieces.all()) and reduce((lambda x, y: x.validate() and y.validate()), self.ensemble_members.all()))
+        return not not (
+            self.parent_contact.validate() and
+            self.teacher.validate() and
+            self.lead_performer.validate() and
+            reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())) and
+            reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True
+            )
 
     def award_strings(self):
         return map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
@@ -313,7 +319,7 @@ class Teacher(Model):
         except ValidationError:
             return False
         else:
-            return not not (self.first_name and self.last_name and self.cmtanc_code and self.valid_cmtanc_code())
+            return not not (self.first_name and self.last_name and (self.valid_cmtanc_code() if self.cmtanc_code else True))
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)
