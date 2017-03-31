@@ -109,7 +109,7 @@ class Entry(Model):
             self.teacher.validate() and
             self.lead_performer.validate() and
             reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())) and
-            reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True
+            (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
             )
 
     def award_strings(self):

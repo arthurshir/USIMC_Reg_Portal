@@ -82,7 +82,6 @@ class ModelValidationMethodTests(TestCase):
     entry.lead_performer.birthday = timezone.now().date()
     self.assertEqual(entry.lead_performer.validate(), True)
 
-    print 'birthday', entry.lead_performer.birthday
     entry.lead_performer.save()
 
   def test_teacher(self):

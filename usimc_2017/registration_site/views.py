@@ -269,9 +269,14 @@ class EditApplicationView(View):
             for instance in self.context['ensemble_member_formset'].deleted_objects:
                 instance.delete()
 
+        # Load forms with entry info
+
+        # Add validation
         self.special_validation_messages(request)
+        if request.POST.get('submit-form'): self.blank_validation_messages(request)
+
+        print entry.validate()
         if request.POST.get('save-form') or not entry.validate():
-            if request.POST.get('submit-form'): self.blank_validation_messages(request)
             return render(request, 'registration_site/application_submission/application_step2.html', self.context)
 
         return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
@@ -493,9 +498,9 @@ class PaymentView(View):
 
 def payment_confirmation(request, *args, **kwargs):
     # Only allow requests for validated entries
-    entry = get_entry(request.user, self.kwargs['pk'])
+    entry = get_entry(request.user, kwargs['pk'])
     if not entry.validate():
-        return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+        return redirect(reverse('registration_site:edit_application', kwargs=kwargs))
 
     context = {}
     usimc_user = get_usimc_user(request.user)
