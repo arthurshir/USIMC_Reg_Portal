@@ -104,7 +104,7 @@ footer {
   font-weight: 400; }
 
 #piece-form-number {
-  width: 20px;
+  width: 24px;
   height: 30px;
   line-height: 30px; }
 
@@ -116,6 +116,11 @@ a {
 
 strong {
   font-weight: 400; }
+
+ul.errorlist {
+  padding-left: 20px; }
+  ul.errorlist li {
+    font-size: 12px; }
 
 .application-input, .textinput {
   border: 1px solid #959595;

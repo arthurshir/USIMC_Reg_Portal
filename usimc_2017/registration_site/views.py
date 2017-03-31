@@ -27,6 +27,20 @@ import phonenumbers
 import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
 stripe.api_key = "sk_test_xvaC23iBiTk0tb8dEasQT93u"
 
+def _cf(value):
+    return None if value == '' else value
+
+def represents_int(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+def _cf_int(value):
+    int(value) if represents_int(value) else None
+
+
 class IndexView(View):
     context = {}
 
@@ -62,7 +76,6 @@ class LoginView(View):
             email = request.POST.get('email', '')
             password = request.POST.get('password', '')
             user = authenticate(username=email, password=password)
-            print email, password
             if user is not None:
                 login(request, user)
                 return redirect('registration_site:dashboard')
@@ -192,66 +205,145 @@ class EditApplicationView(View):
         entry.is_not_international = request.POST.get('lives-in-united-states') == "1"
         entry.save()
 
-        # Clean data and check validity
+        ## Validate all data and add messages to forms
+        entry.teacher.first_name = _cf(self.context['teacher_form']['first_name'].value())
+        entry.teacher.last_name = _cf(self.context['teacher_form']['last_name'].value())
+        entry.teacher.email = _cf(self.context['teacher_form']['email'].value())
+        input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
+        if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code): entry.teacher.cmtanc_code = input_cmtanc_code
+        entry.teacher.save()
+
+        entry.parent_contact.first_name = _cf(self.context['contact_form']['first_name'].value())
+        entry.parent_contact.last_name = _cf(self.context['contact_form']['last_name'].value())
+        entry.parent_contact.email = _cf(self.context['contact_form']['email'].value())
+        entry.parent_contact.phone_number = _cf(self.context['contact_form']['phone_number'].value())
+        entry.parent_contact.save()
+
+        self.context['lead_competitor_form'].is_valid()
+        entry.lead_performer.first_name = _cf(self.context['lead_competitor_form']['first_name'].value())
+        entry.lead_performer.last_name = _cf(self.context['lead_competitor_form']['last_name'].value())
+        entry.lead_performer.instrument = _cf(self.context['lead_competitor_form']['instrument'].value())
+        entry.lead_performer.address = _cf(self.context['lead_competitor_form']['address'].value())
+        entry.lead_performer.city = _cf(self.context['lead_competitor_form']['city'].value())
+        entry.lead_performer.state = _cf(self.context['lead_competitor_form']['state'].value())
+        entry.lead_performer.zip_code = _cf(self.context['lead_competitor_form']['zip_code'].value())
+        entry.lead_performer.country = _cf(self.context['lead_competitor_form']['country'].value())
+        entry.lead_performer.birthday = self.context['lead_competitor_form'].cleaned_data['birthday']
+        entry.lead_performer.save()
+
+        if entry.is_ensemble():
+            for form in self.context['ensemble_member_formset']:
+                contestant = None
+                if _cf(form['id'].value()):
+                    contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))  
+                else:
+                    contestant = models.EnsembleMember()
+                contestant.first_name = _cf(form['first_name'].value())
+                contestant.last_name = _cf(form['last_name'].value())
+                contestant.instrument = _cf(form['instrument'].value())
+                contestant.birthday = _cf(form['birthday'].value())
+                contestant.entry = entry
+                contestant.save()
+
+        for form in self.context['piece_formset']:
+            piece = None
+            if _cf(form['id'].value()):
+                piece = models.Piece.objects.get(pk=_cf(form['id'].value()))
+            else:
+                piece = models.Piece()
+            piece.title = _cf(form['title'].value())
+            piece.opus = _cf(form['opus'].value())
+            piece.movement = _cf(form['movement'].value())
+            piece.composer = _cf(form['composer'].value())
+            piece.youtube_link = _cf(form['youtube_link'].value())
+            piece.minutes = _cf(form['minutes'].value())
+            piece.seconds = _cf(form['seconds'].value())
+            piece.entry = entry
+            piece.save()
+        # Delete instances as needed
+        instances = self.context['piece_formset'].save(commit=False)
+        for instance in self.context['piece_formset'].deleted_objects:
+            instance.delete()
+        if entry.is_ensemble():
+            instances = self.context['ensemble_member_formset'].save(commit=False)
+            for instance in self.context['ensemble_member_formset'].deleted_objects:
+                instance.delete()
+
+        self.special_validation_messages(request)
+        if request.POST.get('save-form') or not entry.validate():
+            if request.POST.get('submit-form'): self.blank_validation_messages(request)
+            return render(request, 'registration_site/application_submission/application_step2.html', self.context)
+
+        return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
+
+    def special_validation_messages(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Validate data
         ensemble_formset_valid = True
-        special_cases_valid = True
         if entry.is_ensemble():
             ensemble_formset_valid = self.context['ensemble_member_formset'].is_valid()
         validity_array = [ self.context['piece_formset'].is_valid(), self.context['lead_competitor_form'].is_valid(), self.context['teacher_form'].is_valid(), self.context['contact_form'].is_valid(), ensemble_formset_valid ]
+        # Add Validation Messages
+        competitor_forms = [self.context['lead_competitor_form']]
+        if entry.is_ensemble():
+            competitor_forms += self.context['ensemble_member_formset'].forms
+        for form in competitor_forms:
+            if form.cleaned_data['birthday']:
+                if not entry.lead_performer.validate_birthday(form.cleaned_data['birthday']):
+                    form.add_error('birthday', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+        input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
+        if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
+            special_cases_valid = False
+            self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
-        # If you're only saving, just allow to validate
-        if not request.POST.get('save-form'):
-            # Validate special cases -- Birthday & CMTANC
-            competitor_forms = [self.context['lead_competitor_form']]
-            if entry.is_ensemble():
-                competitor_forms += self.context['ensemble_member_formset'].forms
-            for form in competitor_forms:
-                years = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
-                if form.cleaned_data['birthday']:
-                    birthday = form.cleaned_data['birthday']
-                    cutoff = usimc_rules.get_age_measurement_date()
-                    cutoff = cutoff.replace(year=cutoff.year - years) # .date() converts instance from datetime.datetime to datetime (Not sure why this is needed / what is different... TODO: do research)
-                    if birthday < cutoff:
-                        special_cases_valid = False
-                        form.add_error('birthday',
-                            "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
-            input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
-            if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
-                special_cases_valid = False
-                self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
+    def blank_validation_messages(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
 
-        # Redirect if not all valid
-        validity_array.append(special_cases_valid)
-        if not all(validity_array):
-            return render(request, 'registration_site/application_submission/application_step2.html', self.context)
-        else:
-            # Everything is valid:
-            # Update single instance objects
-            self.context['lead_competitor_form'].save()
-            self.context['teacher_form'].save()
-            self.context['contact_form'].save()
+        def add_blank_error(form_name, field, value):
+            if value == None:
+                self.context[form_name].add_error(field, 'required')
 
-            # Update pieces
-            instances = self.context['piece_formset'].save(commit=False)
-            for instance in self.context['piece_formset'].deleted_objects:
-                instance.delete()
-            for instance in instances:
-                instance.entry = entry
-                instance.save() 
+        def add_blank_error_form(form, field, value):
+            if value == None:
+                form.add_error(field, 'required')
 
-            # Update ensemble members
-            if entry.is_ensemble():
-                instances = self.context['ensemble_member_formset'].save(commit=False)
-                for instance in self.context['ensemble_member_formset'].deleted_objects:
-                    instance.delete()
-                for instance in instances:
-                    instance.entry = entry
-                    instance.save() 
+        add_blank_error('contact_form', 'first_name', entry.parent_contact.first_name)
+        add_blank_error('contact_form', 'last_name', entry.parent_contact.last_name)
+        add_blank_error('contact_form', 'email', entry.parent_contact.email)
+        add_blank_error('contact_form', 'phone_number', entry.parent_contact.phone_number)
 
-            if request.POST.get('save-form'):
-                return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))                
+        add_blank_error('teacher_form', 'first_name', entry.teacher.first_name)
+        add_blank_error('teacher_form', 'last_name', entry.teacher.last_name)
+        add_blank_error('teacher_form', 'email', entry.teacher.email)
 
-            return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
+        add_blank_error('lead_competitor_form', 'first_name', entry.lead_performer.first_name )
+        add_blank_error('lead_competitor_form', 'last_name', entry.lead_performer.last_name )
+        add_blank_error('lead_competitor_form', 'instrument', entry.lead_performer.instrument )
+        add_blank_error('lead_competitor_form', 'address', entry.lead_performer.address )
+        add_blank_error('lead_competitor_form', 'city', entry.lead_performer.city )
+        add_blank_error('lead_competitor_form', 'state', entry.lead_performer.state )
+        add_blank_error('lead_competitor_form', 'zip_code', entry.lead_performer.zip_code )
+        add_blank_error('lead_competitor_form', 'country', entry.lead_performer.country )
+        add_blank_error('lead_competitor_form', 'birthday', entry.lead_performer.birthday )
+
+        if entry.is_ensemble():
+            for form in self.context['ensemble_member_formset'].forms:
+                add_blank_error_form(form, 'first_name', _cf(form['first_name'].value()))
+                add_blank_error_form(form, 'last_name', _cf(form['last_name'].value()))
+                add_blank_error_form(form, 'instrument', _cf(form['instrument'].value()))
+                add_blank_error_form(form, 'birthday', _cf(form['birthday'].value()))
+
+        for form in self.context['piece_formset']:
+            add_blank_error_form(form, 'title', _cf(form['title'].value()))
+            add_blank_error_form(form, 'composer', _cf(form['composer'].value()))
+            add_blank_error_form(form, 'minutes', _cf(form['minutes'].value()))
+            add_blank_error_form(form, 'seconds', _cf(form['seconds'].value()))
+
 
     def load_forms_to_context(self, request):
         # Retrieve user and entry
@@ -306,12 +398,22 @@ class ReviewSubmissionView(View):
         self.context['complete_description_string'] = entry.complete_description_string()
 
     def get(self, request, *args, **kwargs):
+        # Only allow requests for validated entries
+        entry = get_entry(request.user, self.kwargs['pk'])
+        if not entry.validate():
+            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+
         self.update_entry_context(request)
         if self.context['entry'].submitted:
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         return render(request, 'registration_site/application_submission/review_submission.html', self.context)
 
     def post(self, request, *args, **kwargs):
+        # Only allow requests for validated entries
+        entry = get_entry(request.user, self.kwargs['pk'])
+        if not entry.validate():
+            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+
         return render(request, 'registration_site/application_submission/review_submission.html', self.context)
 
     @method_decorator(login_required)
@@ -322,6 +424,11 @@ class PaymentView(View):
     context = {}
 
     def get(self, request, *args, **kwargs):
+        # Only allow requests for validated entries
+        entry = get_entry(request.user, self.kwargs['pk'])
+        if not entry.validate():
+            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
         if entry.submitted:
@@ -332,6 +439,11 @@ class PaymentView(View):
         return render(request, 'registration_site/application_submission/payment.html', self.context)
 
     def post(self, request, *args, **kwargs):
+        # Only allow requests for validated entries
+        entry = get_entry(request.user, self.kwargs['pk'])
+        if not entry.validate():
+            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+
         user = request.user
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
@@ -380,47 +492,18 @@ class PaymentView(View):
         return super(PaymentView, self).dispatch(*args, **kwargs)
 
 def payment_confirmation(request, *args, **kwargs):
+    # Only allow requests for validated entries
+    entry = get_entry(request.user, self.kwargs['pk'])
+    if not entry.validate():
+        return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+
     context = {}
     usimc_user = get_usimc_user(request.user)
     entry = get_entry(request.user, kwargs['pk'])
     entry.save()
     context['entry'] = entry
     context['email'] = entry.parent_contact.email
-    print entry.parent_contact.email
     return render(request, 'registration_site/application_submission/payment_confirmation.html', context)
-
-class EditPerformersView(View):
-    context = {}
-
-    # Create Formset
-    def get_formset(self, request):
-        usimc_user = get_usimc_user(request.user)
-        entry = usimc_user.entry.all()[0]
-        return self.PersonFormset(queryset=models.Person.objects.filter(entry=entry))
-
-    def get(self, request):
-        # Update Formset
-        self.context['formset'] = self.get_formset(request)
-        return render(request, 'registration_site/person_forms.html', self.context)
-
-    def post(self, request):
-        self.context['formset'] = self.PersonFormset(request.POST)
-        for form in self.context['formset']:
-            if form.is_valid() and form.has_changed():
-                person = form.save(commit=False)
-                person.entry = models.USIMCUser.objects.filter(user=request.user)[0].entry.all()[0]
-                person.save()
-            else:
-                messages.warning(request, "Form is not valid?")
-        self.context['formset'].save()
-        # Update to formset with changed data
-        self.context['formset'] = self.get_formset(request)
-        return render(request, 'registration_site/person_forms.html', self.context)
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(EditPerformersView, self).dispatch(*args, **kwargs)
-
 
 class ApplicationListView(View):
     context = {}
@@ -469,7 +552,6 @@ class AdminLoginView(View):
             email = request.POST.get('email', '')
             password = request.POST.get('password', '')
             user = authenticate(username=email, password=password)
-            print email, password
             if user is not None:
                 login(request, user)
                 return redirect('registration_site:dashboard')

@@ -15,7 +15,7 @@
 }
 
 #piece-form-number {
-  width: 20px;
+  width: 24px;
   height: $form-input-height;
   line-height: $form-input-height;
 }
@@ -30,4 +30,11 @@ a {
 
 strong {
   font-weight: 400;
+}
+
+ul.errorlist {
+  padding-left: 20px;
+  li {
+    font-size: 12px;
+  }
 }

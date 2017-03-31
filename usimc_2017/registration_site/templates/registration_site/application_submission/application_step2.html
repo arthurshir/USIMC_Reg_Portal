@@ -5,9 +5,9 @@
 <!-- Head -->
 {% block head %}
 <script src="{% static 'shared/jquery.formset.js' %}"></script>
-<script src="{% static 'shared/parsley.js' %}"></script>
+<!-- <script src="{% static 'shared/parsley.js' %}"></script> -->
 <script src="{% static 'shared/cmtanc_rules.js' %}"></script>
-<script src="{% static 'shared/cmtanc_parsley_validators.js' %}"></script>
+<!-- <script src="{% static 'shared/cmtanc_parsley_validators.js' %}"></script> -->
 <script src="{% static 'registration_site/application_step_2.js' %}"></script>
 <script src="{% static 'shared/helper_functions.js' %}"></script>
 {% if is_ensemble_application %}
@@ -263,6 +263,7 @@
           <div style="height: 14px"></div>
         </div> <!-- piece div -->
         <div style="height: 14px"></div>
+        <input class="btn btn-default" type="submit" name="save-form" value="Save">
         <input class="btn btn-submit" type="submit" name="submit-form" value="Submit">
         <div style="height: 14px"></div>
       </div> <!-- empty div -->

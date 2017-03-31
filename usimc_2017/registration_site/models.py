@@ -8,14 +8,17 @@ from django.utils import timezone
 import datetime
 import usimc_data
 import usimc_rules
-from phonenumber_field.modelfields import PhoneNumberField
+import phonenumbers
+
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 #
 # Custom Fields
 #
 class AutoDateTimeField(DateTimeField):
     def pre_save(self, model_instance, add):
-        return datetime.datetime.utcnow()
+        return timezone.now()
 
 #
 # Helper Functions
@@ -99,6 +102,10 @@ class Entry(Model):
     objects = EntryManager()
 
     # Functions
+
+    def validate(self):
+        return not not (self.parent_contact.validate() and self.teacher.validate() and self.lead_performer.validate() and reduce((lambda x, y: x.validate() and y.validate()), pieces.all()) and reduce((lambda x, y: x.validate() and y.validate()), self.ensemble_members.all()))
+
     def award_strings(self):
         return map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
 
@@ -238,11 +245,24 @@ class ParentContact(Model):
     # Attributes
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = EmailField(null=True, blank=True, verbose_name='Email')
+    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email')
     phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
+
+    def validate_cmtanc_code(self, cmtanc_code):
+        return cmtanc_code in usimc_data.get_cmtanc_codes()
+
+    def validate(self):
+        try:
+            validate_email(self.email)
+            phone_number_valid = self.phone_number and phonenumbers.is_valid_number(phonenumbers.parse(self.phone_number, 'US'))
+        except ValidationError, phonenumbers.phonenumberutil.NumberParseException:
+            return False
+        else:
+            return not not (phone_number_valid and self.first_name and self.last_name)
+
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number)
@@ -258,10 +278,13 @@ class Piece(Model):
     movement = CharField(max_length=200, verbose_name='Movement', blank=True, null=True)
     composer = CharField(max_length=200, verbose_name='Composer', blank=True, null=True)
     youtube_link = CharField(max_length=200, verbose_name='Youtube Link (Only needed for Young Artist Award Entry)', blank=True, null=True)
-    minutes = IntegerField(verbose_name='min', null=True, blank=True)
-    seconds = IntegerField(verbose_name='sec', null=True, blank=True)
+    minutes = CharField(max_length=6, verbose_name='min', null=True, blank=True)
+    seconds = CharField(max_length=6, verbose_name='sec', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
+
+    def validate(self):
+        return not not(self.title and self.composer and self.minutes and self.seconds)
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Piece')
@@ -278,9 +301,19 @@ class Piece(Model):
 class Teacher(Model):
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
-    email = EmailField(null=True, blank=True, verbose_name='Email')
-    phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
+    email = CharField(null=True, blank=True, max_length=200, verbose_name='Email')
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
+
+    def valid_cmtanc_code(self):
+        return self.cmtanc_code in usimc_data.get_cmtanc_codes()
+
+    def validate(self):
+        try:
+            validate_email(self.email)
+        except ValidationError:
+            return False
+        else:
+            return not not (self.first_name and self.last_name and self.cmtanc_code and self.valid_cmtanc_code())
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)
@@ -303,6 +336,15 @@ class Person(Model):
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
+
+    def validate_birthday(self, birthday):
+        years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
+        cutoff = usimc_rules.get_age_measurement_date()
+        cutoff = cutoff.replace(year=cutoff.year - years)
+        return birthday >= cutoff
+
+    def validate(self):
+        return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday and self.validate_birthday(self.birthday))
 
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
@@ -332,6 +374,15 @@ class EnsembleMember(Model):
 
     # Relations
     entry = ForeignKey('Entry', verbose_name='Ensemble Member')
+
+    def validate_birthday(self, birthday):
+        years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
+        cutoff = usimc_rules.get_age_measurement_date()
+        cutoff = cutoff.replace(year=cutoff.year - years)
+        return birthday >= cutoff
+
+    def validate(self):
+        return not not (self.first_name and self.last_name and self.instrument and self.birthday and self.validate_birthday(self.birthday))
 
     def birthday_string(self):
         return xstr(self.birthday)

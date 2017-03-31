@@ -9,8 +9,8 @@ from django.core.exceptions import ValidationError
 
 def base_input_attrs(placeholder, required = False):
     attrs = {'placeholder': placeholder, 'class': 'application-input'}
-    if required:
-        attrs['required'] = ''
+    # if required:
+    #     attrs['required'] = ''
     return attrs    
 def text_input_widget(placeholder, required=False):
     attrs = base_input_attrs(placeholder=placeholder, required=required)
@@ -125,12 +125,11 @@ class PersonForm(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = models.Teacher
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'cmtanc_code',]
+        fields = ['first_name', 'last_name', 'email', 'cmtanc_code',]
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
             'email': email_input_widget(placeholder='Email*', required=True ),
-            'phone_number': phone_number_input_widget(placeholder='Phone Number*', required=True ),
             'cmtanc_code': text_input_widget(placeholder='CMTANC Code' ),
         }
     helper = FormHelper()
@@ -142,7 +141,6 @@ class TeacherForm(forms.ModelForm):
             Div('first_name', css_class="col-md-6"),
             Div('last_name', css_class="col-md-6"),
             Div('email', css_class="col-md-12"),
-            Div('phone_number', css_class="col-md-12"),
             Div('cmtanc_code', css_class="col-md-12"),
             css_class="row"
         ),

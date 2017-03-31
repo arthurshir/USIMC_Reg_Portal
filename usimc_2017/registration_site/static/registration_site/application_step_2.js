@@ -1,10 +1,10 @@
 // Client-side form validation using Parsley.js
 $(document).ready(function(){
-  $('#application-form').parsley().on('field:validated', function() {
-    var ok = $('.parsley-error').length === 0;
-    $('.bs-callout-info').toggleClass('hidden', !ok);
-    $('.bs-callout-warning').toggleClass('hidden', ok);
-  });
+  // $('#application-form').parsley().on('field:validated', function() {
+  //   var ok = $('.parsley-error').length === 0;
+  //   $('.bs-callout-info').toggleClass('hidden', !ok);
+  //   $('.bs-callout-warning').toggleClass('hidden', ok);
+  // });
 
   // $(document).on("change", 'input', function(event){
   //   ajax_submit();
