@@ -76,14 +76,15 @@ class ParentContactForm(forms.ModelForm):
 class PieceForm(forms.ModelForm):
     class Meta:
         model = models.Piece
-        fields = ['title', 'opus', 'movement', 'composer', 'length', 'youtube_link',]
+        fields = ['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link',]
         widgets = {
             'title': text_input_widget(placeholder='Title*', required=True ),
             'opus': text_input_widget(placeholder='Opus' ),
             'movement': text_input_widget(placeholder='Movement' ),
             'composer': text_input_widget(placeholder='Composer*', required=True ),
             'youtube_link': text_input_widget(placeholder='Youtube Link (Only needed for Young Artist Award Entry)' ),
-            'length': text_input_widget(placeholder='Length' ),
+            'minutes': text_input_widget(placeholder='min', required=True ),
+            'seconds': text_input_widget(placeholder='sec', required=True ),
         }
 
 class PersonForm(forms.ModelForm):

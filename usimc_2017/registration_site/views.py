@@ -216,7 +216,7 @@ class EditApplicationView(View):
                         form.add_error('birthday',
                             "Performer must be under " + str(years) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
             input_cmtanc_code = self.context['teacher_form'].cleaned_data['cmtanc_code']
-            if not entry.validate_cmtanc_code(input_cmtanc_code):
+            if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
                 special_cases_valid = False
                 self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
@@ -579,7 +579,7 @@ def get_performer(user, pk):
 
 ## Constants
 # Formset factories
-PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'length', 'youtube_link'])
+PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link'])
 EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'birthday'])
 # Form prefixes
 piece_formset_prefix = 'pieces'

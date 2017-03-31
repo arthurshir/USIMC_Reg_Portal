@@ -215,7 +215,7 @@ class Entry(Model):
                 'movement': xstr(x.movement),
                 'composer': x.composer,
                 'youtube_link': xstr(x.youtube_link),
-                'length': xstr(x.length)
+                'length': xstr(x.minutes) + ' minutes ' + xstr(x.seconds) + ' seconds'
                 }, self.pieces.all())
         return render_to_string('registration_site/application_submission/entry_complete_description.txt', context)
 
@@ -258,7 +258,8 @@ class Piece(Model):
     movement = CharField(max_length=200, verbose_name='Movement', blank=True, null=True)
     composer = CharField(max_length=200, verbose_name='Composer', blank=True, null=True)
     youtube_link = CharField(max_length=200, verbose_name='Youtube Link (Only needed for Young Artist Award Entry)', blank=True, null=True)
-    length = IntegerField(verbose_name='Length', null=True, blank=True)
+    minutes = IntegerField(verbose_name='min', null=True, blank=True)
+    seconds = IntegerField(verbose_name='sec', null=True, blank=True)
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 

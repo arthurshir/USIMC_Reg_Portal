@@ -244,9 +244,13 @@
                   {{ form.composer }}
                 {{ form.composer.errors }}
                 </div>
-                <div class="col-md-4 application-column">
-                  {{ form.length }}
-                {{ form.length.errors }}
+                <div class="col-md-2 application-column">
+                {{ form.minutes }}
+                {{ form.minutes.errors }}
+                </div>
+                <div class="col-md-2 application-column">
+                {{ form.seconds }}
+                {{ form.seconds.errors }}
                 </div>
                 <div class="col-md-12 application-column">
                   {{ form.youtube_link }}
