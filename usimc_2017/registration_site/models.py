@@ -123,7 +123,7 @@ class Entry(Model):
             self.parent_contact.validate(),
             self.teacher.validate(),
             self.lead_performer.validate(),
-            reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())),
+            (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())) if len(self.pieces.all()) > 0 else True) and
             (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
             )
 

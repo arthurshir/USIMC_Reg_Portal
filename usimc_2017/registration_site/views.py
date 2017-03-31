@@ -241,16 +241,16 @@ class EditApplicationView(View):
                     contestants = models.EnsembleMember.objects.all().filter(pk=_cf(form['id'].value())) 
                     if len(contestants) > 0:
                         contestants[0].delete()
-
-                    del form
                     continue
                 elif _cf(form['id'].value()):
                     print _cf(form['id'].value())
                     contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))
                 else:
                     contestant = models.EnsembleMember()
+                    # Replace modelForm 
+                    form = forms.EnsembleMemberForm(instance=contestant)
                     form.is_valid()
-                    form.cleaned_data['id'] = contestant.pk
+                    # form.cleaned_data['id'] = contestant.pk
                 contestant.first_name = _cf(form['first_name'].value())
                 contestant.last_name = _cf(form['last_name'].value())
                 contestant.instrument = _cf(form['instrument'].value())
@@ -266,14 +266,15 @@ class EditApplicationView(View):
                 pieces = models.Piece.objects.all().filter(pk=_cf(form['id'].value()))
                 if len(pieces) > 0:
                     pieces[0].delete()
-                del form
                 continue
             elif _cf(form['id'].value()):
                 piece = models.Piece.objects.get(pk=_cf(form['id'].value()))
             else:
                 piece = models.Piece()
+                # Replace modelForm 
+                form = forms.PieceForm(instance=piece)
                 form.is_valid()
-                form.cleaned_data['id'] = piece.pk
+                # form.cleaned_data['id'] = piece.pk
 
             piece.title = _cf(form['title'].value())
             piece.opus = _cf(form['opus'].value())
@@ -285,15 +286,16 @@ class EditApplicationView(View):
             piece.entry = entry
             piece.save()
 
-        # Clean all to allow validation
-        self.clean_all_forms(request)
+        if request.POST.get('save-form'):
+            self.load_forms_to_context(request)
+        else:
+            # Clean all to allow validation
+            self.clean_all_forms(request)
+            # Add validation
+            self.special_validation_messages(request)
+            if request.POST.get('submit-form'):
+                self.blank_validation_messages(request)
 
-        # Add validation
-        self.special_validation_messages(request)
-        if request.POST.get('submit-form'):
-            self.blank_validation_messages(request)
-
-        print entry.validate()
         if request.POST.get('save-form') or not entry.validate():
             return render(request, 'registration_site/application_submission/application_step2.html', self.context)
 
@@ -694,7 +696,7 @@ def get_performer(user, pk):
 
 ## Constants
 # Formset factories
-PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=4, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link'])
+PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=20, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link'])
 EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'month', 'day', 'year'])
 # Form prefixes
 piece_formset_prefix = 'pieces'
