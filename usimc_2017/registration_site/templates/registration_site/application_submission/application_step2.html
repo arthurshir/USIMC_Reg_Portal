@@ -239,6 +239,7 @@
           <div class="form-section-header">Pieces</div>
           {{ piece_formset.non_field_errors }}
           {% for form in piece_formset.forms %}
+            {{ form.non_field_errors }}
             <div class="flex-row piece-form">
               <div id="piece-form-number">-</div>
               {{ form.id }}

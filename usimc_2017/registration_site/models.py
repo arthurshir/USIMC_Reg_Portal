@@ -109,31 +109,28 @@ class Entry(Model):
 
     # Functions
 
+    def awards_include_youth(self):
+        return usimc_rules.AWARD_CHOICE_YOUTH in self.awards_applying_for
+
     def validate(self):
-
-        print "Pieces"
-        for piece in self.pieces.all():
-            print piece.validate()
-
-        print "EnsembleMember"
-        for ensemble_member in self.ensemble_members.all():
-            print ensemble_member.validate()
-
-        print (
-            self.parent_contact.validate(),
-            self.teacher.validate(),
-            self.lead_performer.validate(),
-            (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())) if len(self.pieces.all()) > 0 else True) and
-            (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
-            )
-
+        """Checks that all attributes are filled and birthdays and youtube_links are filled if Youth Award"""
         return not not (
             self.parent_contact.validate() and
             self.teacher.validate() and
             self.lead_performer.validate() and
+            self.validate_youth_youtube_link_validation() and
             reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())) and
             (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
             )
+
+    def validate_youth_youtube_link_validation(self):
+        """Needs to have at least 2 entries with youtube links"""
+        if usimc_rules.AWARD_CHOICE_YOUTH not in self.awards_applying_for:
+            return True
+        else:
+            return len(
+                filter(lambda x: x.youtube_link != None, self.pieces.all())
+                ) >= 2
 
     def award_strings(self):
         return map(lambda x: usimc_rules.AWARD_CHOICES_DICT[x], self.awards_applying_for)
@@ -268,7 +265,7 @@ class Entry(Model):
         default_related_name =  'entries'
 
     def __unicode__(self):
-        return self.usimc_user.user.username + "\'s Entry for " + self.instrument_category + " created at: " + self.created_at.strftime('%Y-%m-%d %H:%M')
+        return xstr(self.usimc_user).user.username + "\'s Entry for " + xstr(self.instrument_category) + " created at: " + xstr(self.created_at.strftime('%Y-%m-%d %H:%M'))
 
 class ParentContact(Model):
     # Attributes
@@ -324,7 +321,7 @@ class Piece(Model):
         default_related_name = 'pieces'
 
     def __unicode__(self):
-        return self.title + self.composer
+        return xstr(self.title) + xstr(self.composer) + xstr(self.youtube_link)
 
 class Teacher(Model):
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')

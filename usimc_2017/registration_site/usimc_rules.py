@@ -27,6 +27,8 @@ AGE_CATEGORY_CHOICES_DICT = dict(AGE_CATEGORY_CHOICES)
 
 AWARD_CHOICES = sorted(tuple(((str(x), data['awards'][x]['name']) for x in data['awards'])), reverse=True)
 AWARD_CHOICES_DICT = dict(AWARD_CHOICES)
+AWARD_CHOICE_YOUTH = 'young_artist_award'
+AWARD_CHOICE_CHINESE = 'chinese_music_award'
 
 KEY_PRICING_YES_CMTANC = 'per_contestant_yes_cmtanc'
 KEY_PRICING_NO_CMTANC = 'per_contestant_no_cmtanc'

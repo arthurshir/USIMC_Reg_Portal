@@ -30,7 +30,6 @@ class ModelValidationMethodTests(TestCase):
     EnsembleMember.objects.create(entry = entry)
     entry.save()
 
-
   def test_ensemble_memmber(self):
     """EnsembleMember validation method works as expected"""
     entry = Entry.objects.all()[0]
@@ -42,7 +41,10 @@ class ModelValidationMethodTests(TestCase):
       ensemble_member.first_name = 'Test value'
       ensemble_member.last_name = 'Test value'
       ensemble_member.instrument = 'Test value'
-      ensemble_member.birthday = timezone.now().date()
+      birthday = timezone.now().date()
+      ensemble_member.month = str(birthday.month)
+      ensemble_member.day = str(birthday.day)
+      ensemble_member.year = str(birthday.year)
       ensemble_member.save()
 
     for ensemble_member in entry.ensemble_members.all():
@@ -79,7 +81,10 @@ class ModelValidationMethodTests(TestCase):
     entry.lead_performer.state = 'Test value'
     entry.lead_performer.zip_code = 'Test value'
     entry.lead_performer.country = 'Test value'
-    entry.lead_performer.birthday = timezone.now().date()
+    birthday = timezone.now().date()
+    entry.lead_performer.month = str(birthday.month)
+    entry.lead_performer.day = str(birthday.day)
+    entry.lead_performer.year = str(birthday.year)
     self.assertEqual(entry.lead_performer.validate(), True)
 
     entry.lead_performer.save()
@@ -129,3 +134,31 @@ class ModelValidationMethodTests(TestCase):
     self.test_parent_contact()
     
     self.assertEqual(entry.validate(), True)
+
+  def test_youtube_link_validation(self):
+    """Entry youtube link validation method works as expected"""
+    entry = Entry.objects.all()[0]
+    entry.awards_applying_for = [usimc_rules.AWARD_CHOICE_CHINESE]
+    entry.pieces.all().delete()
+
+    Piece.objects.create(entry = entry)
+    Piece.objects.create(entry = entry)
+    Piece.objects.create(entry = entry)
+    self.assertEqual(entry.validate_youth_youtube_link_validation(), True)
+
+    for piece in entry.pieces.all():
+      piece.youtube_link = 'Test value'
+      piece.save()
+    self.assertEqual(entry.validate_youth_youtube_link_validation(), True)
+
+    entry.awards_applying_for = [usimc_rules.AWARD_CHOICE_YOUTH]
+    for piece in entry.pieces.all():
+      piece.youtube_link = None
+      piece.save()
+    self.assertEqual(entry.validate_youth_youtube_link_validation(), False)
+
+    for piece in entry.pieces.all():
+      piece.youtube_link = 'Test value'
+      piece.save()
+    self.assertEqual(entry.validate_youth_youtube_link_validation(), True)
+
