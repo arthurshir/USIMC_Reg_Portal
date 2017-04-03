@@ -313,7 +313,7 @@ class EditApplicationView(View):
             competitor_forms += self.context['ensemble_member_formset'].forms
         for form in competitor_forms:
             if all([_cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value()) ]):
-                birthday_string = _cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value())
+                birthday_string = _cf(form['month'].value())+ _cf(form['day'].value())+ _cf(form['year'].value())
                 birthday = models.string_to_date(birthday_string) 
                 if birthday:
                     if not entry.lead_performer.validate_birthday(birthday):
