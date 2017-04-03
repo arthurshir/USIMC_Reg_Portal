@@ -31,7 +31,7 @@ def xstr(s):
 
 def string_to_date(s):
     try:
-        return datetime.datetime.strptime(s, "%d%m%Y").date()
+        return datetime.datetime.strptime(s, "%m-%d-%Y").date()
     except ValueError:
         return None
 
@@ -369,7 +369,7 @@ class Person(Model):
             print "No moth, day, year"
             return None
         else:
-            return string_to_date(self.month + self.day + self.year)
+            return string_to_date(self.month + "-" + self.day + "-" + self.year)
 
     def validate_birthday(self, birthday):
         if not birthday:
@@ -417,7 +417,7 @@ class EnsembleMember(Model):
         if not (self.month and self.day and self.year):
             return None
         else:
-            return string_to_date(self.month + self.day + self.year)
+            return string_to_date(self.month + "-" + self.day + "-" + self.year)
 
     def validate_birthday(self, birthday):
         if not birthday:
