@@ -99,7 +99,7 @@ class RegisterView(View):
         form = forms.RegistrationForm(request.POST)
         # Assert form is valid
         if not form.is_valid():
-            return redirect_register_view_error(request, 'Form not valid?')
+            return redirect_register_view_error(request, 'Please fill all fields')
         # Check if user exists
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
@@ -213,12 +213,10 @@ class EditApplicationView(View):
         if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code): entry.teacher.cmtanc_code = input_cmtanc_code
         entry.teacher.save()
 
-        print 'before', entry.parent_contact.first_name, entry.parent_contact.last_name, entry.parent_contact.email 
         entry.parent_contact.first_name = _cf(self.context['contact_form']['first_name'].value())
         entry.parent_contact.last_name = _cf(self.context['contact_form']['last_name'].value())
         entry.parent_contact.email = _cf(self.context['contact_form']['email'].value())
         entry.parent_contact.phone_number = _cf(self.context['contact_form']['phone_number'].value())
-        print 'after', entry.parent_contact.first_name, entry.parent_contact.last_name, entry.parent_contact.email 
         entry.parent_contact.save()
 
         entry.lead_performer.first_name = _cf(self.context['lead_competitor_form']['first_name'].value())
@@ -244,7 +242,6 @@ class EditApplicationView(View):
                     del form
                     continue
                 elif _cf(form['id'].value()):
-                    print _cf(form['id'].value())
                     contestant = models.EnsembleMember.objects.get(pk=_cf(form['id'].value()))
                 else:
                     contestant = models.EnsembleMember()
@@ -316,11 +313,10 @@ class EditApplicationView(View):
             competitor_forms += self.context['ensemble_member_formset'].forms
         for form in competitor_forms:
             if all([_cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value()) ]):
-                birthday = models.string_to_date(_cf(form['month'].value()) + _cf(form['day'].value()) + _cf(form['year'].value()))
-                if not entry.lead_performer.validate_birthday(birthday):
+                print "Birthday", entry.lead_performer.birthday()
+                if not entry.lead_performer.validate_birthday(entry.lead_performer.birthday()):
                     form.add_error('year', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
         input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
-        print 'input_cmtanc_code', input_cmtanc_code
         if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
             self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 

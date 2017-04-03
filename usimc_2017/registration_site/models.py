@@ -366,6 +366,7 @@ class Person(Model):
 
     def birthday(self):
         if not (self.month and self.day and self.year):
+            print "No moth, day, year"
             return None
         else:
             return string_to_date(self.month + self.day + self.year)

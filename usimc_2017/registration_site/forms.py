@@ -159,10 +159,12 @@ class LoginForm(forms.Form):
     )
 
 class RegistrationForm(forms.Form):
-
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")
+
+    # class Meta:
+    #     labels = {'password2': 'confirm password'}
 
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
@@ -172,7 +174,7 @@ class RegistrationForm(forms.Form):
         Div(
             Div('email', css_class="container-fluid"),
             Div('password', css_class="container-fluid"),
-            Div('confirm password', css_class="container-fluid"),
+            Div('password2', css_class="container-fluid"),
         ),
         ButtonHolder(
             Submit('submit', 'Register', css_class='btn btn-submit')
