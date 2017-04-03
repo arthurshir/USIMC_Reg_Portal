@@ -8,7 +8,7 @@ Payment Information:
 {{ pricing_string }}
 PAID: {{ price }} on {{ charge_date }}
 
-Please either reply to this email or email info@usimc.org and cc usimc2017tech@gmail.com for any further questions.
+Please either reply to this email for any further questions.
 
 Thank you,
 USIMC 2017 Registration
