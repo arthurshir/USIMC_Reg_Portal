@@ -313,9 +313,13 @@ class EditApplicationView(View):
             competitor_forms += self.context['ensemble_member_formset'].forms
         for form in competitor_forms:
             if all([_cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value()) ]):
-                print "Birthday", entry.lead_performer.birthday()
-                if not entry.lead_performer.validate_birthday(entry.lead_performer.birthday()):
-                    form.add_error('year', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+                birthday_string = _cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value())
+                birthday = models.string_to_date(birthday_string) 
+                if birthday:
+                    if not entry.lead_performer.validate_birthday(birthday):
+                        form.add_error('year', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+                else:
+                    form.add_error('year', "Wrong format for date")
         input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
         if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
             self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
