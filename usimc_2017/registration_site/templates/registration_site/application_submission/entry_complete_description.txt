@@ -7,8 +7,8 @@
 
   Parent of contestant:
     Name: {{ entry.parent_contact.first_name }} {{ entry.parent_contact.last_name }}
-    Email: {{ entry.parent_contact.email }}, {{ entry.parent_contact.phone_number }}
-    Phone Number: {{ entry.parent_contact.email }}, {{ entry.parent_contact.phone_number }}
+    Email: {{ entry.parent_contact.email }}
+    Phone Number: {{ entry.parent_contact.phone_number }}
 
   Teacher:
     Name: {{ entry.teacher.first_name }} {{ entry.teacher.last_name }}
