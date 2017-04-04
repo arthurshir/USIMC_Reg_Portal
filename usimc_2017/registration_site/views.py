@@ -436,10 +436,12 @@ class ReviewSubmissionView(View):
     def get(self, request, *args, **kwargs):
         # Only allow requests for validated entries
         entry = get_entry(request.user, self.kwargs['pk'])
+        self.update_entry_context(request)
         if not entry.validate():
             return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
 
-        self.update_entry_context(request)
+        self.context['agreement_error'] = None
+
         if self.context['entry'].submitted:
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         return render(request, 'registration_site/application_submission/review_submission.html', self.context)
@@ -447,10 +449,20 @@ class ReviewSubmissionView(View):
     def post(self, request, *args, **kwargs):
         # Only allow requests for validated entries
         entry = get_entry(request.user, self.kwargs['pk'])
+        self.update_entry_context(request)
+
         if not entry.validate():
             return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
 
-        return render(request, 'registration_site/application_submission/review_submission.html', self.context)
+        input_signature = _cf(request.POST.get('agreement_signature'))
+        if not input_signature:
+            self.context['agreement_error'] = True
+            return render(request, 'registration_site/application_submission/review_submission.html', self.context)
+        else:
+            entry.signature = input_signature
+            print input_signature
+            entry.save()
+            return redirect(reverse('registration_site:pay', kwargs=self.kwargs))
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -464,6 +476,8 @@ class PaymentView(View):
         entry = get_entry(request.user, self.kwargs['pk'])
         if not entry.validate():
             return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+        if not entry.signature:
+            return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
 
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])

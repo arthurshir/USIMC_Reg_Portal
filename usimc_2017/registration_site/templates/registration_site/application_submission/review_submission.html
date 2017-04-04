@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_with_side_margins.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
@@ -13,13 +13,29 @@
 
 <!-- Main Content -->
 {% block content %}
-<h2>Reviewing Submission</h2>
+<h2>Entry Application Review</h2>
+<div class="form-section-header">Information to be Submitted</div>
 <div class="information-container">
   {{ complete_description_string|linebreaksbr }}
 </div>
-<div class="flex-row">
-  <a class="btn btn-default" href="{% url 'registration_site:edit_application' pk=entry.pk %}">Back</a>
-  <a class="btn btn-submit" href="{% url 'registration_site:pay' pk=entry.pk %}">Continue to Payment</a>
-</div>
+<div style="height:20px;"></div>
+<form class="form-inline" action="." method="post">
+  {% csrf_token %}
+  <div class="form-section-header">Submission Agreement*</div>
+  <p style="font-weight: 400;">Agreement: "I, the undersigned party, by submitting this online registration form, agree to the rules and allow the USIMC to use my child's photography or likeness taken in the event for promotion, ads and marketing products."</p>
+  <input style="width:200px;" name="agreement_signature" type="text" placeholder="Full Legal name">
+  {% if agreement_error %}
+    <ul class="errorlist">
+      <li>You must sign agreement</li>
+    </ul>
+  {% endif %}
+  <div style="height:60px;"></div>
+
+  <div class="flex-row">
+    <a class="btn btn-default" href="{% url 'registration_site:edit_application' pk=entry.pk %}">Back</a>
+    <input class="btn btn-submit" type="submit" name="submit-form" value="Continue to Payment">
+    <!-- <a class="btn btn-submit" href="{% url 'registration_site:pay' pk=entry.pk %}">Continue to Payment</a> -->
+  </div>
+</form>
 
 {% endblock %}

@@ -39,9 +39,9 @@
 		    </ul>
 	    </div>
 		</nav>
-
+		{% block content_override %}
 		<div class="content">{% block content %}{% endblock %}</div>
-
+		{% endblock %}
 		<footer>
 				© Copyright CMTANC 2017
 		</footer>

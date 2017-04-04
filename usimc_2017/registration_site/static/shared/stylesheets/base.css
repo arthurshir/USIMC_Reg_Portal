@@ -5,7 +5,7 @@
   background-color: #ECECEC;
   padding: 20px; }
 
-.positive-notice-container {
+.success-container {
   border: 1px solid #d6e9c6;
   width: 100%;
   padding: 12px 8px 12px 8px;
@@ -13,6 +13,13 @@
   font-size: 14px;
   color: #3c763d;
   background-color: #dff0d8; }
+
+.alert-container {
+  border: 1px solid #ebccd1;
+  width: 100%;
+  padding: 12px 8px 12px 8px;
+  font-weight: 400;
+  font-size: 14px; }
 
 .information-container {
   border: 1px solid #000000;
@@ -40,7 +47,7 @@
 .panel-default {
   border-radius: 0px; }
 
-.content {
+.content, .content-with-margins {
   margin-top: 70px;
   margin-bottom: 36px;
   min-height: calc(100% - 70px - 36px);
@@ -48,6 +55,12 @@
   flex-direction: column;
   flex: 1;
   overflow: scroll; }
+
+.content-with-margins {
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 120px;
+  margin-bottom: 86px; }
 
 .centered-align-wrapper {
   display: flex;

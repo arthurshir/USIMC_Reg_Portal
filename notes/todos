@@ -1,21 +1,9 @@
 Todos:
 
-- System Todos
-  - WEB SERVER
-  - BACKUP
-- Add unit testing for Pricing
-- Edit after submission
-  - Change anything that doesn't affect the price
-    - Piece
-      - Change all data
-    - Ensemble Members & Lead Performer
-      - Change all data
-      - CANNOT change number of ensemble members
-    - Teacher
-      - Change all data
-    - Parent Contact
-      - Change all data
-    - Cannot adjust international status, awards, or instrument category
+- Make it more clear when CMTANC code is applied
+- Add Automated Backup
+- Add pricing unit testing
+- Add edit after submission
 
 x - Minute & Seconds
 x - Added Youtube Link Check
@@ -25,12 +13,3 @@ x - Link to rules
 x - Fix Parsely and Pricing update with each dynamic form change AND CMTANC Code
 x - Email Format
 x - Fix Presentation of Confirmation Page
-
-Pricing Unit Tests:
-  - Check yes_cmtanc * 1_award * 1_member = price
-  - Check no_cmtanc * 1_award * 1_member = price
-  - Check yes_international * 1_award * 1_member = price
-
-  - per_contestant_yes_cmtanc
-  - per_contestant_no_cmtanc
-  - per_contestant_yes_international

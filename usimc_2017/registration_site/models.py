@@ -94,7 +94,8 @@ class Entry(Model):
     submitted = BooleanField(default=False)
     is_not_international = BooleanField(default=True)
     proof_of_age = FileField(null = True, blank = True)
-    
+    signature = CharField(max_length=500, blank=True, null=True)
+
     # Relations
     parent_contact = OneToOneField('ParentContact', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Parent Contact")
     teacher = OneToOneField('Teacher', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Teacher")
