@@ -265,7 +265,7 @@ class Entry(Model):
         default_related_name =  'entries'
 
     def __unicode__(self):
-        return xstr(self.usimc_user).user.username + "\'s Entry for " + xstr(self.instrument_category) + " created at: " + xstr(self.created_at.strftime('%Y-%m-%d %H:%M'))
+        return xstr(self.usimc_user.user.username) + "\'s Entry for " + xstr(self.instrument_category) + " created at: " + xstr(self.created_at.strftime('%Y-%m-%d %H:%M'))
 
 class ParentContact(Model):
     # Attributes
