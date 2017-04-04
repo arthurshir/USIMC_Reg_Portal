@@ -97,13 +97,23 @@ class ModelValidationMethodTests(TestCase):
 
     entry.teacher.first_name = 'Test value'
     entry.teacher.last_name = 'Test value'
-    entry.teacher.email = 'Test value'
+    entry.teacher.email = 'Invalid'
     self.assertEqual(entry.teacher.validate(), False)
 
     entry.teacher.email = 'test@gmail.com'
     self.assertEqual(entry.teacher.validate(), True)
 
+    entry.teacher.cmtanc_code = "Invalid"
     entry.teacher.save()
+    self.assertEqual(entry.teacher.validate(), False)
+
+    entry.teacher.cmtanc_code = "HP12500"
+    entry.teacher.save()
+    self.assertEqual(entry.teacher.validate(), True)
+
+    entry.teacher.cmtanc_code = None
+    entry.teacher.save()
+    
 
   def test_parent_contact(self):
     """ParentContact validation method works as expected"""
@@ -113,7 +123,7 @@ class ModelValidationMethodTests(TestCase):
 
     entry.parent_contact.first_name = 'Test value'
     entry.parent_contact.last_name = 'Test value'
-    entry.parent_contact.email = 'Test value'
+    entry.parent_contact.email = 'Invalid'
     entry.parent_contact.phone_number = '5106768998'
     self.assertEqual(entry.parent_contact.validate(), False)
 
@@ -127,13 +137,61 @@ class ModelValidationMethodTests(TestCase):
     """Entry validation method works as expected"""
     entry = Entry.objects.all()[0]
 
-    self.test_ensemble_memmber()
-    self.test_pieces()
-    self.test_lead_competitor()
-    self.test_teacher()
-    self.test_parent_contact()
-    
+    for ensemble_member in entry.ensemble_members.all():
+      ensemble_member.first_name = 'Test value'
+      ensemble_member.last_name = 'Test value'
+      ensemble_member.instrument = 'Test value'
+      birthday = timezone.now().date()
+      ensemble_member.month = str(birthday.month)
+      ensemble_member.day = str(birthday.day)
+      ensemble_member.year = str(birthday.year)
+      ensemble_member.save()
+
+    for piece in entry.pieces.all():
+      piece.title = 'Test value'
+      piece.composer = 'Test value'
+      piece.youtube_link = 'Test value'
+      piece.minutes = 1
+      piece.seconds = 1
+      piece.save()
+
+    entry.lead_performer.first_name = 'Test value'
+    entry.lead_performer.last_name = 'Test value'
+    entry.lead_performer.instrument = 'Test value'
+    entry.lead_performer.address = 'Test value'
+    entry.lead_performer.city = 'Test value'
+    entry.lead_performer.state = 'Test value'
+    entry.lead_performer.zip_code = 'Test value'
+    entry.lead_performer.country = 'Test value'
+    birthday = timezone.now().date()
+    entry.lead_performer.month = str(birthday.month)
+    entry.lead_performer.day = str(birthday.day)
+    entry.lead_performer.year = str(birthday.year)
+    entry.lead_performer.save()
+
+    entry.teacher.first_name = 'Test value'
+    entry.teacher.last_name = 'Test value'
+    entry.teacher.email = 'Arthur.shir@gmail.com'
+    entry.teacher.cmtanc_code = None
+    entry.teacher.save()
+    print entry.teacher.validate()
+
+    entry.parent_contact.first_name = 'Test value'
+    entry.parent_contact.last_name = 'Test value'
+    entry.parent_contact.email = 'Arthur.shir@gmail.com'
+    entry.parent_contact.phone_number = '5106768998'
+    entry.save()
+
+    # self.assertEqual(entry.validate(), True)
+
+    entry.teacher.cmtanc_code = "Invalid"
+    entry.teacher.save()
+    self.assertEqual(entry.validate(), False)
+
+    entry.teacher.cmtanc_code = "HP12500"
+    entry.teacher.save()
     self.assertEqual(entry.validate(), True)
+
 
   def test_youtube_link_validation(self):
     """Entry youtube link validation method works as expected"""

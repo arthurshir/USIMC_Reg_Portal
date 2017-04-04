@@ -191,7 +191,6 @@ class EditApplicationView(View):
         # Retrieve user and entry
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
-        self.load_entry_data_to_context(request)
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
@@ -209,8 +208,8 @@ class EditApplicationView(View):
         entry.teacher.first_name = _cf(self.context['teacher_form']['first_name'].value())
         entry.teacher.last_name = _cf(self.context['teacher_form']['last_name'].value())
         entry.teacher.email = _cf(self.context['teacher_form']['email'].value())
-        input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
-        if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code): entry.teacher.cmtanc_code = input_cmtanc_code
+        entry.teacher.cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
+        print entry.teacher.cmtanc_code
         entry.teacher.save()
 
         entry.parent_contact.first_name = _cf(self.context['contact_form']['first_name'].value())
@@ -287,6 +286,7 @@ class EditApplicationView(View):
             if request.POST.get('submit-form'):
                 self.blank_validation_messages(request)
 
+        self.load_entry_data_to_context(request)
         if request.POST.get('save-form') or not entry.validate():
             return render(request, 'registration_site/application_submission/application_step2.html', self.context)
 
@@ -322,7 +322,9 @@ class EditApplicationView(View):
                 else:
                     form.add_error('year', "Wrong format for date")
         input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
-        if input_cmtanc_code and not entry.validate_cmtanc_code(input_cmtanc_code):
+        print input_cmtanc_code
+        print entry.teacher.validate_cmtanc_code(input_cmtanc_code)
+        if input_cmtanc_code and not entry.teacher.validate_cmtanc_code(input_cmtanc_code):
             self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
     def blank_validation_messages(self, request):
@@ -407,6 +409,7 @@ class EditApplicationView(View):
         self.context['calculated_price'] = entry.calculate_price()
         self.context['calculated_price_string'] = entry.create_pricing_string()
         self.context['is_ensemble_application'] = entry.is_ensemble()
+        self.context['valid_cmtanc_code'] = entry.teacher.cmtanc_code if entry.teacher.has_valid_cmtanc_code() else False
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

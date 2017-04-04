@@ -157,7 +157,7 @@ class Entry(Model):
         if not self.is_not_international:
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_INTERNATIONAL]
         # If CMTANC
-        elif self.teacher.cmtanc_code:
+        elif self.teacher.has_valid_cmtanc_code():
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_CMTANC]
         # If not CMTANC
         else:
@@ -171,15 +171,12 @@ class Entry(Model):
         if not is_not_international:
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_INTERNATIONAL]
         # If CMTANC
-        elif self.validate_cmtanc_code(cmtanc_code):
+        elif self.teacher.validate_cmtanc_code(cmtanc_code):
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_YES_CMTANC]
         # If not CMTANC
         else:
             price_per_competitor = pricing_dict[usimc_rules.KEY_PRICING_NO_CMTANC]
         return price_per_competitor
-
-    def validate_cmtanc_code(self, cmtanc_code):
-        return cmtanc_code in usimc_data.get_cmtanc_codes()
 
     def calculate_price_with_custom_values(self, num_ensemble_members, num_awards, is_not_international, cmtanc_code):
         # Price per competitor & award * (number of competitors) * (number of awards)
@@ -199,7 +196,7 @@ class Entry(Model):
         output = '$' + str(self.price_per_competitor_per_award()) + ' per contestant, per award category '
         if not self.is_not_international:
             output += ' for international entry\n'
-        elif self.teacher.cmtanc_code:
+        elif self.teacher.has_valid_cmtanc_code():
             output += ' (coached by Active CMTANC members)\n' if self.is_ensemble() else ' (students of Active CMTANC members)\n'
         else:
             output += ' (coached by Non-CMTANC members)\n' if self.is_ensemble() else ' (students of Non-CMTANC members)\n'
@@ -229,7 +226,7 @@ class Entry(Model):
     def complete_description_string(self):
         context = {}  
         context['entry'] = self
-        context['is_cmtanc_member_string'] = 'Yes' if self.teacher.cmtanc_code else 'No'
+        context['is_cmtanc_member_string'] = 'Yes' if self.teacher.has_valid_cmtanc_code() else 'No'
         context['awards_string'] = self.awards_string()
         context['age_category_string'] = self.age_category_string()
         context['instrument_category_string'] = self.instrument_category_string()
@@ -276,9 +273,6 @@ class ParentContact(Model):
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
-
-    def validate_cmtanc_code(self, cmtanc_code):
-        return cmtanc_code in usimc_data.get_cmtanc_codes()
 
     def validate(self):
         try:
@@ -329,8 +323,11 @@ class Teacher(Model):
     email = CharField(null=True, blank=True, max_length=200, verbose_name='Email')
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
 
-    def valid_cmtanc_code(self):
+    def has_valid_cmtanc_code(self):
         return self.cmtanc_code in usimc_data.get_cmtanc_codes()
+
+    def validate_cmtanc_code(self, cmtanc_code):
+        return cmtanc_code in usimc_data.get_cmtanc_codes()
 
     def validate(self):
         try:
@@ -338,7 +335,7 @@ class Teacher(Model):
         except ValidationError:
             return False
         else:
-            return not not (self.first_name and self.last_name and (self.valid_cmtanc_code() if self.cmtanc_code else True))
+            return not not (self.first_name and self.last_name and (self.has_valid_cmtanc_code() if self.cmtanc_code else True))
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)
@@ -366,7 +363,7 @@ class Person(Model):
 
     def birthday(self):
         if not (self.month and self.day and self.year):
-            print "No moth, day, year"
+            print "No month, day, year"
             return None
         else:
             return string_to_date(self.month + "-" + self.day + "-" + self.year)

@@ -101,7 +101,7 @@ class TeacherForm(forms.ModelForm):
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
             'email': email_input_widget(placeholder='Email*', required=True ),
-            'cmtanc_code': text_input_widget(placeholder='CMTANC Code' ),
+            'cmtanc_code': text_input_widget(placeholder='CMTANC Member ID' ),
         }
     helper = FormHelper()
     helper.form_class = 'form-horizontal'
