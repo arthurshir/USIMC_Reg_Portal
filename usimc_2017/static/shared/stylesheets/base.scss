@@ -1,0 +1,22 @@
+@import "constants";
+@import "components/containers";
+@import "components/text";
+@import "components/input";
+@import "components/spacers";
+@import "components/bootstrap_defaults";
+@import "components/buttons";
+@import "components/flex";
+
+#small_logo{
+  height: 50px;
+  width: 50px;
+}
+
+html * {
+  font-family: 'Fira Sans' !important;
+  font-weight: 300;
+}
+
+.form-horizontal {
+  margin: 0px;
+}

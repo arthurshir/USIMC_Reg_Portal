@@ -1,0 +1,40 @@
+.form-section-header {
+  font-size: 20px;
+  margin-left: 2px;
+  font-weight: 200;
+}
+
+.form-section-subheader {
+  font-size: 14px;
+  margin: 0px;
+  font-weight: 200;
+}
+
+.paragraph-bold {
+  font-weight: 400;
+}
+
+#piece-form-number {
+  width: 24px;
+  height: $form-input-height;
+  line-height: $form-input-height;
+}
+
+a {
+  color: $primary-brand-color;
+}
+
+.text-centered {
+  text-align: center;
+}
+
+strong {
+  font-weight: 400;
+}
+
+ul.errorlist {
+  padding-left: 20px;
+  li {
+    font-size: 12px;
+  }
+}
