@@ -5,6 +5,7 @@ __pycache__/
 
 .sass-cache/
 .usimc_2017/static/
+.env
 
 # C extensions
 *.so

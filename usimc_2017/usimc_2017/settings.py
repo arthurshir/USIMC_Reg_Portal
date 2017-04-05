@@ -11,19 +11,24 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import sys
+
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Load Environment variables
+dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tjj(nqf=(hqz06d24t#xgoz$tue@p$#f3j*m6rz17f6yy^x5zn'
+SECRET_KEY = os.environ.get('SECRET_KEY', '123456')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', True)
 
 ALLOWED_HOSTS = ['0.0.0.0']
 
@@ -84,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'usimc',
         'USER': 'usimc',
-        'PASSWORD': '1234',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', '1234'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -137,12 +142,9 @@ LOGIN_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-# https://github.com/stefanfoulis/django-phonenumber-field
-# PHONENUMBER_DB_FORMAT = 'NATIONAL'
-
 # Email
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'usimc2017tech'
-EMAIL_HOST_PASSWORD = 'arthurtacotruck'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'invalid' )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

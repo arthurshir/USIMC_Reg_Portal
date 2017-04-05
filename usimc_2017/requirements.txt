@@ -1,5 +1,6 @@
 Babel==2.3.4
 cffi==1.9.1
+click==6.7
 cryptography==1.7.2
 cssmin==0.2.0
 Django==1.10.2
@@ -27,6 +28,7 @@ pyexcel-webio==0.0.10
 PyExecJS==1.4.0
 PyJWT==1.4.2
 PyReact==0.6.0
+python-dotenv==0.6.4
 pytz==2016.10
 requests==2.13.0
 six==1.10.0

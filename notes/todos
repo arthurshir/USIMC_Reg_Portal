@@ -1,9 +1,13 @@
 Todos:
 
-- Make it more clear when CMTANC code is applied
 - Add Automated Backup
+- Add dotenv
 - Add pricing unit testing
 - Add edit after submission
+
+
+4/4/17
+x - Make it more clear when CMTANC code is applied
 
 x - Minute & Seconds
 x - Added Youtube Link Check
