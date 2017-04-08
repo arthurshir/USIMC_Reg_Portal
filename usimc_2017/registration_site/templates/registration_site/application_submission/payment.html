@@ -14,6 +14,14 @@
 <!-- Main Content -->
 {% block content %}
 <h2>Pay</h2>
+<div style="height: 14px"></div> 
+<div class="form-section-header">Please double check your submission info</div>
+<div class="information-container">
+  <div id="pricing_string"/>
+  <span class="paragraph-bold" style="color: red">You will not be able to change information in your entry so please double check your entry before submitting.</span>
+  </div>
+</div>
+<div style="height: 14px"></div> 
 <div class="information-container">
   <span class="paragraph-bold">Pricing:<br></span>
   {{ calculated_price_string|linebreaksbr }}
