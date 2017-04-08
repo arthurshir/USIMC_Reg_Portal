@@ -10,7 +10,7 @@ from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.forms import formset_factory
 from django.forms.models import modelformset_factory
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from . import forms
 from . import models
 from django.core.exceptions import ObjectDoesNotExist
@@ -26,6 +26,10 @@ import phonenumbers
 # Set your secret key: remember to change this to your live secret key in production
 import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
 stripe.api_key = "sk_test_xvaC23iBiTk0tb8dEasQT93u"
+
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def _cf(value):
     return None if value == '' else value
@@ -161,7 +165,7 @@ class NewApplicationView(View):
         # Ensemble
         if entry.is_ensemble():
             models.EnsembleMember.objects.create(entry = entry)
-        return redirect('registration_site:edit_application', pk=entry.id)
+        return redirect('registration_site:application_part_2', pk=entry.id)
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -180,7 +184,7 @@ class DeleteApplicationView(View):
 
 
 ## Application Submission
-class EditApplicationView(View):
+class ApplicationPart2View(View):
     context = {}
     def get(self, request, *args, **kwargs):
         self.load_forms_to_context(request)
@@ -413,6 +417,131 @@ class EditApplicationView(View):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        return super(ApplicationPart2View, self).dispatch(*args, **kwargs)
+
+class EditApplicationView(View):
+    context = {}
+    def get(self, request, *args, **kwargs):
+        self.load_forms_to_context(request)
+        self.load_entry_data_to_context(request)
+        self.context['saved'] = False
+        return render(request, 'registration_site/application_management/application_edit.html', self.context)
+
+
+    def post(self, request, *args, **kwargs):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Collect forms
+        self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+        self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        if entry.is_ensemble():
+            self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
+        self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
+
+        ## Validate all data and add messages to forms
+        contact_form_fields = [_cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['email'].value()), _cf(self.context['contact_form']['phone_number'].value()) ]
+        if all(contact_form_fields):
+            print "changing parent data!"
+        else:
+            print "Missing field?"
+
+        teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()) ]
+        if all(teacher_form_fields):
+            print "changing teacher data!"
+        else:
+            print "Missing field?"
+
+        lead_performer_form_fields = [_cf(self.context['lead_competitor_form']['first_name'].value()), _cf(self.context['lead_competitor_form']['last_name'].value()), _cf(self.context['lead_competitor_form']['instrument'].value()), _cf(self.context['lead_competitor_form']['address'].value()), _cf(self.context['lead_competitor_form']['city'].value()), _cf(self.context['lead_competitor_form']['state'].value()), _cf(self.context['lead_competitor_form']['zip_code'].value()), _cf(self.context['lead_competitor_form']['country'].value()),]
+        if all(teacher_form_fields):
+            print "changing lead performer data!"
+        else:
+            print "missing Field?"
+        if entry.is_ensemble():
+            for form in self.context['ensemble_member_formset']:
+                ensemble_member_form_fields = [_cf(form['first_name'].value()), _cf(form['last_name'].value()), _cf(form['instrument'].value())]
+                if all(ensemble_member_form_fields):
+                    print "changing ensemble member data!"
+                else:
+                    print "missing field?"
+        has_enough_youtube_links = True
+        if entry.awards_include_youth():
+            youtube_link_array = []
+            for form in self.context['piece_formset']:
+                if _cf(form['youtube_link'].value()):
+                    youtube_link_array.append( _cf(form['youtube_link'].value()) )
+            has_enough_youtube_links = len(youtube_link_array) >= 2
+        if not has_enough_youtube_links:
+            print "missing youtube field?"
+
+        for form in self.context['piece_formset']:            
+            piece_form_fields = [_cf(form['title'].value()), _cf(form['composer'].value()), _cf(form['minutes'].value()), _cf(form['seconds'].value()), ]
+            if all(piece_form_fields):
+                print "changing piece data!"
+            else:
+                print "missing field?"
+
+            if has_enough_youtube_links:
+                print "chnging youtube"
+            else:
+                print "no youtube"
+
+        self.load_forms_to_context(request)
+        self.load_entry_data_to_context(request)
+        self.context['saved'] = True
+        return render(request, 'registration_site/application_management/application_edit.html', self.context)
+   
+    def load_forms_to_context(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Set django forms
+        self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+        self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all().order_by('created_at'))
+
+        # Set html fields
+        self.context['lives_in_united_states'] = "1" if entry.is_not_international else "0"
+
+    def load_forms_to_context(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Set django forms
+        self.context['piece_formset'] = PieceFormset(prefix=piece_formset_prefix, queryset=models.Piece.objects.filter(entry=entry).order_by('created_at'))
+        self.context['lead_competitor_form'] = forms.PersonForm(prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['teacher_form'] = forms.TeacherForm(prefix=teacher_form_prefix, instance=entry.teacher)
+        self.context['contact_form'] = forms.ParentContactForm(prefix=parent_contact_form_prefix, instance=entry.parent_contact)
+        self.context['ensemble_member_formset'] = EnsembleMemberFormset(prefix=ensemble_member_formset_prefix, queryset=entry.ensemble_members.all().order_by('created_at'))
+
+        # Set html fields
+        self.context['lives_in_united_states'] = "1" if entry.is_not_international else "0"
+
+
+    def load_entry_data_to_context(self, request):
+        # Retrieve user and entry
+        usimc_user = get_usimc_user(request.user)
+        entry = get_entry(request.user, self.kwargs['pk'])
+
+        # Set other
+        self.context['entry'] = entry
+        self.context['entry_num_award_categories'] = len(entry.awards_applying_for)
+        self.context['entry_award_categories'] = entry.awards_string()
+        self.context['entry_instrument_category'] = usimc_rules.INSTRUMENT_CATEGORY_CHOICES_DICT[entry.instrument_category]
+        self.context['entry_age_category_years'] = usimc_rules.get_instrument_category_age_rules(entry.instrument_category)[entry.age_category]
+        self.context['calculated_price'] = entry.calculate_price()
+        self.context['calculated_price_string'] = entry.create_pricing_string()
+        self.context['is_ensemble_application'] = entry.is_ensemble()
+        self.context['valid_cmtanc_code'] = entry.teacher.cmtanc_code if entry.teacher.has_valid_cmtanc_code() else False
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
         return super(EditApplicationView, self).dispatch(*args, **kwargs)
 
 class ReviewSubmissionView(View):
@@ -438,7 +567,7 @@ class ReviewSubmissionView(View):
         entry = get_entry(request.user, self.kwargs['pk'])
         self.update_entry_context(request)
         if not entry.validate():
-            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+            return redirect(reverse('registration_site:application_part_2', kwargs=self.kwargs))
 
         self.context['agreement_error'] = None
 
@@ -452,7 +581,7 @@ class ReviewSubmissionView(View):
         self.update_entry_context(request)
 
         if not entry.validate():
-            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+            return redirect(reverse('registration_site:application_part_2', kwargs=self.kwargs))
 
         input_signature = _cf(request.POST.get('agreement_signature'))
         if not input_signature:
@@ -475,7 +604,7 @@ class PaymentView(View):
         # Only allow requests for validated entries
         entry = get_entry(request.user, self.kwargs['pk'])
         if not entry.validate():
-            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+            return redirect(reverse('registration_site:application_part_2', kwargs=self.kwargs))
         if not entry.signature:
             return redirect(reverse('registration_site:review_submission', kwargs=self.kwargs))
 
@@ -492,7 +621,7 @@ class PaymentView(View):
         # Only allow requests for validated entries
         entry = get_entry(request.user, self.kwargs['pk'])
         if not entry.validate():
-            return redirect(reverse('registration_site:edit_application', kwargs=self.kwargs))
+            return redirect(reverse('registration_site:application_part_2', kwargs=self.kwargs))
 
         user = request.user
         usimc_user = get_usimc_user(request.user)
@@ -525,13 +654,16 @@ class PaymentView(View):
         if charge.paid:
             entry.submitted = True
             entry.save()
-            send_mail(
+
+            email = EmailMessage(
                 'USIMC Entry Confirmation',
                 entry.confirmation_email_string(),
                 'usimc2017tech@gmail.com',
                 [user.username, 'info@usimc.org'],
-                fail_silently=True,
             )
+            email.attach_file(os.path.join(BASE_DIR, 'USIMC_Checklist.pdf'))
+            email.send()
+
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         else:
             self.context['payment_error_message'] = charge.failure_message
@@ -545,7 +677,7 @@ def payment_confirmation(request, *args, **kwargs):
     # Only allow requests for validated entries
     entry = get_entry(request.user, kwargs['pk'])
     if not entry.validate():
-        return redirect(reverse('registration_site:edit_application', kwargs=kwargs))
+        return redirect(reverse('registration_site:application_part_2', kwargs=kwargs))
 
     context = {}
     usimc_user = get_usimc_user(request.user)

@@ -33,6 +33,7 @@ $(document).ready(function() {
       deselect_award_options();
       toggle_all_award_options(false);
       var valid_awards = get_valid_awards(instrument_category);
+      
       valid_awards.forEach(function(value) {
         toggle_award_option(value, true);
       })

@@ -1,14 +1,22 @@
 Todos:
 
-- Add Automated Backup
-- Add dotenv
-- Add pricing unit testing
 - Add edit after submission
+- Add checklist to confirmation letter
+- Do user testing for Stripe
+- Add notice detailing that editing of entry is not allowed.
 
+- Add pricing unit testing
+- Add Automated Backup
+  - daily local backup
+  - daily remote backup
+- Add Google Analytics
+
+Also:
+  - Add charging of AWS bill
 
 4/4/17
 x - Make it more clear when CMTANC code is applied
-
+x - Add dotenv
 x - Minute & Seconds
 x - Added Youtube Link Check
 x - Add Save Functionality

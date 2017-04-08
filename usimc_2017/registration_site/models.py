@@ -211,7 +211,7 @@ class Entry(Model):
         output = '$' + str(self.price_per_competitor_per_award_with_custom_values(is_not_international, cmtanc_code)) + ' per contestant, per award category '
         if not is_not_international:
             output += ' for international entry\n'
-        elif self.validate_cmtanc_code(cmtanc_code):
+        elif self.teacher.validate_cmtanc_code(cmtanc_code):
             output += ' (coached by Active CMTANC members)\n' if self.is_ensemble() else ' (students of Active CMTANC members)\n'
         else:
             output += ' (coached by Non-CMTANC members)\n' if self.is_ensemble() else ' (students of Non-CMTANC members)\n'

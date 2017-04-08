@@ -4,10 +4,6 @@ $(document).ready(function(){
     update_pricing();
   });
 
-  $('#application-form').on("change", 'input', function(event){
-    $('[name="submit-form"]').attr("disabled",true);
-  });
-
   function update_pricing() {
     $.ajax({
       url: "/application/create_pricing_string/",
