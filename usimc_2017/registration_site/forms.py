@@ -34,7 +34,7 @@ class EntryForm(forms.ModelForm):
         model = models.Entry
         fields = ['instrument_category', 'age_category', 'awards_applying_for']
 
-    awards_applying_for = forms.MultipleChoiceField(choices=usimc_rules.AWARD_CHOICES, widget=forms.CheckboxSelectMultiple)
+    awards_applying_for = forms.ChoiceField(choices=usimc_rules.AWARD_CHOICES)
 
 class ParentContactForm(forms.ModelForm):
     class Meta:

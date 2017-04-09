@@ -31,7 +31,7 @@ urlpatterns = [
 
     # Admin Users
     url(r'^admin/login/', views.AdminLoginView.as_view(), name='admin_register'),
-    # url(r'^admin/download-entries/', views.DownloadEntriesView.as_view(), name='download_entries'),
+    url(r'^admin/download-entries/', views.DownloadEntriesView.as_view(), name='download_entries'),
     url(r'^admin/dashboard/', views.DownloadEntriesView.as_view(), name='admin_dashboard'),
 
     # Info

@@ -144,14 +144,14 @@ class NewApplicationView(View):
     def post(self, request):
         form = forms.EntryForm(request.POST)
         # Assert form is valid
-        if not form.is_valid():
-            messages.warning(request, "Form is not valid?")
+        if not all(map(lambda x: _cf(x), form['awards_applying_for'].value())):
+            messages.warning(request, "Please fill all fields")
             self.context['form'] = form
             return render(request, 'registration_site/application_submission/application_step1.html', self.context)
         # Create entry
-        awards_applying_for = form.cleaned_data['awards_applying_for']
-        instrument_category = form.cleaned_data['instrument_category']
-        age_category = form.cleaned_data['age_category']
+        awards_applying_for = [form['awards_applying_for'].value()]
+        instrument_category = form['instrument_category'].value()
+        age_category = form['age_category'].value()
         usimc_user = get_usimc_user(request.user)
         entry = models.Entry.objects.create(awards_applying_for=awards_applying_for, instrument_category=instrument_category, age_category=age_category, usimc_user=usimc_user)
 
@@ -748,63 +748,89 @@ class DownloadEntriesView(View ):
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="entries.csv"'
+        response['Content-Disposition'] = 'attachment; filename="ensemble_entries.csv"'
 
         writer = csv.writer(response)
         writer.writerow([
-            'Contact First Name',
-            'Contact Last Name',
-            'Contact Email',
-            'awards_applying_for',
-            'instrument_category',
-            'age_category',
-            'submitted',
-            'performers',
-            'pieces',
+            'Parent: First Name',
+            'Parent: Last Name',
+            'Parent: Email',
+            'Parent: Phone Number',
+
+            'Award',
+            'Instrument Category',
+            'Age Category',
+            'Age Category (years)',
+            'Lead Competitor: Address',
+
+            'Teacher: First Name',
+            'Teacher: Last Name',
+            'Teacher: Email',
+            'Teacher: CMTANC Code',
+
+            'Competitors: First Name',
+            'Competitors: Last Name',
+            'Competitors: Instrument',
+            'Competitors: Birthday',
+
+            'Pieces: Title',
+            'Pieces: Opus',
+            'Pieces: Movement',
+            'Pieces: Composer',
+            'Pieces: Youtube_link',
+            'Pieces: Minutes',
+            'Pieces: Seconds',
+
             'created_at',
             'updated_at',
             ])
 
-        entries = models.Entry.objects.all().order_by('instrument_category')
+        entries = filter(lambda x: x.is_ensemble(), models.Entry.objects.all().filter(submitted=True).order_by('instrument_category'))
         for entry in entries:
+            usimc_user = entry.usimc_user
             user = entry.usimc_user.user
             row = []
-            # row.append(user.first_name)
-            # row.append(user.last_name)
-            # row.append(user.email)
-            # row.append(map(lambda x: str(models.AWARD_CATEGORIES_DICT[x]), entry.awards_applying_for))
-            # row.append(str(usimc_rules.INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT[entry.instrument_category]))
-            # row.append(entry.age_category)
-            # row.append(entry.submitted)
 
-            # persons = models.Person.objects.filter(entry=entry)
-            # person_column = ""
-            # for person in persons:
-            #     person_column += str(person.first_name) + ', '
-            #     person_column += str(person.middle_name) + ', '
-            #     person_column += str(person.last_name) + ', '
-            #     person_column += str(person.email) + ', '
-            #     person_column += str(person.phone_number) + ', '
-            #     person_column += str(person.instrument) + ', '
-            #     person_column += str(person.teacher_first_name) + ', '
-            #     person_column += str(person.teacher_middle_name) + ', '
-            #     person_column += str(person.teacher_last_name) + ', '
-            #     person_column += str(person.teacher_code)
-            #     person_column += '\n'
-            # row.append(person_column)
+            # Parent Contact
+            row.append( entry.parent_contact.first_name )
+            row.append( entry.parent_contact.last_name )
+            row.append( entry.parent_contact.email )
+            row.append( entry.parent_contact.phone_number )
 
-            # pieces = models.Piece.objects.filter(entry=entry)
-            # piece_column = ""
-            # for piece in pieces:
-            #     piece_column += str(piece.catalogue) + ', '
-            #     piece_column += str(piece.title) + ', '
-            #     piece_column += str(piece.composer) + ', '
-            #     piece_column += str(piece.is_chinese)
-            #     piece_column += '\n'
-            # row.append(piece_column)
+            # Entry Information
+            row.append( entry.awards_string() )
+            row.append( entry.instrument_category_string() )
+            row.append( entry.age_category )
+            row.append( entry.age_category_years() )
 
-            # row.append(entry.created_at)
-            # row.append(entry.updated_at)
+            # Teacher Information
+            row.append( entry.teacher.first_name )
+            row.append( entry.teacher.last_name )
+            row.append( entry.teacher.email )
+            row.append( entry.teacher.cmtanc_code )
+
+            # Lead Performer Address
+            row.append( entry.lead_performer.living_address() )
+
+            # Ensemble Members
+            ensemble_members = [entry.lead_performer].append(entry.ensemble_members.all())
+            print ensemble_members
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.first_name, ensemble_members ) ))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.last_name, ensemble_members ) ))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.instrument, ensemble_members ) ))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.birthday(), ensemble_members ) ))
+
+            pieces = entry.pieces.all()
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.title, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.opus, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.movement, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.composer, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.youtube_link, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.minutes, pieces)))
+            row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.seconds, pieces)))
+
+            row.append(entry.created_at)
+            row.append(entry.updated_at)
             writer.writerow(row)
 
         return response

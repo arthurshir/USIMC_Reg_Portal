@@ -362,6 +362,9 @@ class Person(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
+    def living_address(self):
+        return xstr(self.address) + " " + xstr(self.city) + ", " + xstr(self.state) + " " + xstr(self.zip_code) + ", " + xstr(self.country)
+
     def birthday(self):
         if not (self.month and self.day and self.year):
             print "No month, day, year"
