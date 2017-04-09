@@ -29,7 +29,15 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
 import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
-stripe.api_key = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+STRIPE_TEST_PUBLISHABLE_KEY = ''
+STRIPE_LIVE_PUBLISHABLE_KEY = ''
+if DEBUG:
+    stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
+    STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123456')
+else:
+    stripe.api_key = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
+    STRIPE_LIVE_PUBLISHABLE_KEY = os.environ.get('STRIPE_LIVE_PUBLISHABLE_KEY', '123456')
 
 def _cf(value):
     return None if value == '' else value
@@ -612,6 +620,12 @@ class PaymentView(View):
         entry = get_entry(request.user, self.kwargs['pk'])
         if entry.submitted:
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
+
+        if DEBUG:
+            self.context['stripe_publishable_key'] = STRIPE_TEST_PUBLISHABLE_KEY
+        else:
+            self.context['stripe_publishable_key'] = STRIPE_LIVE_PUBLISHABLE_KEY
+
         self.context['entry'] = entry
         self.context['calculated_price'] = entry.calculate_price()
         self.context['calculated_price_string'] = entry.create_pricing_string()
@@ -785,6 +799,7 @@ class DownloadEntriesView(View ):
             'updated_at',
             ])
 
+        print models.Entry.objects.all().filter(submitted=True).order_by('instrument_category')
         entries = filter(lambda x: x.is_ensemble(), models.Entry.objects.all().filter(submitted=True).order_by('instrument_category'))
         for entry in entries:
             usimc_user = entry.usimc_user
