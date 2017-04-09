@@ -1,9 +1,9 @@
 Todos:
 
-- Add edit after submission
-- Add checklist to confirmation letter
+For today
+- Generate Excel
 - Do user testing for Stripe
-- Add notice detailing that editing of entry is not allowed.
+- Add FAQ pages
 
 - Add pricing unit testing
 - Add Automated Backup
@@ -13,6 +13,10 @@ Todos:
 
 Also:
   - Add charging of AWS bill
+
+4/7/17
+x - Add checklist to confirmation letter
+x - Add notice detailing that editing of entry is not allowed.
 
 4/4/17
 x - Make it more clear when CMTANC code is applied
@@ -25,3 +29,6 @@ x - Link to rules
 x - Fix Parsely and Pricing update with each dynamic form change AND CMTANC Code
 x - Email Format
 x - Fix Presentation of Confirmation Page
+
+Not going to do
+o - Add edit after submission

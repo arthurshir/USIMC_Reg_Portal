@@ -24,12 +24,12 @@ import pytz
 import phonenumbers
 
 # Set your secret key: remember to change this to your live secret key in production
-import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
-stripe.api_key = "sk_test_xvaC23iBiTk0tb8dEasQT93u"
-
+import dotenv
 import os
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
+import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
+stripe.api_key = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
 
 def _cf(value):
     return None if value == '' else value
