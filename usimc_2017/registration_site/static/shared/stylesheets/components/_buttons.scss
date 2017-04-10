@@ -1,0 +1,16 @@
+.btn-add {
+  flex: 1;
+};
+
+.btn-default {
+  border-radius: 0px;
+  font-weight: 400;
+}
+
+.btn-submit {
+  border: none;
+  border-radius: 0px;
+  font-weight: 200;
+  color: white;
+  background-color: $primary-brand-color;
+}

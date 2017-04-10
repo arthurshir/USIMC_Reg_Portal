@@ -1,0 +1,21 @@
+Edit after submission:
+  - Change anything that doesn't affect the price
+    - Piece
+      - Change all data
+    - Ensemble Members & Lead Performer
+      - Change all data
+      - CANNOT change number of ensemble members
+    - Teacher
+      - Change all data
+    - Parent Contact
+      - Change all data
+    - Cannot adjust international status, awards, or instrument category
+
+Pricing Unit Tests:
+  - Check yes_cmtanc * 1_award * 1_member = price
+  - Check no_cmtanc * 1_award * 1_member = price
+  - Check yes_international * 1_award * 1_member = price
+
+  - per_contestant_yes_cmtanc
+  - per_contestant_no_cmtanc
+  - per_contestant_yes_international

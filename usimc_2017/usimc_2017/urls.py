@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from . import views
-from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    # Frontend
-    url(r'^backend/', include('registration_site.urls')),
-    url(r'^', TemplateView.as_view(template_name='index.html')),
+    url(r'', include('registration_site.urls')),
+
+    # Password Recovery
+    url(r'^password_reset/$', auth_views.password_reset, {'template_name': 'user_management/usimc_password_reset_form.html'}, name='password_reset'),
+    url(r'^password_reset/done/$', auth_views.password_reset_done, {'template_name': 'user_management/usimc_password_reset_done.html'}, name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.password_reset_confirm, {'template_name': 'user_management/usimc_password_reset_confirm.html'}, name='password_reset_confirm'),
+    url(r'^reset/done/$', auth_views.password_reset_complete, {'template_name': 'user_management/usimc_password_reset_complete.html'}, name='password_reset_complete'),
+
 ]

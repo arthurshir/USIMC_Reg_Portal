@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+{% endblock %}
+
+<!-- Title -->
+{% block title %}USIMC{% endblock %}
+{% block subtitle %}Hosted by CMTANC{% endblock %}
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div class="centered-wrapper">
+  <div class="btn-group" role="group" aria-label="...">
+    <a href="{% url 'registration_site:login' %}" type="button" class="btn btn-default">Log in</a>
+    <a href="{% url 'registration_site:register' %}" type="button" class="btn btn-default"
+    >Register</a>
+    <a href="{% url 'registration_site:download_entries' %}" type="button" class="btn btn-defualt">Download Entries</a>
+  </div>
+</div>
+{% endblock %}

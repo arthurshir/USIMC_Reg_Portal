@@ -1,0 +1,38 @@
+Todos:
+
+For today
+- Generate Excel
+- Add FAQ pages
+
+- Do user testing for Stripe
+- Add pricing unit testing
+- Add Automated Backup
+  - daily local backup
+  - daily remote backup
+- Add Google Analytics
+
+Also:
+  - Add charging of AWS bill
+
+4/8/17
+x - Enable live Stripe
+x - Converted to single choice award type
+
+4/7/17
+x - Add checklist to confirmation letter
+x - Add notice detailing that editing of entry is not allowed.
+
+4/4/17
+x - Make it more clear when CMTANC code is applied
+x - Add dotenv
+x - Minute & Seconds
+x - Added Youtube Link Check
+x - Add Save Functionality
+x - Edit Functionality
+x - Link to rules
+x - Fix Parsely and Pricing update with each dynamic form change AND CMTANC Code
+x - Email Format
+x - Fix Presentation of Confirmation Page
+
+Not going to do
+o - Add edit after submission

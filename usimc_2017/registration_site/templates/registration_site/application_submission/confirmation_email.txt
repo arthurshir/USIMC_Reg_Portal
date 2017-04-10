@@ -1,0 +1,13 @@
+Dear {{ entry.parent_contact.first_name }} {{ entry.parent_contact.last_name }},
+
+Thank you for applying for the 2017 USIMC. Good luck! Here is your form you have submitted, feel free to edit the form before the deadline:
+{{ complete_description_string }}
+
+Payment Information:
+{{ pricing_string }}
+PAID: {{ price }} on {{ charge_date }}
+
+If you have any questions, please reply to this email.
+
+Thank you,
+USIMC 2017 Registration

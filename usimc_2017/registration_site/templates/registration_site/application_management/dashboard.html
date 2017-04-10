@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+{% endblock %}
+
+<!-- Title -->
+{% block title %}USIMC{% endblock %}
+{% block subtitle %}Hosted by CMTANC{% endblock %}
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div class="centered-wrapper">
+  <div class="btn-group" role="group" aria-label="...">
+    <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
+    <a href="{% url 'registration_site:application_list' %}" type="button" class="btn btn-default">Update or Edit an old Application</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends 'registration_site/application_submission/application_form.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+<script src="{% static 'shared/cmtanc_rules.js' %}"></script>
+<script src="{% static 'registration_site/edit_application.js' %}"></script>
+<script src="{% static 'shared/helper_functions.js' %}"></script>
+{% endblock %}
+
+<!-- Title -->
+{% block title %}USIMC International Music Competition{% endblock %}
+{% block subtitle %}Hosted by CMTANC{% endblock %}
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block form_title %}
+<div style="height: 14px"></div>
+{% endblock %}
+{% block side-bar %}
+<a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back</a>
+{% endblock %}
+{% block form %}
+
+<div id="entry_info_div" style="display: none;">
+  <input name="pk" value="{{entry.pk}}">
+  <input name="num_award_categories" value="{{entry_num_award_categories}}">
+</div>
+
+<div class="flex-start flex-column">
+  <p>Note: If you would like to add an award or an ensemble member, please email both info@cmtanc.org and usimc2017tech@gmail.com, or reply to your confirmation email.</p>
+  <div class="form-section-header">Entry Details</div>
+  <div class="information-container">
+    <span>
+      <span class="paragraph-bold">Awards competing for:</span> {{ entry_award_categories }}<br>
+    </span>
+    <span>
+      <span class="paragraph-bold">Instrument category:</span> {{ entry_instrument_category }}<br>
+    </span>
+    <span>
+      <span class="paragraph-bold">Age category:</span> {{ entry.age_category }}, below {{ entry_age_category_years }} years old<br>
+    </span>
+  </div>
+  <div style="height: 14px"></div>
+  <div class="form-section-header">Pricing</div>
+  <div class="information-container">
+    <div id="pricing_string"/>
+      <span class="paragraph-bold">{{ calculated_price_string|linebreaksbr }}</span>
+    </div>
+  </div>
+  {% if valid_cmtanc_code %}
+  <div style="height: 6px;"></div>
+  <div class="success-container">
+    Valid CMTANC Member ID applied to price: {{valid_cmtanc_code}}
+  </div>
+  {% endif %}
+  <div style="height: 14px"></div>
+  <form class="form-inline" id="application-form" action="." method="post">
+    {% csrf_token %}
+    <div class="flex-column flex-center">
+      <div>
+        <div>
+
+          <div class="form-section-header">International Status</div>
+          <label for="question">Do you live in the United States?</label>
+          <br>
+            {% if lives_in_united_states == "1" %} Yes {% else %} No {% endif %}
+          <div style="height: 14px"></div>
+
+          <div class="form-section-header">Parent Contact</div>
+          {{ teacher_form.non_field_errors }}
+          {{ contact_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{ contact_form.first_name}}
+                {{ contact_form.first_name.errors }}
+            </div>
+            <div class="col-md-6 application-column">
+              {{ contact_form.last_name }}
+                {{ contact_form.last_name.errors }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.email }}
+                {{ contact_form.email.errors }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.phone_number }}
+                {{ contact_form.phone_number.errors }}
+            </div>
+          </div>
+          <div style="height: 14px"></div>
+        </div> <!-- parent encosing div -->
+
+        <div class="teacher-div">
+          <div class="form-section-header">Teacher</div>
+          {{ teacher_form.non_field_errors }}
+          {{ teacher_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{teacher_form.first_name}}
+                {{teacher_form.first_name.errors}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{teacher_form.last_name}}
+                {{teacher_form.last_name.errors}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.email}}
+                {{teacher_form.email.errors}}
+            </div>
+          </div>
+          <div style="height: 14px"></div>
+        </div> <!-- teacher enclosing div -->
+
+        <div class="lead-competitor-div">
+          <div class="form-section-header">Competitors</div>
+          {{ lead_competitor_form.non_field_errors }}
+          {{ lead_competitor_form.id }}
+          <div class="flex-row">
+            <div id="piece-form-number">-</div>
+            <div class="row">
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Name</div>
+              </div>
+              <div class="col-md-6 application-column">
+                {{ lead_competitor_form.first_name }}
+                {{ lead_competitor_form.first_name.errors }}
+              </div>
+              <div class="col-md-6 application-column">
+                {{ lead_competitor_form.last_name }}
+                {{ lead_competitor_form.last_name.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                {{ lead_competitor_form.instrument }}
+                {{ lead_competitor_form.instrument.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Address</div>
+              </div>
+              <div class="col-md-12 application-column">
+                {{ lead_competitor_form.address }}
+                {{ lead_competitor_form.address.errors }}
+              </div>
+              <div class="col-md-5 application-column">
+                {{ lead_competitor_form.city }}
+                {{ lead_competitor_form.city.errors }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ lead_competitor_form.state }}
+                {{ lead_competitor_form.state.errors }}
+              </div>
+              <div class="col-md-2 application-column">
+                {{ lead_competitor_form.zip_code }}
+                {{ lead_competitor_form.zip_code.errors }}
+              </div>
+              <div class="col-md-3 application-column">
+                {{ lead_competitor_form.country }}
+                {{ lead_competitor_form.country.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Birthday*</div>
+              </div>
+              <div class="col-md-3 application-column">
+                {{ lead_competitor_form.month.value }} / {{ lead_competitor_form.day.value }} / {{ lead_competitor_form.year.value }}
+              </div>
+            </div>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+
+        {% if is_ensemble_application %}
+        <div class="competitor-div">
+          {{ ensemble_member_formset.non_field_errors }}
+          {{ ensemble_member_formset.id }}
+          {% for form in ensemble_member_formset.forms %}
+          <div class="flex-row competitor-form">
+            <div id="piece-form-number">-</div>
+            {{ form.id }}
+            <div class="row">
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Name</div>
+              </div>
+              <div class="col-md-6 application-column">
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+              </div>
+              <div class="col-md-6 application-column">
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                {{ form.instrument }}
+                {{ form.instrument.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div class="form-section-subheader">Birthday*</div>
+              </div>
+              <div class="col-md-3 application-column">
+                {{ form.month.value }} / {{ form.day.value }} / {{ form.year.value }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {{ ensemble_member_formset.management_form }}
+          <div style="height: 14px"></div>
+        </div>
+        {% endif %}
+
+        <div class="piece-div">
+          <div class="form-section-header">Pieces</div>
+          {{ piece_formset.non_field_errors }}
+          {% for form in piece_formset.forms %}
+            {{ form.non_field_errors }}
+            <div class="flex-row piece-form">
+              <div id="piece-form-number">-</div>
+              {{ form.id }}
+              <div class="row">
+                <div class="col-md-8 application-column">
+                  {{ form.title }}
+                {{ form.title.errors }}
+                </div>
+                <div class="col-md-2 application-column">
+                  {{ form.opus }}
+                {{ form.opus.errors }}
+                </div>
+                <div class="col-md-2 application-column">
+                  {{ form.movement }}
+                {{ form.movement.errors }}
+                </div>
+                <div class="col-md-8 application-column">
+                  {{ form.composer }}
+                {{ form.composer.errors }}
+                </div>
+                <div class="col-md-2 application-column">
+                {{ form.minutes }}
+                {{ form.minutes.errors }}
+                </div>
+                <div class="col-md-2 application-column">
+                {{ form.seconds }}
+                {{ form.seconds.errors }}
+                </div>
+                <div class="col-md-12 application-column">
+                  {{ form.youtube_link }}
+                {{ form.youtube_link.errors }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          {{ piece_formset.management_form }}
+          <div style="height: 14px"></div>
+        </div> <!-- piece div -->
+        <div style="height: 14px"></div>
+        <input class="btn btn-default" type="submit" name="submit-changes" value="Submit changes">
+        <div style="height: 14px"></div>
+      </div> <!-- empty div -->
+    </div> <!-- flex-column flex-center -->
+
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base_with_side_margins.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Head -->
+{% block head %}
+{% endblock %}
+
+<!-- Title -->
+
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div class="flex-column">
+  <div class="information-container">
+    <h3>Submission and Payment Successful</h3>
+    We’ve sent an email confirmation to {{ email }}. Thank you for applying!
+  </div>
+  <div style="height: 10px;"></div>
+  <div class="information-container">
+    <h3>Application ID: {{ entry.pk }}</h3>
+  </div>
+  <div style="height: 10px;"></div>
+  <a href="{% url 'registration_site:dashboard' %}" class="btn btn-default">Back to<br>Entry List</a>
+</div>
+{% endblock %}

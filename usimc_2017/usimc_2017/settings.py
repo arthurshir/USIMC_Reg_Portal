@@ -11,24 +11,28 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from os.path import abspath, basename, dirname, join, normpath
+import sys
 
-# Replace BASE_DIR with this
-BASE_DIR = os.path.dirname(os.path.dirname((__file__)))
-SITE_ROOT = dirname(BASE_DIR)  
-SITE_NAME = basename(BASE_DIR)
+import dotenv
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Load Environment variables
+dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'tjj(nqf=(hqz06d24t#xgoz$tue@p$#f3j*m6rz17f6yy^x5zn'
+SECRET_KEY = os.environ.get('SECRET_KEY', '123456')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'usimc2017registration']
 
+print "DEBUG=", "True" if DEBUG else "False"
 
 # Application definition
 
@@ -41,12 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'registration_site',
     'crispy_forms',
-    # DRF
-    'rest_framework',
-    # DRF jwt
-    'rest_framework_jwt',
-    # Webpack Loader
-    'webpack_loader',
+    'django_excel',
+    'phonenumber_field',
+#    'stripe',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'usimc',
         'USER': 'usimc',
-        'PASSWORD': '1234',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', '1234'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -118,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Pacific'
 
 USE_I18N = True
 
@@ -128,25 +129,10 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'  
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'), # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT or syncs them to whatever storage we use.
-    # os.path.join(BASE_DIR, 'apps'), # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT or syncs them to whatever storage we use.
-)
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-    }
-}
-
-STATICFILES_FINDERS = (  
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # User Management
 
@@ -157,16 +143,9 @@ LOGIN_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-
-
-# Django REST
-REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),
-}
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'usimc2017tech'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'invalid' )
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
