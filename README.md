@@ -1,5 +1,5 @@
 # United States International Music Competition Registration Portal
-USIMC Registration Portal is a live portal for applicants to register for the 2017 USIMC competition. It includes rule restrictions, application editing and submission, account management, and payments through Stripe (Est. projected $30k - $40k in transactions). It's written in Python, built with Django with PostgreSQL database, SASS for stylesheets, and is hosted on a Ubuntu instance on Amazon Web Services with an Nginx+uWSGI web server.
+USIMC Registration Portal is a live portal for applicants to register for the 2017 USIMC competition. It includes rule restrictions, application editing and submission, account management, and payments through Stripe (Est. projected $30k - $40k in transactions). It's written in Python, built with Django with PostgreSQL database, SASS for stylesheets, and is hosted on a Ubuntu instance on Amazon Web Services with an Nginx+uWSGI web server. Hourly PostgreSQL dump backed up to Dropbox folder.
 
 ## Building
 Start a virtual environment, pip install requirements.txt, and add a .env with all deployment variables. (DEBUG, SECRET_KEY, DATABASE_PASSWORD, EMAIL_PASSWORD, STRIPE_TEST_SECRET_KEY, STRIPE_TEST_PUBLISHABLE_KEY, STRIPE_LIVE_SECRET_KEY, STRIPE_LIVE_PUBLISHABLE_KEY)
@@ -15,6 +15,8 @@ Forms don't include complete validation and is currently a mix between Django's 
 
 ## Libraries
 
+* Django dbbackup https://django-dbbackup.readthedocs.io/en/stable/
+* Djnago crontab https://github.com/kraiz/django-crontab
 * Stripe https://pypi.python.org/pypi/stripe/
 * Python dot-env https://github.com/theskumar/python-dotenv
 * Crispy Forms https://github.com/django-crispy-forms/django-crispy-forms
