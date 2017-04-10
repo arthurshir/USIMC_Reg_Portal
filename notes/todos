@@ -2,9 +2,9 @@ Todos:
 
 For today
 - Generate Excel
-- Do user testing for Stripe
 - Add FAQ pages
 
+- Do user testing for Stripe
 - Add pricing unit testing
 - Add Automated Backup
   - daily local backup
@@ -13,6 +13,10 @@ For today
 
 Also:
   - Add charging of AWS bill
+
+4/8/17
+x - Enable live Stripe
+x - Converted to single choice award type
 
 4/7/17
 x - Add checklist to confirmation letter
