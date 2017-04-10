@@ -159,5 +159,5 @@ DBBACKUP_STORAGE_OPTIONS = {
 
 # CRON JOBS
 CRONJOBS = [
-    ('* * * * *', 'registration_site.cron.backup_database')
+    ('0 * * * *', 'registration_site.cron.backup_database')
 ]
