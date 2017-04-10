@@ -10,6 +10,24 @@
   }
 }
 
+.success-container {
+  border: 1px solid #d6e9c6;
+  width: 100%;
+  padding: 12px 8px 12px 8px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #3c763d;
+  background-color: #dff0d8;
+}
+
+.alert-container {
+  border: 1px solid #ebccd1;
+  width: 100%;
+  padding: 12px 8px 12px 8px;
+  font-weight: 400;
+  font-size: 14px;
+}
+
 .information-container {
   border: 1px solid #000000;
   width: 100%;
@@ -54,6 +72,14 @@
   overflow: scroll;
 }
 
+.content-with-margins {
+  @extend .content;
+  margin: auto;
+  max-width: 600px; 
+  margin-top: $nav-height + 50px;
+  margin-bottom: $footer-height + 50px;
+}
+
 .centered-align-wrapper {
   display: flex;
   flex: 1;
@@ -70,7 +96,6 @@
   flex-direction: column;
   min-height: calc(100% - #{$nav-height} - #{$footer-height});
 }
-
 
 .navbar {
   min-height: $nav-height !important;
