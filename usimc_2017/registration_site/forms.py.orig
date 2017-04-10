@@ -1,0 +1,401 @@
+from django import forms
+from . import models
+import usimc_rules
+
+from crispy_forms.helper import *
+from crispy_forms.layout import *
+import phonenumbers
+from django.core.exceptions import ValidationError
+
+def base_input_attrs(placeholder, required = False):
+    attrs = {'placeholder': placeholder, 'class': 'application-input'}
+    # if required:
+    #     attrs['required'] = ''
+    return attrs    
+def text_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    return forms.TextInput(attrs=attrs)
+def email_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    attrs['type'] = 'email'
+    return forms.TextInput(attrs=attrs)
+def phone_number_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    return forms.TextInput(attrs=attrs)
+def cmtanc_birthday_input_widget():
+    return forms.SelectDateWidget(
+        empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        years=range(1980, 2017),
+        attrs={'data-parsley-trigger': 'change', 'required': '', 'data-parsley-birthday': ''},
+        )
+
+#
+# Forms
+#
+
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.EmailInput)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+class RegistrationForm(forms.Form):
+    first_name = forms.CharField(max_length = 100)
+    last_name = forms.CharField(max_length = 100)
+    username = forms.CharField(widget=forms.EmailInput)
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+class EntryForm(forms.ModelForm):
+    class Meta:
+        model = models.Entry
+        fields = ['instrument_category', 'age_category', 'awards_applying_for']
+
+    awards_applying_for = forms.ChoiceField(choices=usimc_rules.AWARD_CHOICES)
+
+class ParentContactForm(forms.ModelForm):
+    class Meta:
+        model = models.ParentContact
+        fields = ['first_name', 'last_name', 'email', 'phone_number',]
+        widgets = {
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'email': email_input_widget(placeholder='Email*', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number*', required=True ),
+        }
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div('first_name', css_class="col-md-6"),
+            Div('last_name', css_class="col-md-6"),
+            Div('email', css_class="col-md-12"),
+            Div('phone_number', css_class="col-md-12"),
+            css_class="row"
+        ),
+    )
+
+
+class PieceForm(forms.ModelForm):
+    class Meta:
+        model = models.Piece
+        fields = ['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link',]
+        widgets = {
+            'title': text_input_widget(placeholder='Title*', required=True ),
+            'opus': text_input_widget(placeholder='Opus' ),
+            'movement': text_input_widget(placeholder='Movement' ),
+            'composer': text_input_widget(placeholder='Composer*', required=True ),
+            'youtube_link': text_input_widget(placeholder='Youtube Link (Only needed for Young Artist Award Entry)' ),
+            'minutes': text_input_widget(placeholder='min*', required=True ),
+            'seconds': text_input_widget(placeholder='sec*', required=True ),
+        }
+
+class PersonForm(forms.ModelForm):
+    class Meta:
+        model = models.Person
+<<<<<<< HEAD
+        fields = ['first_name', 'middle_name', 'last_name', 'email', 'phone_number', 'instrument', 'teacher_first_name', 'teacher_middle_name', 'teacher_last_name', 'teacher_code']
+
+
+# class UserSigninForm(forms.Form):
+
+#     email = forms.CharField()
+#     password = forms.CharField(widget=forms.PasswordInput())
+
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.form_method = 'POST'
+#     helper.layout = Layout(
+#         Div(
+#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#             Div('email', css_class="container-fluid"),
+#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#             Div('password', css_class="container-fluid"),
+#             HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#         ),
+#         ButtonHolder(
+#             StrictButton('Log in', css_class='btn btn-success', type="submit"),
+#         ),
+#         HTML("""
+#             <div style="height:4px;"> </div>
+#             <a href="/signup">or sign up</a>
+#         """),
+#     )
+
+# class UserSignupForm(forms.Form):
+#     email = forms.CharField()
+#     password = forms.CharField(widget=forms.PasswordInput())
+#     confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+#     helper = FormHelper()
+#     helper.label_class = 'hidden'
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.form_method = 'POST'
+#     helper.layout = Layout(
+#         Div(
+#             Div(
+#                 HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#                 Div('email', css_class="container-fluid"),
+#                 HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#                 Div('password', css_class="container-fluid"),
+#                 HTML("""<div class="description">Must be between 5 and 15 characters. Should only include letters and numbers.</div>"""),
+#                 HTML("""<div class="rowspacer" style="height:10px;"></div>"""),
+#                 Div('confirm_password', css_class="container-fluid"),
+#                 HTML("""<div class="rowspacer" style="height:20px;"></div>"""),
+#             ),
+#             ButtonHolder(
+#                 StrictButton('Sign up', css_class='btn btn-success', type="submit"),
+#             ),
+#             HTML("""
+#                 <div style="height:4px;"> </div>
+#                 <a href="/login">or log in</a>
+#             """),
+            
+#         )
+#     )
+
+# class ParentForm(forms.ModelForm):
+#     class Meta:
+#         model=models.Parent
+#         fields= '__all__'
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.form_method = 'POST'
+#     helper.layout = Layout(
+#         Div(
+#             Div(
+#                 Div(
+#                     HTML("""
+#                         <h3>Parent Information</h3>
+#                     """),
+#                     Div('firstName', css_class='col-md-4'),
+#                     Div('middleName', css_class='col-md-4'),
+#                     Div('lastName', css_class='col-md-4'),
+#                     Div('email', css_class='col-md-12'),
+#                     Div('homePhone', css_class='col-md-12'),
+#                     Div('mobilePhone', css_class='col-md-12'),
+#                     css_class='row'
+#                 ),
+#                 css_class='col-md-7',
+#             ),
+#             Div(
+#                 Div(
+#                     HTML("""
+#                         <h3>Location</h3>
+#                     """),
+#                     Div('address', css_class='col-md-12'),
+#                     Div('city', css_class='col-md-8'),
+#                     Div('state', css_class='col-md-4'),
+#                     Div('zipCode', css_class='col-md-12'),
+#                     css_class='row'
+#                 ),
+#                 css_class='col-md-4 col-md-offset-1',
+#             ),
+#             css_class='row',
+#         ),
+#     )
+
+# class PerformerForm(forms.ModelForm):
+#     class Meta:
+#         model=models.Performer
+#         fields= ('firstName', 'middleName', 'lastName', 'instrument', 'accompanist', 'group',)
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.form_method = 'POST'
+#     helper.layout = Layout(
+#         Div(
+#             Div(
+#                 Div(
+#                     HTML("""
+#                         <h3>Performer</h3>
+#                     """),
+#                     Div('firstName', css_class='col-md-4'),
+#                     Div('middleName', css_class='col-md-4'),
+#                     Div('lastName', css_class='col-md-4'),
+#                     Div('instrument', css_class='col-md-12'),
+#                     Div('accompanist', css_class='col-md-12'),
+#                     Div('group', css_class='col-md-12'),
+#                     css_class='row'
+#                 ),
+#                 css_class='col-md-12',
+#             ),
+#             css_class='row',
+#         ),
+#     )
+
+# class TeacherForm(forms.ModelForm):
+#     class Meta:
+#         model=models.Teacher
+#         fields= '__all__'
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.layout = Layout (
+#         HTML("""
+#             <h3>Teacher</h3>
+#         """),
+#         "firstName",
+#         "middleName",
+#         "lastName",
+#         "contactId",
+#         "email",
+#         "homePhone",
+#         "mobilePhone",
+#         "locationId",
+#         "address",
+#         "city",
+#         "state",
+#         "zipCode",
+#     )
+
+# class PieceForm(forms.ModelForm):
+#     class Meta:
+#         model=models.Piece
+#         fields= '__all__'
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.layout = Layout (
+#         HTML("""
+#             <h3>Piece</h3>
+#         """),
+#         'pieceId',
+#         'catalogue',
+#         'title',
+#         'composer',
+#     )
+
+# class ChinesePieceForm(forms.ModelForm):
+#     class Meta:
+#         model=models.Piece
+#         fields= '__all__'
+#     helper = FormHelper()
+#     helper.form_class = 'form-horizontal'
+#     helper.field_template = 'bootstrap3/layout/inline_field.html'
+#     helper.layout = Layout (
+#         HTML("""
+#             <h3>Chinese Piece</h3>
+#         """),
+#         'pieceId',
+#         'catalogue',
+#         'title',
+#         'composer',
+#     )
+
+# class PieceFormSetHelper(FormHelper):
+#     def __init__(self, *args, **kwargs):
+#         super(PieceFormSetHelper, self).__init__(*args, **kwargs)
+#         self.form_class = 'form-horizontal'
+#         self.field_template = 'bootstrap3/layout/inline_field.html'
+=======
+        fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'month', 'day', 'year']
+        widgets = {
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last name*', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument*', required=True ),
+            'address': text_input_widget(placeholder='Address*', required=True ),
+            'city': text_input_widget(placeholder='City*', required=True ),
+            'state': text_input_widget(placeholder='State*', required=True ),
+            'zip_code': text_input_widget(placeholder='Zip code*', required=True ),
+            'country': text_input_widget(placeholder='Country*', required=True ),
+            'month': text_input_widget(placeholder='MM', required=True ),
+            'day': text_input_widget(placeholder='DD', required=True ),
+            'year': text_input_widget(placeholder='YYYY', required=True ),
+        }
+
+class TeacherForm(forms.ModelForm):
+    class Meta:
+        model = models.Teacher
+        fields = ['first_name', 'last_name', 'email', 'cmtanc_code',]
+        widgets = {
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'email': email_input_widget(placeholder='Email*', required=True ),
+            'cmtanc_code': text_input_widget(placeholder='CMTANC Member ID' ),
+        }
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div('first_name', css_class="col-md-6"),
+            Div('last_name', css_class="col-md-6"),
+            Div('email', css_class="col-md-12"),
+            Div('cmtanc_code', css_class="col-md-12"),
+            css_class="row"
+        ),
+    )
+
+class EnsembleMemberForm(forms.ModelForm):
+    class Meta:
+        model = models.EnsembleMember
+        fields = ['first_name', 'last_name', 'instrument', 'month', 'day', 'year']
+        widgets = {
+            'first_name': text_input_widget(placeholder='First Name*', required=True ),
+            'last_name': text_input_widget(placeholder='Last Name*', required=True ),
+            'instrument': text_input_widget(placeholder='Instrument*', required=True ),
+            'month': text_input_widget(placeholder='MM', required=True ),
+            'day': text_input_widget(placeholder='DD', required=True ),
+            'year': text_input_widget(placeholder='YYYY', required=True ),
+        }
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+
+
+class LoginForm(forms.Form):
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+        	Div('email', css_class="container-fluid"),
+        	Div('password', css_class="container-fluid"),
+    	),
+        ButtonHolder(
+            Submit('submit', 'Log in', css_class='btn btn-submit')
+        ),
+        HTML("""
+            <div style="height:5px;"></div>
+            <a href="{% url 'registration_site:register' %}">or register</a>
+        """),
+    )
+
+class RegistrationForm(forms.Form):
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")
+
+    # class Meta:
+    #     labels = {'password2': 'confirm password'}
+
+    helper = FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.field_template = 'bootstrap3/layout/inline_field.html'
+    helper.form_method = 'POST'
+    helper.layout = Layout(
+        Div(
+            Div('email', css_class="container-fluid"),
+            Div('password', css_class="container-fluid"),
+            Div('password2', css_class="container-fluid"),
+        ),
+        ButtonHolder(
+            Submit('submit', 'Register', css_class='btn btn-submit')
+        ),
+        HTML("""
+            <div style="height:5px;"></div>
+            <a href="{% url 'registration_site:login' %}">or log in</a>
+        """),
+    )
+>>>>>>> django_only
