@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_excel',
     'phonenumber_field',
-#    'stripe',
+    'dbbackup',  # django-dbbackup
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,14 @@ EMAIL_HOST_USER = 'usimc2017tech'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'invalid' )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# Backups
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' ),
+}
+
+# CRON JOBS
+CRONJOBS = [
+    ('* * * * *', 'registration_site.cron.backup_database')
+]
