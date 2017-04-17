@@ -22,22 +22,23 @@ from django.http import JsonResponse
 import datetime
 import pytz
 import phonenumbers
+from django.conf import settings
 
 # Set your secret key: remember to change this to your live secret key in production
 import dotenv
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
 import stripe # See your keys here: https://dashboard.stripe.com/account/apikeys
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 STRIPE_TEST_PUBLISHABLE_KEY = ''
 STRIPE_LIVE_PUBLISHABLE_KEY = ''
-if DEBUG:
-    stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
-    STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123456')
+if settings.DEBUG:
+    stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+    STRIPE_TEST_PUBLISHABLE_KEY = settings.STRIPE_TEST_PUBLISHABLE_KEY
 else:
-    stripe.api_key = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
-    STRIPE_LIVE_PUBLISHABLE_KEY = os.environ.get('STRIPE_LIVE_PUBLISHABLE_KEY', '123456')
+    stripe.api_key = settings.STRIPE_LIVE_SECRET_KEY
+    STRIPE_LIVE_PUBLISHABLE_KEY = settings.STRIPE_LIVE_PUBLISHABLE_KEY
 
 def _cf(value):
     return None if value == '' else value
@@ -621,7 +622,7 @@ class PaymentView(View):
         if entry.submitted:
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
 
-        if DEBUG:
+        if settings.DEBUG:
             self.context['stripe_publishable_key'] = STRIPE_TEST_PUBLISHABLE_KEY
         else:
             self.context['stripe_publishable_key'] = STRIPE_LIVE_PUBLISHABLE_KEY
@@ -670,13 +671,14 @@ class PaymentView(View):
             entry.save()
 
             email = EmailMessage(
-                'USIMC Entry Confirmation',
+                'USIMC Entry Confirmation' + (' - TESTING (Not a real applicant)' if settings.DEBUG else ''),
                 entry.confirmation_email_string(),
                 'usimc2017tech@gmail.com',
                 [user.username, 'info@usimc.org'],
             )
             email.attach_file(os.path.join(BASE_DIR, 'USIMC_Checklist.pdf'))
-            email.send()
+            if (not settings.DEBUG) or (settings.DEBUG and settings.ENABLE_EMAILS_FOR_DEBUG):
+                email.send()
 
             return redirect(reverse('registration_site:payment_confirmation', kwargs=self.kwargs))
         else:
