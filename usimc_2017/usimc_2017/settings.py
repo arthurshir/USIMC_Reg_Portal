@@ -150,6 +150,7 @@ EMAIL_HOST_USER = 'usimc2017tech'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'invalid' )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+ENABLE_EMAILS_FOR_DEBUG = False
 
 # Backups
 DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
@@ -161,3 +162,9 @@ DBBACKUP_STORAGE_OPTIONS = {
 CRONJOBS = [
     ('0 * * * *', 'registration_site.cron.backup_database')
 ]
+
+# Stripe
+STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
+STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123456')
+STRIPE_LIVE_SECRET_KEY = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
+STRIPE_LIVE_PUBLISHABLE_KEY = os.environ.get('STRIPE_LIVE_PUBLISHABLE_KEY', '123456')
