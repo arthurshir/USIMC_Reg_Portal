@@ -85,18 +85,22 @@ class LoginView(View):
 
     def post(self, request):
         form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            email = request.POST.get('email', '')
-            password = request.POST.get('password', '')
-            user = authenticate(username=email, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('registration_site:dashboard')
-            else:
-                messages.warning(request, 'Wrong Login Information', extra_tags='login')
-                return redirect('registration_site:login')
+
+        if not form.is_valid():
+            messages.warning(request, 'Please fill all of the fields', extra_tags='login')
+            return redirect('registration_site:login')
+
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        user = authenticate(username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('registration_site:dashboard')
         else:
-            messages.warning(request, 'Form not Valid?', extra_tags='login')
+            if User.objects.filter(username=email).exists():
+                messages.warning(request, 'This is a wrong password', extra_tags='login')
+            else:
+                messages.warning(request, 'An account with this email does not exist in our system', extra_tags='login')
             return redirect('registration_site:login')
 
 class RegisterView(View):
@@ -112,17 +116,17 @@ class RegisterView(View):
         form = forms.RegistrationForm(request.POST)
         # Assert form is valid
         if not form.is_valid():
-            return redirect_register_view_error(request, 'Please fill all fields')
+            return redirect_register_view_error(request, 'Please fill all of the fields')
         # Check if user exists
         email = request.POST.get('email', '')
         password = request.POST.get('password', '')
         password2 = request.POST.get('password2', '')
-        if User.objects.filter(username=email).exists() > 0:
-            return redirect_register_view_error(request, 'User with that email already exists')
+        if User.objects.filter(username=email).exists():
+            return redirect_register_view_error(request, 'A user with that email already exists')
 
         # Assert passwords are equal
         if password != password2:
-            return redirect_register_view_error(request, 'Passwords do not match')
+            return redirect_register_view_error(request, 'The passwords do not match')
         # Create User and corresponding USIMCUser instances
         user = User.objects.create(username=email, email=email, password=password)
         user.set_password(password)
