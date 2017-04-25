@@ -38,7 +38,6 @@
 
 .panel-body {
   padding: 15px 12px 10px 12px;
-  border: 1px solid $input-border-color;
 }
 
 .application-form-div {
@@ -58,7 +57,13 @@
 }
 
 .panel-default {
+  background-color: $container-background-color;
   border-radius: 0px;
+  border-radius: 3px;
+  border: 1px solid $border-color;
+}
+
+.login-panel {
 }
 
 .content {
@@ -95,6 +100,7 @@
   justify-content: center;
   flex-direction: column;
   min-height: calc(100% - #{$nav-height} - #{$footer-height});
+  background-color: $wrapper-background-color;
 }
 
 .navbar {

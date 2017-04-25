@@ -29,8 +29,7 @@
   font-size: 14px; }
 
 .panel-body {
-  padding: 15px 12px 10px 12px;
-  border: 1px solid #959595; }
+  padding: 15px 12px 10px 12px; }
 
 .application-form-div {
   max-width: 550px; }
@@ -45,7 +44,10 @@
   max-width: 124px; }
 
 .panel-default {
-  border-radius: 0px; }
+  background-color: #FDFEFE;
+  border-radius: 0px;
+  border-radius: 3px;
+  border: 1px solid #e0e2e3; }
 
 .content, .content-with-margins {
   margin-top: 70px;
@@ -75,7 +77,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-height: calc(100% - 70px - 36px); }
+  min-height: calc(100% - 70px - 36px);
+  background-color: #FAFAFA; }
 
 .navbar {
   min-height: 70px !important;
@@ -158,7 +161,8 @@ textarea:focus, input:focus {
 
 .textinput {
   padding-left: 6px;
-  padding-right: 6px; }
+  padding-right: 6px;
+  border-radius: 3px; }
 
 input.parsley-success,
 select.parsley-success,
@@ -209,15 +213,17 @@ textarea.parsley-error,
   flex: 1; }
 
 .btn-default {
-  border-radius: 0px;
+  border-radius: 3px;
   font-weight: 400; }
 
 .btn-submit {
   border: none;
-  border-radius: 0px;
+  border-radius: 3px;
   font-weight: 200;
   color: white;
   background-color: #9C0D38; }
+  .btn-submit:hover {
+    background-color: #9E3A58; }
 
 .flex-column {
   display: flex;

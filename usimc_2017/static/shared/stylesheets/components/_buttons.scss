@@ -3,14 +3,17 @@
 };
 
 .btn-default {
-  border-radius: 0px;
+  border-radius: 3px;
   font-weight: 400;
 }
 
 .btn-submit {
   border: none;
-  border-radius: 0px;
+  border-radius: 3px;
   font-weight: 200;
   color: white;
   background-color: $primary-brand-color;
+  &:hover {
+    background-color: $primary-brand-color-faded;
+  }
 }

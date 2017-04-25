@@ -1,18 +1,19 @@
 Todos:
-
-For today
-- Generate Excel
-- Add FAQ pages
-
-- Do user testing for Stripe
-- Add pricing unit testing
-- Add Automated Backup
-  - daily local backup
-  - daily remote backup
-- Add Google Analytics
+  - Add Submission Editing
+  - Update Warning messages
+  - Generate Excel
+  - Add FAQ pages
+  - Do user testing for Stripe
+  - Add pricing unit testing
 
 Also:
   - Add charging of AWS bill
+
+4/16/17
+x - Add Automated Backup
+  x - daily local backup
+  x - daily remote backup
+x - Add Google Analytics
 
 4/8/17
 x - Enable live Stripe

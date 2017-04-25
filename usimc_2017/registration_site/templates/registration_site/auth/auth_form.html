@@ -15,12 +15,11 @@
 
   <div class="text-centered">
     <h1>USIMC Application Website</h1>
-    <h4>Log in or register to apply</h4>
+    <div style="height:30px;"></div>
   </div>
   <div style="height:10px;"></div>
-  <h3>{% block panel_title %}{% endblock %}</h3>
   <div class="login-panel panel panel-default">
-
+    <h4 style="text-align:center; margin-bottom:0px; margin-top:16px;">{% block panel_title %}{% endblock %}</h4>
       <div class="panel-body">
         {% if messages %}
           <div class="messages">
