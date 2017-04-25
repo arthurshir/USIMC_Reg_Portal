@@ -47,7 +47,8 @@
   background-color: #FDFEFE;
   border-radius: 0px;
   border-radius: 3px;
-  border: 1px solid #e0e2e3; }
+  border: 1px solid #e0e2e3;
+  box-shadow: 0px 0px 5px 1px #888888; }
 
 .content, .content-with-margins {
   margin-top: 70px;

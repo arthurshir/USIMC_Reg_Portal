@@ -1,7 +1,7 @@
 Todos:
+  - Add FAQ pages
   - Add Submission Editing
   - Add Excel Generation
-  - Add FAQ pages
   - Do user testing for Stripe
   - Add pricing unit testing
 
@@ -9,6 +9,7 @@ Also:
   - Add charging of AWS bill
 
 4/25/17
+x - Only allow deletion of entries that have not been submitted yet
 x - Update Warning messages for login
 x - Added SSL redirect to HTTPS
 x - Updated Login UI and title

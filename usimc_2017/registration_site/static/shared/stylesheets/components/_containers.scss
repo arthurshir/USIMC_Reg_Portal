@@ -37,7 +37,7 @@
 }
 
 .panel-body {
-  padding: 15px 12px 10px 12px;
+  padding: 20px;
 }
 
 .application-form-div {
@@ -56,6 +56,21 @@
   max-width: 124px;
 }
 
+.group-input {
+  .textinput {
+    border-bottom-width: 0px;
+    border-radius: 0px;
+    &:first-child {
+      border-radius: 3px 3px 0px 0px;
+    }
+    &:last-child {
+      border-radius: 0px 0px 3px 3px;
+      border-bottom-width: 1px;
+    }
+
+  }
+}
+
 .panel-default {
   background-color: $container-background-color;
   border-radius: 0px;
@@ -64,6 +79,7 @@
 }
 
 .login-panel {
+  width: 240px;
 }
 
 .content {
@@ -143,4 +159,8 @@ footer {
   justify-content: center;
   font-weight: 200;
   padding: 10px;
+}
+
+form {
+  margin:0px;
 }

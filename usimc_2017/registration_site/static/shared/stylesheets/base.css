@@ -29,7 +29,7 @@
   font-size: 14px; }
 
 .panel-body {
-  padding: 15px 12px 10px 12px; }
+  padding: 20px; }
 
 .application-form-div {
   max-width: 550px; }
@@ -43,11 +43,23 @@
 #created-at-column {
   max-width: 124px; }
 
+.group-input .textinput {
+  border-bottom-width: 0px;
+  border-radius: 0px; }
+  .group-input .textinput:first-child {
+    border-radius: 3px 3px 0px 0px; }
+  .group-input .textinput:last-child {
+    border-radius: 0px 0px 3px 3px;
+    border-bottom-width: 1px; }
+
 .panel-default {
   background-color: #FDFEFE;
   border-radius: 0px;
   border-radius: 3px;
   border: 1px solid #e0e2e3; }
+
+.login-panel {
+  width: 240px; }
 
 .content, .content-with-margins {
   margin-top: 70px;
@@ -114,6 +126,9 @@ footer {
   justify-content: center;
   font-weight: 200;
   padding: 10px; }
+
+form {
+  margin: 0px; }
 
 .form-section-header {
   font-size: 20px;
@@ -216,14 +231,17 @@ textarea.parsley-error,
   border-radius: 3px;
   font-weight: 400; }
 
-.btn-submit {
+.btn-submit, .btn-login {
   border: none;
   border-radius: 3px;
   font-weight: 200;
   color: white;
   background-color: #9C0D38; }
-  .btn-submit:hover {
+  .btn-submit:hover, .btn-login:hover {
     background-color: #9E3A58; }
+
+.btn-login {
+  width: 100%; }
 
 .flex-column {
   display: flex;
