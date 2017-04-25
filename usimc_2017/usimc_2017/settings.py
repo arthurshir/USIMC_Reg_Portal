@@ -35,8 +35,12 @@ ALLOWED_HOSTS = ['*']
 
 print "DEBUG=", "True" if DEBUG else "False"
 
-# Application definition
+# Security
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
