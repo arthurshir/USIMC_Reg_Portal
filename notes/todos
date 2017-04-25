@@ -1,13 +1,18 @@
 Todos:
   - Add Submission Editing
-  - Update Warning messages for login
-  - Generate Excel
+  - Add Excel Generation
   - Add FAQ pages
   - Do user testing for Stripe
   - Add pricing unit testing
 
 Also:
   - Add charging of AWS bill
+
+4/25/17
+x - Update Warning messages for login
+x - Added SSL redirect to HTTPS
+x - Updated Login UI and title
+x - Added support email to footer
 
 4/16/17
 x - Add Automated Backup

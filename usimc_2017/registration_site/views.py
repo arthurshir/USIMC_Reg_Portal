@@ -188,7 +188,10 @@ class DeleteApplicationView(View):
     context = {}
 
     def get(self, request, *args, **kwargs):
-        entry = get_object_or_404(models.Entry, pk=self.kwargs['pk']).delete()
+        entry = get_object_or_404(models.Entry, pk=self.kwargs['pk'])
+        # only allow the entry to be deleted if it has not been submitted yet
+        if not entry.submitted:
+            entry.delete()
         return redirect('registration_site:dashboard')
 
     @method_decorator(login_required)
