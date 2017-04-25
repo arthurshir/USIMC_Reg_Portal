@@ -19,7 +19,11 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
+    
+    # Admin
     url(r'^admin/', admin.site.urls),
+
+    # Registration
     url(r'', include('registration_site.urls')),
 
     # Password Recovery
