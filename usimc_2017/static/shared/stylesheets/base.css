@@ -29,7 +29,7 @@
   font-size: 14px; }
 
 .panel-body {
-  padding: 15px 12px 10px 12px; }
+  padding: 20px; }
 
 .application-form-div {
   max-width: 550px; }
@@ -43,17 +43,37 @@
 #created-at-column {
   max-width: 124px; }
 
-.panel-default {
+.group-input .textinput {
+  border-bottom-width: 0px;
+  border-radius: 0px; }
+  .group-input .textinput:first-child {
+    border-radius: 3px 3px 0px 0px; }
+  .group-input .textinput:last-child {
+    border-radius: 0px 0px 3px 3px;
+    border-bottom-width: 1px; }
+
+table {
+  margin: 0px !important; }
+
+.generic-container {
   background-color: #FDFEFE;
   border-radius: 0px;
   border-radius: 3px;
   border: 1px solid #e0e2e3;
-  box-shadow: 0px 0px 5px 1px #888888; }
+  padding: 20px; }
+
+.panel-default {
+  @extends .generic-container;
+  padding: 0px; }
+
+.login-panel {
+  width: 240px; }
 
 .content, .content-with-margins {
   margin-top: 70px;
   margin-bottom: 36px;
   min-height: calc(100% - 70px - 36px);
+  background-color: #FAFAFA;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -78,8 +98,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-height: calc(100% - 70px - 36px);
-  background-color: #FAFAFA; }
+  min-height: calc(100% - 70px - 36px); }
 
 .navbar {
   min-height: 70px !important;
@@ -115,6 +134,9 @@ footer {
   justify-content: center;
   font-weight: 200;
   padding: 10px; }
+
+form {
+  margin: 0px; }
 
 .form-section-header {
   font-size: 20px;
@@ -217,14 +239,17 @@ textarea.parsley-error,
   border-radius: 3px;
   font-weight: 400; }
 
-.btn-submit {
+.btn-submit, .btn-login {
   border: none;
   border-radius: 3px;
   font-weight: 200;
   color: white;
   background-color: #9C0D38; }
-  .btn-submit:hover {
+  .btn-submit:hover, .btn-login:hover {
     background-color: #9E3A58; }
+
+.btn-login {
+  width: 100%; }
 
 .flex-column {
   display: flex;

@@ -37,7 +37,7 @@
 }
 
 .panel-body {
-  padding: 15px 12px 10px 12px;
+  padding: 20px;
 }
 
 .application-form-div {
@@ -56,21 +56,48 @@
   max-width: 124px;
 }
 
-.panel-default {
+.group-input {
+  .textinput {
+    border-bottom-width: 0px;
+    border-radius: 0px;
+    &:first-child {
+      border-radius: 3px 3px 0px 0px;
+    }
+    &:last-child {
+      border-radius: 0px 0px 3px 3px;
+      border-bottom-width: 1px;
+    }
+
+  }
+}
+
+table {
+  margin: 0px !important;
+}
+
+.generic-container {
   background-color: $container-background-color;
   border-radius: 0px;
   border-radius: 3px;
   border: 1px solid $border-color;
-  box-shadow: 0px 0px 5px 1px #888888;
+  padding: 20px;
 }
 
+.panel-default {
+  @extends .generic-container;
+  padding: 0px;
+}
+
+
 .login-panel {
+  width: 240px;
 }
 
 .content {
   margin-top: $nav-height;
   margin-bottom: $footer-height;
   min-height: calc(100% - #{$nav-height} - #{$footer-height});
+  background-color: $wrapper-background-color;
 
   display: flex;
   flex-direction: column;
@@ -101,7 +128,6 @@
   justify-content: center;
   flex-direction: column;
   min-height: calc(100% - #{$nav-height} - #{$footer-height});
-  background-color: $wrapper-background-color;
 }
 
 .navbar {
@@ -144,4 +170,8 @@ footer {
   justify-content: center;
   font-weight: 200;
   padding: 10px;
+}
+
+form {
+  margin:0px;
 }

@@ -9,6 +9,7 @@ Also:
   - Add charging of AWS bill
 
 4/25/17
+x - Added favicon
 x - Only allow deletion of entries that have not been submitted yet
 x - Update Warning messages for login
 x - Added SSL redirect to HTTPS

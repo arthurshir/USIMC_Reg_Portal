@@ -52,11 +52,19 @@
     border-radius: 0px 0px 3px 3px;
     border-bottom-width: 1px; }
 
-.panel-default {
+table {
+  margin: 0px !important; }
+
+.generic-container {
   background-color: #FDFEFE;
   border-radius: 0px;
   border-radius: 3px;
-  border: 1px solid #e0e2e3; }
+  border: 1px solid #e0e2e3;
+  padding: 20px; }
+
+.panel-default {
+  @extends .generic-container;
+  padding: 0px; }
 
 .login-panel {
   width: 240px; }
@@ -65,6 +73,7 @@
   margin-top: 70px;
   margin-bottom: 36px;
   min-height: calc(100% - 70px - 36px);
+  background-color: #FAFAFA;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -89,8 +98,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-height: calc(100% - 70px - 36px);
-  background-color: #FAFAFA; }
+  min-height: calc(100% - 70px - 36px); }
 
 .navbar {
   min-height: 70px !important;
@@ -289,6 +297,5 @@ html * {
 
 .form-horizontal {
   margin: 0px; }
-
 
 /*# sourceMappingURL=base.css.map */

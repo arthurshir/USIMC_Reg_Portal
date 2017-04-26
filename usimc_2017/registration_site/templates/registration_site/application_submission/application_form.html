@@ -22,9 +22,9 @@
   </div>
   <div class="wrapper" style="flex-grow: 1;">
     <div class="centered-wrapper">
-      <div class="application-form-div">
+      <div style="height: 20px;"></div>
+      <div class="application-form-div generic-container">
         {% block form_title %}{% endblock %}
-        <div style="height: 10px;"></div>
         {% if messages %}
           <div class="messages">
               {% for message in messages %}
@@ -34,6 +34,7 @@
         {% endif %}
         {% block form %}{% endblock %}
       </div> <!-- application form div --> 
+      <div style="height: 20px;"></div>
     </div>  
   </div>
 </div>

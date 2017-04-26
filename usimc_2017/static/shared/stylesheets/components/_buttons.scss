@@ -17,3 +17,8 @@
     background-color: $primary-brand-color-faded;
   }
 }
+
+.btn-login {
+  @extend .btn-submit;
+  width: 100%;
+}
