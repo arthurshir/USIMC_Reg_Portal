@@ -54,13 +54,6 @@
         "flute",
         "clarinet",
         "vocal",
-        "chinese_traditional_instrument_zither",
-        "chinese_traditional_instrument_bowed_strings",
-        "chinese_traditional_instrument_plucked_string",
-        "chinese_traditional_instrument_woodwinds",
-        "chinese_traditional_instrument_guqin",
-        "chinese_traditional_instrument_professional_zither",
-        "chinese_traditional_instruments_ensemble",
         "chamber_ensemble",
         "vocal_ensemble"
       ]
@@ -244,7 +237,7 @@
       }
     },
     "chinese_traditional_instrument_zither": {
-      "name": "Zither - Chinese Traditional Instrument",
+      "name": "Guzheng (Zither) - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
         11,
@@ -331,7 +324,7 @@
       }
     },
     "chinese_traditional_instrument_professional_zither": {
-      "name": "Professional Zither - Chinese Traditional Instrument",
+      "name": "Professional Guzheng (Zither) - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
         18,

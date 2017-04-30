@@ -237,7 +237,7 @@
       }
     },
     "chinese_traditional_instrument_zither": {
-      "name": "Zither - Chinese Traditional Instrument",
+      "name": "Guzheng (Zither) - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
         11,
@@ -324,7 +324,7 @@
       }
     },
     "chinese_traditional_instrument_professional_zither": {
-      "name": "Professional Zither - Chinese Traditional Instrument",
+      "name": "Professional Guzheng (Zither) - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
         18,
