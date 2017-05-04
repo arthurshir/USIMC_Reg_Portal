@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -13,6 +14,7 @@ from django.forms.models import modelformset_factory
 from django.core.mail import send_mail, EmailMessage
 from . import forms
 from . import models
+from .models import xstr
 from django.core.exceptions import ObjectDoesNotExist
 import django_excel as excel
 import csv
@@ -877,10 +879,6 @@ def create_pricing_string(request):
     return HttpResponse(entry.create_pricing_string_with_custom_values(num_ensemble_members, num_awards, is_not_international, entry.teacher.cmtanc_code))
 
 ## Helper Functions
-def xstr(s):
-    if s is None:
-        return ''
-    return str(s)
 def get_entry(user, pk):
     usimc_user = models.USIMCUser.objects.filter(user=user)[0]
     return usimc_user.entry.get(pk=pk)

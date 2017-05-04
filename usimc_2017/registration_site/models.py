@@ -27,7 +27,18 @@ class AutoDateTimeField(DateTimeField):
 def xstr(s):
     if s is None:
         return ''
-    return str(s)
+    if isinstance(s, int):
+        return str(s)
+    else:
+        return s
+
+
+def make_unicode(input):
+    if type(input) != unicode:
+        input =  input.decode('utf-8')
+        return input
+    else:
+        return input
 
 def string_to_date(s):
     try:
