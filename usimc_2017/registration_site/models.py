@@ -388,7 +388,7 @@ class Person(Model):
             return False
         years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
         cutoff = usimc_rules.get_age_measurement_date()
-        cutoff = cutoff.replace(year=cutoff.year - years)
+        cutoff = cutoff.replace(year=cutoff.year - years - 1) # Minus an extra year to account for 11.4 years old
         return birthday >= cutoff
 
     def validate(self):
@@ -436,7 +436,7 @@ class EnsembleMember(Model):
             return False
         years = usimc_rules.get_instrument_category_age_rules(self.entry.instrument_category)[self.entry.age_category]
         cutoff = usimc_rules.get_age_measurement_date()
-        cutoff = cutoff.replace(year=cutoff.year - years)
+        cutoff = cutoff.replace(year=cutoff.year - years - 1) # Minus an extra year to account for 11.4 years old
         return birthday >= cutoff
 
     def validate(self):
