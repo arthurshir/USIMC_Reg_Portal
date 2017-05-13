@@ -340,7 +340,7 @@ class ApplicationPart2View(View):
                 birthday = models.string_to_date(birthday_string) 
                 if birthday:
                     if not entry.lead_performer.validate_birthday(birthday):
-                        form.add_error('year', "Performer must be under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
+                        form.add_error('year', "Performer must be at or under " + str(entry.age_category_years()) + " years old by " + usimc_rules.get_age_measurement_date().strftime("%B %d, %Y"))
                 else:
                     form.add_error('year', "Wrong format for date")
         input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())

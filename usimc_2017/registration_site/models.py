@@ -160,7 +160,7 @@ class Entry(Model):
         return usimc_rules.get_instrument_category_age_rules(self.instrument_category)[self.age_category]
 
     def age_category_string(self):
-        return xstr(self.age_category) + ', below ' + xstr(self.age_category_years()) + ' years old'
+        return xstr(self.age_category) + ', at or below ' + xstr(self.age_category_years()) + ' years old'
 
     def price_per_competitor_per_award(self):
         price_per_competitor = 0
