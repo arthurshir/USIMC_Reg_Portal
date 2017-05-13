@@ -723,7 +723,7 @@ class ApplicationListView(View):
                 entries_formatted.append({
                 "awards": reduce((lambda x, y: x + ',\n' + y), entry.award_strings()),
                 "instrument_category": entry.instrument_category_string(),
-                "age_category": entry.age_category + ",\nbelow " + str(entry.age_category_years()) + " years old",
+                "age_category": entry.age_category + ",\nat or under " + str(entry.age_category_years()) + " years old",
                 "created_at": entry.created_at,
                 "submitted": "Submitted" if entry.submitted else "Not Submitted",
                 "pk": entry.pk
