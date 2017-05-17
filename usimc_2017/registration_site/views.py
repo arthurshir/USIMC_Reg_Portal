@@ -725,7 +725,7 @@ class ApplicationListView(View):
                 "instrument_category": entry.instrument_category_string(),
                 "age_category": entry.age_category + ",\nat or under " + str(entry.age_category_years()) + " years old",
                 "created_at": entry.created_at,
-                "submitted": "Submitted" if entry.submitted else "Not Submitted",
+                "status": "Canceled" if entry.canceled else ("Submitted" if entry.submitted else "Not Submitted"),
                 "pk": entry.pk
                 })
             return entries_formatted

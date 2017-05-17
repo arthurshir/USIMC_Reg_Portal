@@ -103,6 +103,7 @@ class Entry(Model):
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
     submitted = BooleanField(default=False)
+    canceled = BooleanField(default=False)
     is_not_international = BooleanField(default=True)
     proof_of_age = FileField(null = True, blank = True)
     signature = CharField(max_length=500, blank=True, null=True)
