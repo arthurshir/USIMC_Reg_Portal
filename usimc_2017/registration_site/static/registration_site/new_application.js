@@ -33,7 +33,6 @@ $(document).ready(function() {
       deselect_award_options();
       toggle_all_award_options(false);
       var valid_awards = get_valid_awards(instrument_category);
-      
       valid_awards.forEach(function(value) {
         toggle_award_option(value, true);
       })
@@ -66,7 +65,7 @@ $(document).ready(function() {
   }
 
   function toggle_all_award_options(enabled) {
-    $("#div_id_awards_applying_for input").map(function() {return $(this).val();}).get().
+    $("select#id_awards_applying_for option").map(function() {return $(this).val();}).get().
       forEach( function(option) { 
         if (option) {
           toggle_award_option(option, enabled);
@@ -74,10 +73,11 @@ $(document).ready(function() {
     })
   }
   function toggle_award_option(option, enabled) {
-    $('#div_id_awards_applying_for input[value=' + option + ']').prop('disabled',!enabled);
+    $('select#id_awards_applying_for option[value=' + option + ']').prop('disabled',!enabled);
   }
   function deselect_award_options() {
-    $("#div_id_awards_applying_for input").removeAttr('checked');
+    $("select#id_awards_applying_for option:selected").removeAttr("selected");
+    // $("#div_id_awards_applying_for input").removeAttr('checked');
   }
 
 
