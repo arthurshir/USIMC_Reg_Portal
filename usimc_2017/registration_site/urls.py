@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^application/delete/(?P<pk>\d+)/$', views.DeleteApplicationView.as_view(), name='delete_application'),
     url(r'^application/create_pricing_string/$', views.create_pricing_string, name='create_pricing_string'),
     # Application Edit
-    url(r'^dashboard/(?P<pk>\d+)/edit/$', views.EditApplicationView.as_view(), name='edit_application'),
+    # url(r'^dashboard/(?P<pk>\d+)/edit/$', views.EditApplicationView.as_view(), name='edit_application'),
 
     # Admin Users
     url(r'^admin/login/', views.AdminLoginView.as_view(), name='admin_register'),

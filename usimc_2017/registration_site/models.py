@@ -137,10 +137,21 @@ class Entry(Model):
             )
 
     def validate_youth_youtube_link_validation(self):
-        """Needs to have at least 2 entries with youtube links"""
+        """
+            For Youth Award Category:
+            Only one needed for Chinese Ensemble and chamber music instrument categories
+            >=2 needed for all other categories
+
+        """
         if usimc_rules.AWARD_CHOICE_YOUTH not in self.awards_applying_for:
             return True
         else:
+            if self.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE \
+                or self.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHAMBER_ENSEMBLE:
+                return len(
+                    filter(lambda x: x.youtube_link != None, self.pieces.all())
+                    ) >= 1
+
             return len(
                 filter(lambda x: x.youtube_link != None, self.pieces.all())
                 ) >= 2

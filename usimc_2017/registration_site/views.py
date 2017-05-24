@@ -384,7 +384,11 @@ class ApplicationPart2View(View):
         add_blank_error('lead_competitor_form', 'year', entry.lead_performer.year )
 
         if entry.awards_include_youth() and not entry.validate_youth_youtube_link_validation():
-            self.context['piece_formset'][0].add_error(None, 'Must include Youtube Links to at least 2 pieces for Young Artist Award')
+            if entry.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE \
+                or entry.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHAMBER_ENSEMBLE:
+                self.context['piece_formset'][0].add_error(None, 'Must include Youtube Links to at least 1 piece for Young Artist Award for this instrument category.')
+            else:
+                self.context['piece_formset'][0].add_error(None, 'Must include Youtube Links to at least 2 pieces for Young Artist Award.')
 
         if entry.is_ensemble():
             for form in self.context['ensemble_member_formset'].forms:
