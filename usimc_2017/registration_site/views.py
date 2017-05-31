@@ -667,19 +667,19 @@ class PaymentView(View):
           source=token,
         )
 
-        usimc_charge = models.Charge()
-        usimc_charge.usimc_user = usimc_user
-        usimc_charge.entry = entry
-        usimc_charge.charge_id = charge.id
-        usimc_charge.charge_amount = charge.amount
-        usimc_charge.charge_customer = xstr(charge.customer)
-        usimc_charge.charge_description = xstr(charge.description)
-        usimc_charge.charge_failure_message = xstr(charge.failure_message)
-        usimc_charge.charge_paid = charge.paid
-        usimc_charge.charge_receipt_email = xstr(charge.receipt_email)
-        usimc_charge.save()
-
         if charge.paid:
+            usimc_charge = models.Charge()
+            usimc_charge.usimc_user = usimc_user
+            usimc_charge.entry = entry
+            usimc_charge.charge_id = charge.id
+            usimc_charge.charge_amount = charge.amount
+            usimc_charge.charge_customer = xstr(charge.customer)
+            usimc_charge.charge_description = xstr(charge.description)
+            usimc_charge.charge_failure_message = xstr(charge.failure_message)
+            usimc_charge.charge_paid = charge.paid
+            usimc_charge.charge_receipt_email = xstr(charge.receipt_email)
+            usimc_charge.save()
+
             entry.submitted = True
             entry.save()
 
