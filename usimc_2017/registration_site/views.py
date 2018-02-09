@@ -18,8 +18,8 @@ from .models import xstr
 from django.core.exceptions import ObjectDoesNotExist
 import django_excel as excel
 import csv
-import usimc_rules
-import usimc_data
+from . import usimc_rules
+from . import usimc_data
 from django.http import JsonResponse
 import datetime
 import pytz
@@ -231,7 +231,7 @@ class ApplicationPart2View(View):
         entry.teacher.last_name = _cf(self.context['teacher_form']['last_name'].value())
         entry.teacher.email = _cf(self.context['teacher_form']['email'].value())
         entry.teacher.cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
-        print entry.teacher.cmtanc_code
+        print (entry.teacher.cmtanc_code)
         entry.teacher.save()
 
         entry.parent_contact.first_name = _cf(self.context['contact_form']['first_name'].value())
@@ -336,7 +336,7 @@ class ApplicationPart2View(View):
         for form in competitor_forms:
             if all([_cf(form['month'].value()), _cf(form['day'].value()), _cf(form['year'].value()) ]):
                 birthday_string = _cf(form['month'].value()) + "-" + _cf(form['day'].value()) + "-" + _cf(form['year'].value())
-                print "Birthday String", birthday_string
+                print ("Birthday String", birthday_string)
                 birthday = models.string_to_date(birthday_string) 
                 if birthday:
                     if not entry.lead_performer.validate_birthday(birthday):
@@ -344,8 +344,8 @@ class ApplicationPart2View(View):
                 else:
                     form.add_error('year', "Wrong format for date")
         input_cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
-        print input_cmtanc_code
-        print entry.teacher.validate_cmtanc_code(input_cmtanc_code)
+        print (input_cmtanc_code)
+        print (entry.teacher.validate_cmtanc_code(input_cmtanc_code))
         if input_cmtanc_code and not entry.teacher.validate_cmtanc_code(input_cmtanc_code):
             self.context['teacher_form'].add_error('cmtanc_code', 'this is an invalid code')    
 
@@ -466,28 +466,28 @@ class EditApplicationView(View):
         ## Validate all data and add messages to forms
         contact_form_fields = [_cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['email'].value()), _cf(self.context['contact_form']['phone_number'].value()) ]
         if all(contact_form_fields):
-            print "changing parent data!"
+            print ("changing parent data!")
         else:
-            print "Missing field?"
+            print ("Missing field?")
 
         teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()) ]
         if all(teacher_form_fields):
-            print "changing teacher data!"
+            print ("changing teacher data!")
         else:
-            print "Missing field?"
+            print ("Missing field?")
 
         lead_performer_form_fields = [_cf(self.context['lead_competitor_form']['first_name'].value()), _cf(self.context['lead_competitor_form']['last_name'].value()), _cf(self.context['lead_competitor_form']['instrument'].value()), _cf(self.context['lead_competitor_form']['address'].value()), _cf(self.context['lead_competitor_form']['city'].value()), _cf(self.context['lead_competitor_form']['state'].value()), _cf(self.context['lead_competitor_form']['zip_code'].value()), _cf(self.context['lead_competitor_form']['country'].value()),]
         if all(teacher_form_fields):
-            print "changing lead performer data!"
+            print ("changing lead performer data!")
         else:
-            print "missing Field?"
+            print ("missing Field?")
         if entry.is_ensemble():
             for form in self.context['ensemble_member_formset']:
                 ensemble_member_form_fields = [_cf(form['first_name'].value()), _cf(form['last_name'].value()), _cf(form['instrument'].value())]
                 if all(ensemble_member_form_fields):
-                    print "changing ensemble member data!"
+                    print ("changing ensemble member data!")
                 else:
-                    print "missing field?"
+                    print ("missing field?")
         has_enough_youtube_links = True
         if entry.awards_include_youth():
             youtube_link_array = []
@@ -496,19 +496,19 @@ class EditApplicationView(View):
                     youtube_link_array.append( _cf(form['youtube_link'].value()) )
             has_enough_youtube_links = len(youtube_link_array) >= 2
         if not has_enough_youtube_links:
-            print "missing youtube field?"
+            print ("missing youtube field?")
 
         for form in self.context['piece_formset']:            
             piece_form_fields = [_cf(form['title'].value()), _cf(form['composer'].value()), _cf(form['minutes'].value()), _cf(form['seconds'].value()), ]
             if all(piece_form_fields):
-                print "changing piece data!"
+                print ("changing piece data!")
             else:
-                print "missing field?"
+                print ("missing field?")
 
             if has_enough_youtube_links:
-                print "chnging youtube"
+                print ("chnging youtube")
             else:
-                print "no youtube"
+                print ("no youtube")
 
         self.load_forms_to_context(request)
         self.load_entry_data_to_context(request)
@@ -611,7 +611,7 @@ class ReviewSubmissionView(View):
             return render(request, 'registration_site/application_submission/review_submission.html', self.context)
         else:
             entry.signature = input_signature
-            print input_signature
+            print (input_signature)
             entry.save()
             return redirect(reverse('registration_site:pay', kwargs=self.kwargs))
 
@@ -814,7 +814,7 @@ class DownloadEntriesView(View ):
             'updated_at',
             ])
 
-        print models.Entry.objects.all().filter(submitted=True).order_by('instrument_category')
+        print (models.Entry.objects.all().filter(submitted=True).order_by('instrument_category'))
         entries = filter(lambda x: x.is_ensemble(), models.Entry.objects.all().filter(submitted=True).order_by('instrument_category'))
         for entry in entries:
             usimc_user = entry.usimc_user
@@ -844,7 +844,7 @@ class DownloadEntriesView(View ):
 
             # Ensemble Members
             ensemble_members = [entry.lead_performer].append(entry.ensemble_members.all())
-            print ensemble_members
+            print (ensemble_members)
             row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.first_name, ensemble_members ) ))
             row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.last_name, ensemble_members ) ))
             row.append( reduce(lambda x, y: x + "\n" + y, map(lambda x: x.instrument, ensemble_members ) ))

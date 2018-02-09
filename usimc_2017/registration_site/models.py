@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 import datetime
-import usimc_data
-import usimc_rules
+from . import usimc_data
+from . import usimc_rules
 import phonenumbers
 
 from django.core.exceptions import ValidationError
@@ -390,7 +390,7 @@ class Person(Model):
 
     def birthday(self):
         if not (self.month and self.day and self.year):
-            print "No month, day, year"
+            print("No month, day, year")
             return None
         else:
             return string_to_date(self.month + "-" + self.day + "-" + self.year)

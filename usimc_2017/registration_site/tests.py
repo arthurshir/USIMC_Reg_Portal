@@ -1,7 +1,8 @@
 from django.test import TestCase
 from .models import USIMCUser, Charge, Entry, ParentContact, Piece, Teacher, Person, EnsembleMember
 from django.contrib.auth.models import User
-import usimc_rules
+from . import usimc_data
+from . import usimc_rules
 from django.utils import timezone
 
 class ModelValidationMethodTests(TestCase):

@@ -33,7 +33,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = ['localhost', '54.193.10.208', '127.0.0.1', 'usimc2017registration']
 
-print "DEBUG=", "True" if DEBUG else "False"
+print("DEBUG=", "True" if DEBUG else "False")
 
 # Security
 SESSION_COOKIE_SECURE = not DEBUG

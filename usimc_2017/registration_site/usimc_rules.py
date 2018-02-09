@@ -15,9 +15,9 @@ with open(json_path) as json_data:
 # Define Constants
 RAW_JSON = data
 
-INSTRUMENT_SOLO_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if not v['ensemble'])))
-INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems() if v['ensemble'])))
-INSTRUMENT_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].iteritems())))
+INSTRUMENT_SOLO_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].items() if not v['ensemble'])))
+INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].items() if v['ensemble'])))
+INSTRUMENT_CATEGORY_CHOICES = sorted(tuple(((str(k), str(v['name'])) for k,v in data['instrument_categories'].items())))
 INSTRUMENT_SOLO_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_SOLO_CATEGORY_CHOICES)
 INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_ENSEMBLE_CATEGORY_CHOICES)
 INSTRUMENT_CATEGORY_CHOICES_DICT = dict(INSTRUMENT_CATEGORY_CHOICES)
@@ -42,7 +42,7 @@ def print_data():
   pprint(data)
 
 def get_instrument_category(instrument):
-  print data['instrument_categories'][instrument]
+  print(data['instrument_categories'][instrument])
 
 def get_instrument_category_age_rules(instrument):
   return dict( (data['age_group_names'][index], age) for index, age in enumerate(data['instrument_categories'][instrument]['age_groups']))

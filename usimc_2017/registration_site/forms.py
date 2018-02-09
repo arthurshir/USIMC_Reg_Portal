@@ -1,6 +1,7 @@
 from django import forms
 from . import models
-import usimc_rules
+from . import usimc_data
+from . import usimc_rules
 
 from crispy_forms.helper import *
 from crispy_forms.layout import *
