@@ -19,7 +19,7 @@
         "harp",
         "celtic_harp",
         "chamber_ensemble_and_piano_duet",
-        "vocal_ensemble"
+        "vocal_ensemble",
         "chinese_traditional_instrument_zither",
         "chinese_traditional_instrument_bowed_strings",
         "chinese_traditional_instrument_plucked_string",
@@ -58,7 +58,7 @@
         "chinese_traditional_instrument_plucked_string",
         "chinese_traditional_instrument_woodwinds",
         "chinese_traditional_instrument_guqin",
-        "chinese_traditional_instrument_professional_zither",
+        "chinese_traditional_instrument_professional_zither"
       ]
     }
   },
