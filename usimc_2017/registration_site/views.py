@@ -58,6 +58,7 @@ def _cf_int(value):
 
 class IndexView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
 
     def get(self, request):
         if request.user.is_authenticated():
@@ -70,6 +71,7 @@ class IndexView(View):
 ## Auth Views
 class LogoutView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
 
     def get(self, request):
         logout(request)
@@ -77,6 +79,7 @@ class LogoutView(View):
 
 class LoginView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
     context['form'] = forms.LoginForm
 
     def get(self, request):
@@ -107,6 +110,7 @@ class LoginView(View):
 
 class RegisterView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
     context['form'] = forms.RegistrationForm
 
     def get(self, request):
@@ -141,6 +145,7 @@ class RegisterView(View):
 ## Application Management Views
 class DashboardView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
 
     def get(self, request):
         return render(request, 'registration_site/application_management/dashboard.html', self.context)
@@ -718,6 +723,7 @@ def payment_confirmation(request, *args, **kwargs):
 
 class ApplicationListView(View):
     context = {}
+    context['competition_ended'] = settings.COMPETITION_ENDED
     context['entries'] = []
 
     def get(self, request):

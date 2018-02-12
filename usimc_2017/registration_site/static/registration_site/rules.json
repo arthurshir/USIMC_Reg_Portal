@@ -14,19 +14,19 @@
         "violin",
         "viola",
         "cello",
-        "marimba",
-        "flute",
-        "clarinet",
         "vocal",
+        "classical_guitar",
+        "harp",
+        "celtic_harp",
+        "chamber_ensemble_and_piano_duet",
+        "vocal_ensemble"
         "chinese_traditional_instrument_zither",
         "chinese_traditional_instrument_bowed_strings",
         "chinese_traditional_instrument_plucked_string",
         "chinese_traditional_instrument_woodwinds",
         "chinese_traditional_instrument_guqin",
         "chinese_traditional_instrument_professional_zither",
-        "chinese_traditional_instruments_ensemble",
-        "chamber_ensemble",
-        "vocal_ensemble"
+        "chinese_traditional_instruments_ensemble"
       ]
     },
     "chinese_music_award": {
@@ -36,11 +36,10 @@
         "violin",
         "viola",
         "cello",
-        "marimba",
-        "flute",
-        "clarinet",
         "vocal",
-        "vocal_ensemble"
+        "classical_guitar",
+        "harp",
+        "celtic_harp"
       ]
     },
     "special_theme_bach": {
@@ -50,12 +49,16 @@
         "violin",
         "viola",
         "cello",
-        "marimba",
-        "flute",
-        "clarinet",
         "vocal",
-        "chamber_ensemble",
-        "vocal_ensemble"
+        "classical_guitar",
+        "harp",
+        "celtic_harp",
+        "chinese_traditional_instrument_zither",
+        "chinese_traditional_instrument_bowed_strings",
+        "chinese_traditional_instrument_plucked_string",
+        "chinese_traditional_instrument_woodwinds",
+        "chinese_traditional_instrument_guqin",
+        "chinese_traditional_instrument_professional_zither",
       ]
     }
   },
@@ -68,33 +71,32 @@
         9,
         11,
         14,
-        17,
+        18,
         30
       ],
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "violin": {
       "name": "Violin",
       "ensemble": null,
       "age_groups": [
-        8,
-        10,
+        9,
         13,
-        17,
+        18,
         30
       ],
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "viola": {
@@ -102,15 +104,15 @@
       "ensemble": null,
       "age_groups": [
         14,
-        17,
+        18,
         30
       ],
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "cello": {
@@ -119,69 +121,15 @@
       "age_groups": [
         11,
         14,
-        17,
+        18,
         30
       ],
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
-      }
-    },
-    "marimba": {
-      "name": "Marimba",
-      "ensemble": null,
-      "age_groups": [
-        11,
-        14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
-      }
-    },
-    "flute": {
-      "name": "Flute",
-      "ensemble": null,
-      "age_groups": [
-        12,
-        14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
-      }
-    },
-    "clarinet": {
-      "name": "Clarinet",
-      "ensemble": null,
-      "age_groups": [
-        12,
-        14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "vocal": {
@@ -191,15 +139,62 @@
         9,
         12,
         14,
-        17,
+        18,
         30
       ],
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
+      }
+    },
+    "classical_guitar": {
+      "name": "Classical Guitar",
+      "ensemble": null,
+      "age_groups": [
+        11,
+        18,
+        30
+      ],
+      "max_pieces": 4,
+      "max_length": 6,
+      "pricing": {
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
+      }
+    },
+    "harp": {
+      "name": "Harp",
+      "ensemble": null,
+      "age_groups": [
+        12,
+        15,
+        18,
+        30
+      ],
+      "max_pieces": 4,
+      "max_length": 6,
+      "pricing": {
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
+      }
+    },
+    "celtic_harp": {
+      "name": "Celtic Harp",
+      "ensemble": null,
+      "age_groups": [
+        18
+      ],
+      "max_pieces": 4,
+      "max_length": 6,
+      "pricing": {
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chamber_ensemble": {
@@ -214,9 +209,9 @@
       "max_pieces": 4,
       "max_length": 12,
       "pricing": {
-        "per_contestant_yes_cmtanc": 40,
-        "per_contestant_no_cmtanc": 50,
-        "per_contestant_yes_international": 60
+        "per_contestant_yes_cmtanc": 50,
+        "per_contestant_no_cmtanc": 60,
+        "per_contestant_yes_international": 70
       }
     },
     "vocal_ensemble": {
@@ -231,9 +226,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 40,
-        "per_contestant_no_cmtanc": 50,
-        "per_contestant_yes_international": 60
+        "per_contestant_yes_cmtanc": 50,
+        "per_contestant_no_cmtanc": 60,
+        "per_contestant_yes_international": 70
       }
     },
     "chinese_traditional_instrument_zither": {
@@ -249,9 +244,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instrument_bowed_strings": {
@@ -267,9 +262,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instrument_plucked_string": {
@@ -285,9 +280,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instrument_woodwinds": {
@@ -303,9 +298,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instrument_guqin": {
@@ -318,9 +313,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instrument_professional_zither": {
@@ -333,9 +328,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 70,
-        "per_contestant_no_cmtanc": 100,
-        "per_contestant_yes_international": 120
+        "per_contestant_yes_cmtanc": 80,
+        "per_contestant_no_cmtanc": 110,
+        "per_contestant_yes_international": 130
       }
     },
     "chinese_traditional_instruments_ensemble": {
@@ -350,9 +345,9 @@
       "max_pieces": 4,
       "max_length": 6,
       "pricing": {
-        "per_contestant_yes_cmtanc": 40,
-        "per_contestant_no_cmtanc": 50,
-        "per_contestant_yes_international": 60
+        "per_contestant_yes_cmtanc": 50,
+        "per_contestant_no_cmtanc": 60,
+        "per_contestant_yes_international": 70
       }
     }
   }

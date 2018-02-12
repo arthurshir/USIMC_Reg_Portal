@@ -1,0 +1,99 @@
+Categories:
+ - Piano
+ - Violin
+ - Viola
+ - Cello
+ - Vocal
+ - Classical Guitar
+ - Harp
+ - Celtic Harp
+ - Classical Chamber Music & Piano Duet
+ - Vocal Ensemble
+
+Traditional Categories:
+ - Zither
+ - Bowed Strings
+ - Plucked String
+ - Woodwinds
+ - Guqin
+ - Professional Zither
+ - Traditional Chinese Instruments Ensemble
+
+
+Instrument Codes:
+  "piano",
+  "violin",
+  "viola",
+  "cello",
+  "vocal",
+  "classical_guitar",
+  "harp",
+  "celtic_harp",
+  "chamber_ensemble_and_piano_duet",
+  "vocal_ensemble"
+  "chinese_traditional_instrument_zither",
+  "chinese_traditional_instrument_bowed_strings",
+  "chinese_traditional_instrument_plucked_string",
+  "chinese_traditional_instrument_woodwinds",
+  "chinese_traditional_instrument_guqin",
+  "chinese_traditional_instrument_professional_zither",
+  "chinese_traditional_instruments_ensemble"
+
+
+Some questions:
+
+Is this correct for Instruments permitted for Chinese Music Award?:
+ - Piano
+ - Violin
+ - Viola
+ - Cello
+ - Vocal
+ - Classical Guitar
+ - Harp
+ - Celtic Harp
+
+Special Theme Bach:
+ - Are Chinese solo instruments allowed to compete in this?
+
+Is this correct for group and piece sizes?
+
+For all Solo Instrument Categories:
+- max amount of pieces = 6
+- max length of each piece = 6 minutes
+
+Chamber Ensemble:
+- max amount of pieces = 4
+- max length of each piece = 12 minutes
+- max amount of competitors = 6
+
+Vocal Ensemble:
+- max amount of pieces = 4
+- max length of each piece = 6 minutes
+- max amount of competitors = 6
+
+Ensembles:
+- max amount of pieces = 4
+- max length of each piece = 6 minutes
+- max amount of competitors = 7
+
+
+
+
+Instrument Codes:
+  "piano",
+  "violin",
+  "viola",
+  "cello",
+  "vocal",
+  "classical_guitar",
+  "harp",
+  "celtic_harp",
+  "chamber_ensemble_and_piano_duet",
+  "vocal_ensemble"
+  "chinese_traditional_instrument_zither",
+  "chinese_traditional_instrument_bowed_strings",
+  "chinese_traditional_instrument_plucked_string",
+  "chinese_traditional_instrument_woodwinds",
+  "chinese_traditional_instrument_guqin",
+  "chinese_traditional_instrument_professional_zither",
+  "chinese_traditional_instruments_ensemble"

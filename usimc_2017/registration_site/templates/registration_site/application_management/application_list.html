@@ -24,11 +24,19 @@
         <h4>Logged in as {{ user.email }}</h4>
       </div>
       <div class="flex-align-items-center flex-justify-content-center">
+        {% if competition_ended %}
         <div>
         Registration for the 2017 USIMC has now been closed. If you have any questions, please email info@usimc.org.</div>
         <div style="height: 10px;"></div>
+        {% endif %}
       </div>
       <div class="flex-align-items-center flex-justify-content-center">
+        {% if not competition_ended %}
+          <div class="btn-group" role="group" aria-label="...">
+            <a href="{% url 'registration_site:new_application' %}" type="button" class="btn btn-default">Create a new Application</a>
+            <a href="{% url 'registration_site:application_list' %}" type="button" class="btn btn-default" style="margin-right: 4px;">Update or Edit an old Application</a>
+          </div>
+        {% endif %}
         <a class="btn btn-default" href="{% url 'registration_site:logout' %}" type="button">Log out</a>
       </div>
     </div>

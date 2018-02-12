@@ -174,3 +174,6 @@ STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123
 STRIPE_LIVE_SECRET_KEY = os.environ.get('STRIPE_LIVE_SECRET_KEY', '123456')
 STRIPE_LIVE_PUBLISHABLE_KEY = os.environ.get('STRIPE_LIVE_PUBLISHABLE_KEY', '123456')
 
+# Competition Status
+COMPETITION_ENDED = os.environ.get('COMPETITION_ENDED', 'False') == 'True'
+print("Competition_ended = {}".format(COMPETITION_ENDED))

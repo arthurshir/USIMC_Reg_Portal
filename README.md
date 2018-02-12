@@ -27,3 +27,8 @@ Forms don't include complete validation and is currently a mix between Django's 
 * Redo the form validation to stick to one paradigm
 * Hire a separate designer and customer service worker to interface with client.
 * Utilize a React + Node stack instead of Django
+
+
+
+## Helpful Links
+* https://stackoverflow.com/questions/40564605/pip-install-mod-wsgi-fails-in-virtualenv
