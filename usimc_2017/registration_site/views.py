@@ -25,6 +25,7 @@ import datetime
 import pytz
 import phonenumbers
 from django.conf import settings
+from functools import reduce
 
 # Set your secret key: remember to change this to your live secret key in production
 import dotenv

@@ -52,13 +52,7 @@
         "vocal",
         "classical_guitar",
         "harp",
-        "celtic_harp",
-        "chinese_traditional_instrument_zither",
-        "chinese_traditional_instrument_bowed_strings",
-        "chinese_traditional_instrument_plucked_string",
-        "chinese_traditional_instrument_woodwinds",
-        "chinese_traditional_instrument_guqin",
-        "chinese_traditional_instrument_professional_zither"
+        "celtic_harp"
       ]
     }
   },

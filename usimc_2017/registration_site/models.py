@@ -9,6 +9,7 @@ import datetime
 from . import usimc_data
 from . import usimc_rules
 import phonenumbers
+from functools import reduce
 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
