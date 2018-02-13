@@ -97,11 +97,16 @@ class PersonForm(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = models.Teacher
-        fields = ['first_name', 'last_name', 'email', 'cmtanc_code',]
+        fields = ['first_name', 'last_name', 'email', 'cmtanc_code', 'address', 'city', 'state', 'zip_code', 'country']
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
             'email': email_input_widget(placeholder='Email*', required=True ),
+            'address': text_input_widget(placeholder='Address*', required=True ),
+            'city': text_input_widget(placeholder='City*', required=True ),
+            'state': text_input_widget(placeholder='State*', required=True ),
+            'zip_code': text_input_widget(placeholder='Zip code*', required=True ),
+            'country': text_input_widget(placeholder='Country*', required=True ),
             'cmtanc_code': text_input_widget(placeholder='CMTANC Member ID' ),
         }
     helper = FormHelper()

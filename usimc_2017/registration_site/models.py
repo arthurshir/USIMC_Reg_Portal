@@ -346,7 +346,15 @@ class Teacher(Model):
     first_name = CharField(null=True, blank=True, max_length=200, verbose_name='First Name')
     last_name = CharField(null=True, blank=True, max_length=200, verbose_name='Last Name')
     email = CharField(null=True, blank=True, max_length=200, verbose_name='Email')
+    address = CharField(null=True, blank=True, max_length=200)
+    city = CharField(null=True, blank=True, max_length=200)
+    state = CharField(null=True, blank=True, max_length=200)
+    zip_code = CharField(null=True, blank=True, max_length=200)
+    country = CharField(null=True, blank=True, max_length=200)
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
+
+    def living_address(self):
+        return xstr(self.address) + " " + xstr(self.city) + ", " + xstr(self.state) + " " + xstr(self.zip_code) + ", " + xstr(self.country)
 
     def has_valid_cmtanc_code(self):
         return self.cmtanc_code in usimc_data.get_cmtanc_codes()

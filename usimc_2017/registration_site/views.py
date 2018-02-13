@@ -236,6 +236,11 @@ class ApplicationPart2View(View):
         entry.teacher.first_name = _cf(self.context['teacher_form']['first_name'].value())
         entry.teacher.last_name = _cf(self.context['teacher_form']['last_name'].value())
         entry.teacher.email = _cf(self.context['teacher_form']['email'].value())
+        entry.teacher.address = _cf(self.context['teacher_form']['address'].value())
+        entry.teacher.city = _cf(self.context['teacher_form']['city'].value())
+        entry.teacher.state = _cf(self.context['teacher_form']['state'].value())
+        entry.teacher.zip_code = _cf(self.context['teacher_form']['zip_code'].value())
+        entry.teacher.country = _cf(self.context['teacher_form']['country'].value())
         entry.teacher.cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
         print (entry.teacher.cmtanc_code)
         entry.teacher.save()
@@ -376,6 +381,11 @@ class ApplicationPart2View(View):
         add_blank_error('teacher_form', 'first_name', entry.teacher.first_name)
         add_blank_error('teacher_form', 'last_name', entry.teacher.last_name)
         add_blank_error('teacher_form', 'email', entry.teacher.email)
+        add_blank_error('teacher_form', 'address', entry.teacher.address )
+        add_blank_error('teacher_form', 'city', entry.teacher.city )
+        add_blank_error('teacher_form', 'state', entry.teacher.state )
+        add_blank_error('teacher_form', 'zip_code', entry.teacher.zip_code )
+        add_blank_error('teacher_form', 'country', entry.teacher.country )
 
         add_blank_error('lead_competitor_form', 'first_name', entry.lead_performer.first_name )
         add_blank_error('lead_competitor_form', 'last_name', entry.lead_performer.last_name )
@@ -476,7 +486,7 @@ class EditApplicationView(View):
         else:
             print ("Missing field?")
 
-        teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()) ]
+        teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()), _cf(self.context['teacher_form']['address'].value()), _cf(self.context['teacher_form']['city'].value()), _cf(self.context['teacher_form']['state'].value()), _cf(self.context['teacher_form']['zip_code'].value()), _cf(self.context['teacher_form']['country'].value()),]
         if all(teacher_form_fields):
             print ("changing teacher data!")
         else:
@@ -802,6 +812,7 @@ class DownloadEntriesView(View ):
             'Teacher: First Name',
             'Teacher: Last Name',
             'Teacher: Email',
+            'Teacher: Address',
             'Teacher: CMTANC Code',
 
             'Competitors: First Name',
@@ -844,6 +855,7 @@ class DownloadEntriesView(View ):
             row.append( entry.teacher.first_name )
             row.append( entry.teacher.last_name )
             row.append( entry.teacher.email )
+            row.append( entry.teacher.living_address() )
             row.append( entry.teacher.cmtanc_code )
 
             # Lead Performer Address
