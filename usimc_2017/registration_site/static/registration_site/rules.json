@@ -191,8 +191,8 @@
         "per_contestant_yes_international": 130
       }
     },
-    "chamber_ensemble": {
-      "name": "Chamber Ensemble",
+    "chamber_ensemble_and_piano_duet": {
+      "name": "Chamber Ensemble and Piano Duet",
       "ensemble": {
         "max_competitors": 6
       },
