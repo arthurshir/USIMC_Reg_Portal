@@ -1,4 +1,0 @@
-Watching and packaging assets
-./node_modules/.bin/webpack --config webpack.config.js --watch
-sudo ./manage.py runserver 0.0.0.0:80
-
