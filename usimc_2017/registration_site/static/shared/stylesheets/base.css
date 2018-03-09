@@ -102,7 +102,7 @@ table {
 
 .navbar {
   min-height: 70px !important;
-  background-color: #9C0D38; }
+  background-color: #6B174F; }
   .navbar .navbar-brand {
     padding: 10px; }
     .navbar .navbar-brand .navbar-wrapper {
@@ -157,7 +157,7 @@ form {
   line-height: 30px; }
 
 a {
-  color: #9C0D38; }
+  color: #6B174F; }
 
 .text-centered {
   text-align: center; }
@@ -244,9 +244,9 @@ textarea.parsley-error,
   border-radius: 3px;
   font-weight: 200;
   color: white;
-  background-color: #9C0D38; }
+  background-color: #6B174F; }
   .btn-submit:hover, .btn-login:hover {
-    background-color: #9E3A58; }
+    background-color: #9B9499; }
 
 .btn-login {
   width: 100%; }
