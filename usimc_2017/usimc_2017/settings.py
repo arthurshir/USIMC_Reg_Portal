@@ -150,11 +150,12 @@ LOGIN_URL = '/login/'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Email
-EMAIL_HOST = 'smtp.usimccompetition.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER', 'invalid' )
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', 'invalid' )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER', 'invalid' )
 ENABLE_EMAILS_FOR_DEBUG = False
 
 # Backups
