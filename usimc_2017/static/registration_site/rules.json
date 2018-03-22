@@ -192,7 +192,7 @@
       }
     },
     "chamber_ensemble_and_piano_duet": {
-      "name": "Chamber Ensemble and Piano Duet ",
+      "name": "Chamber Ensemble and Piano Duet",
       "ensemble": {
         "max_competitors": 6
       },
