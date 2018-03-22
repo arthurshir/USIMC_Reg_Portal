@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from . import models
 from . import usimc_data
 from . import usimc_rules
@@ -16,6 +17,9 @@ def base_input_attrs(placeholder, required = False):
 def text_input_widget(placeholder, required=False):
     attrs = base_input_attrs(placeholder=placeholder, required=required)
     return forms.TextInput(attrs=attrs)
+def file_input_widget(placeholder, required=False):
+    attrs = base_input_attrs(placeholder=placeholder, required=required)
+    return forms.ClearableFileInput(attrs=attrs)
 def email_input_widget(placeholder, required=False):
     attrs = base_input_attrs(placeholder=placeholder, required=required)
     attrs['type'] = 'email'
@@ -79,7 +83,7 @@ class PieceForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = models.Person
-        fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'month', 'day', 'year']
+        fields = ['first_name', 'last_name', 'instrument', 'address', 'city', 'state', 'zip_code', 'country', 'month', 'day', 'year', 'birth_certificate_image']
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last name*', required=True ),
@@ -92,7 +96,24 @@ class PersonForm(forms.ModelForm):
             'month': text_input_widget(placeholder='MM', required=True ),
             'day': text_input_widget(placeholder='DD', required=True ),
             'year': text_input_widget(placeholder='YYYY', required=True ),
+            'birth_certificate_image': file_input_widget(placeholder='Upload an image of your Birth Certificate', required=True),
         }
+
+    def __init__(self, *args, **kwargs):
+        self.max_upload_size = kwargs.pop('max_upload_size', None)
+        if not self.max_upload_size:
+            self.max_upload_size = settings.MAX_UPLOAD_SIZE
+        super(PersonForm, self).__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super(PersonForm, self).clean(*args, **kwargs)
+        try:
+            if data.size > self.max_upload_size:
+                raise forms.ValidationError(_('File size must be under %s. Current file size is %s.') % (filesizeformat(self.max_upload_size), filesizeformat(data.size)))
+        except AttributeError:
+            pass
+
+        return data
 
 class TeacherForm(forms.ModelForm):
     class Meta:

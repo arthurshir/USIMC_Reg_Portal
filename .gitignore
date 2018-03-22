@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+documents/
+
 .sass-cache/
 .usimc_2017/static/
 .env

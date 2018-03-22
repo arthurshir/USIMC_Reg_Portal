@@ -220,9 +220,11 @@ class ApplicationPart2View(View):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
 
+        print("Request\nFILES: {}\n POST: {}".format(request.FILES, request.POST))
+
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
-        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, request.FILES, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
         if entry.is_ensemble():
@@ -262,6 +264,7 @@ class ApplicationPart2View(View):
         entry.lead_performer.month = _cf(self.context['lead_competitor_form']['month'].value())
         entry.lead_performer.day = _cf(self.context['lead_competitor_form']['day'].value())
         entry.lead_performer.year = _cf(self.context['lead_competitor_form']['year'].value())
+        entry.lead_performer.birth_certificate_image = _cf(self.context['lead_competitor_form']['birth_certificate_image'].value())
         entry.lead_performer.save()
 
         if entry.is_ensemble():
@@ -398,6 +401,7 @@ class ApplicationPart2View(View):
         add_blank_error('lead_competitor_form', 'month', entry.lead_performer.month )
         add_blank_error('lead_competitor_form', 'day', entry.lead_performer.day )
         add_blank_error('lead_competitor_form', 'year', entry.lead_performer.year )
+        add_blank_error('lead_competitor_form', 'birth_certificate_image', entry.lead_performer.birth_certificate_image )
 
         if entry.awards_include_youth() and not entry.validate_youth_youtube_link_validation():
             if entry.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE \
@@ -474,7 +478,7 @@ class EditApplicationView(View):
         # Collect forms
         self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
         self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
-        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
+        self.context['lead_competitor_form'] = forms.PersonForm(request.POST, request.FILES, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         if entry.is_ensemble():
             self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)

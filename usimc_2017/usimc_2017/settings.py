@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'dbbackup',  # django-dbbackup
     'django_crontab',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+# File upload
+MAX_UPLOAD_SIZE = 3000000
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN = os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' )
+DROPBOX_ROOT_PATH = 'usimc_2018'
+
+# Backups
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' ),
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -158,11 +170,6 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER', 'invalid' )
 ENABLE_EMAILS_FOR_DEBUG = False
 
-# Backups
-DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DBBACKUP_STORAGE_OPTIONS = {
-    'oauth2_access_token': os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' ),
-}
 
 # CRON JOBS
 CRONJOBS = [

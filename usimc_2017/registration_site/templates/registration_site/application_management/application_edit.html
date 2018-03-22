@@ -58,7 +58,8 @@
   </div>
   {% endif %}
   <div style="height: 14px"></div>
-  <form class="form-inline" id="application-form" action="." method="post">
+  <form class="form-inline" id="application-form" action="." method="post" enctype="multipart/form-data">
+    hi
     {% csrf_token %}
     <div class="flex-column flex-center">
       <div>
