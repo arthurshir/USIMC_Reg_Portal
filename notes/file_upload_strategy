@@ -1,0 +1,10 @@
+
+
+Todos:
+x - Find out if uploading a file to dropbox with the same name will replace it
+  - Yes it will https://stackoverflow.com/questions/34964473/overwrite-a-file-with-dropbox-api-v2-in-python
+  - dbx.files_upload(data, '/file.py', mode=dropbox.files.WriteMode.overwrite)
+
+- Everytime a post request is sent, upload to dropbox
+  - Name it as ApplicationID_Firstname_lastname
+  - If it already exists, just replace it

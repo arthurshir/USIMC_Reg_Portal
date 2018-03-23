@@ -1,3 +1,28 @@
+Sunday 3/22/18
+- Add file upload limit
+- Unit test pricing.
+- Unit test email and summary.
+- competitor information first parents first.
+
+Saturday 3/10/18 Todos
+x - Add and verify file upload as needed
+x - Add new members
+
+Saturday 3/10/18 Todos
+- Add and verify file upload as needed
+x - Set up new URL
+x - Set up letsencrypt
+
+Wednesday 3/7/18 Todos
+x - Reset data in database
+x - Verify and allow Stripe testing
+x - Fix Forgot Password
+x - Change note for new website to: "All applicants need to create a new account for the 2018 competition" and make it in purple.
+x - Fix Bug - Vocal ensemble shows up for sepcail theme
+
+3/2/18 Todos
+x - Host Website
+
 2/14/18 Todos
 - Add and verify file upload as needed
 
@@ -7,14 +32,17 @@ x - Change Birthday Check date
 x - Add Teacher field
 x  - Create new email for this year. Use @Usimc.org if possible
 
-Other Todos:
-  - Change name of project from "usimc_2017" to "usimc"
+Overall Todos:
+  - Add file upload limit
+  - Unit test pricing.
+  - Unit test email and summary.
+  - Verify database backup.
+  - Add Excel Generation.
+  - Add Email Verification.
   - Add FAQ pages
     - Remind them to use CMTANC Code
-  - Add Submission Editing
-  - Add Excel Generation
-  - Do user testing for Stripe
-  - Add pricing unit testing
+  - Change name of project from "usimc_2017" to "usimc"
+  No - Add Submission Editing
 
 Also:
   - Add charging of AWS bill

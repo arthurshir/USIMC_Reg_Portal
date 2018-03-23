@@ -19,3 +19,70 @@ Pricing Unit Tests:
   - per_contestant_yes_cmtanc
   - per_contestant_no_cmtanc
   - per_contestant_yes_international
+
+Delete all sessions:
+- from django.contrib.sessions.models import Session
+- Session.objects.all().delete()
+
+Running Nginx Uwsgi Server:
+1. sudo uwsgi --ini usimc_2017.ini
+2. 
+
+Example Stopping Uwsgi
+ps ax | grep uwsgi
+15005 pts/4    S      0:00 /ve/path/bin/uwsgi --ini config.ini
+15006 pts/4    S      0:00 /ve/path/bin/uwsgi --ini config.ini
+15007 pts/4    S      0:00 /ve/path/bin/uwsgi --ini config.ini
+
+sudo pkill -f uwsgi -9
+
+Debugging Uwsgi
+  Add this flag --honour-stdin and undaemonize Uwsgi
+
+
+sudo service nginx restart 
+sudo service uwsgi restart
+
+
+
+Gotchas:
+- Uwsgi chdir = /home/ubuntu/Ling_Registration_Portal/
+- Nginx Configuration
+    - Nginx /etc/nginx/sites-available
+- UWsgi Configuration
+  - usimc_2017.ini - Uwsgi chdir = /home/ubuntu/Ling_Registration_Portal/
+
+Locations:
+- Nginx logs - /var/log/nginx
+
+
+find . -name "pattern" -print
+
+
+
+Postgresql:
+
+Access Database
+  - sudo su - postgres
+  - psql
+  - \connect usimc
+
+Usefull
+  - \dt - list tables when connected to database
+  - \list - list databases
+
+
+
+Nginx Certbox:
+- Install certbox nginx plugin
+  - `sudo apt install python-certbot-nginx`
+- Set up Domains
+  - `sudo certbot --nginx -d usimccompetition.com -d www.usimccompetition.com`
+  - Check the ip
+    - `dig +short A www.usimccompetition.com`
+    - `dig +short A usimccompetition.com`
+
+
+
+Django-storages
+- pip install -e 'git+https://github.com/jschneier/django-storages.git#egg=django-storages'
