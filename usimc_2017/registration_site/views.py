@@ -220,7 +220,7 @@ class ApplicationPart2View(View):
         usimc_user = get_usimc_user(request.user)
         entry = get_entry(request.user, self.kwargs['pk'])
 
-        print("Request\nFILES: {}\n POST: {}".format(request.FILES, request.POST))
+#        print("Request\nFILES: {}\n POST: {}".format(request.FILES, request.POST))
 
         # Collect forms
         self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
