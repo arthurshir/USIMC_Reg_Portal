@@ -444,6 +444,7 @@ class EnsembleMember(Model):
     month = CharField(null=True, blank=True, max_length=2)
     day = CharField(null=True, blank=True, max_length=2)
     year = CharField(null=True, blank=True, max_length=4)
+    birth_certificate_image = ImageField(null=True, blank=True, upload_to=person_image_directory_path)
 
     created_at = DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)

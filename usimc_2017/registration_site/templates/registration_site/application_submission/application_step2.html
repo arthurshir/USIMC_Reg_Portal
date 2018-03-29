@@ -211,7 +211,7 @@
               </div>
               <div class="col-md-12 application-column">
                 <div style="height:10px;"></div>
-                <div class="form-section-subheader">Birth Certificate*</div>
+                <div class="form-section-subheader">Birth Certificate*  (Please upload in format "firstname_lastname")</div>
                 {{ lead_competitor_form.birth_certificate_image }}
                 {{ lead_competitor_form.birth_certificate_image.errors }}
               </div>
@@ -259,6 +259,12 @@
               <div class="col-md-2 application-column">
                 {{ form.year }}
                 {{ form.year.errors }}
+              </div>
+              <div class="col-md-12 application-column">
+                <div style="height:10px;"></div>
+                <div class="form-section-subheader">Birth Certificate*  (Please upload in format "firstname_lastname")</div>
+                {{ form.birth_certificate_image }}
+                {{ form.birth_certificate_image.errors }}
               </div>
             </div>
           </div>

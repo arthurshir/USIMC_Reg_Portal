@@ -228,7 +228,7 @@ class ApplicationPart2View(View):
         self.context['teacher_form'] = forms.TeacherForm(request.POST, prefix=teacher_form_prefix, instance=entry.teacher)
         self.context['contact_form'] = forms.ParentContactForm(request.POST, prefix=parent_contact_form_prefix, instance=entry.parent_contact)
         if entry.is_ensemble():
-            self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
+            self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, request.FILES, prefix=ensemble_member_formset_prefix)
 
         # Save html field data
         entry.is_not_international = request.POST.get('lives-in-united-states') == "1"
@@ -286,6 +286,7 @@ class ApplicationPart2View(View):
                 contestant.month = _cf(form['month'].value())
                 contestant.day = _cf(form['day'].value())
                 contestant.year = _cf(form['year'].value())
+                contestant.birth_certificate_image = _cf(form['birth_certificate_image'].value())
                 contestant.entry = entry
                 contestant.save()
 
@@ -418,6 +419,7 @@ class ApplicationPart2View(View):
                 add_blank_error_form(form, 'month', _cf(form['month'].value()))
                 add_blank_error_form(form, 'day', _cf(form['day'].value()))
                 add_blank_error_form(form, 'year', _cf(form['year'].value()))
+                add_blank_error_form(form, 'birth_certificate_image', _cf(form['birth_certificate_image'].value()))
 
         for form in self.context['piece_formset']:
             add_blank_error_form(form, 'title', _cf(form['title'].value()))
@@ -481,7 +483,7 @@ class EditApplicationView(View):
         self.context['lead_competitor_form'] = forms.PersonForm(request.POST, request.FILES, prefix=lead_competitor_form_prefix, instance=entry.lead_performer)
         if entry.is_ensemble():
             self.context['ensemble_member_formset'] = EnsembleMemberFormset(request.POST, prefix=ensemble_member_formset_prefix)
-        self.context['piece_formset'] = PieceFormset(request.POST, prefix=piece_formset_prefix)
+        self.context['piece_formset'] = PieceFormset(request.POST, request.FILES, prefix=piece_formset_prefix)
 
         ## Validate all data and add messages to forms
         contact_form_fields = [_cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['first_name'].value()), _cf(self.context['contact_form']['email'].value()), _cf(self.context['contact_form']['phone_number'].value()) ]
@@ -496,14 +498,14 @@ class EditApplicationView(View):
         else:
             print ("Missing field?")
 
-        lead_performer_form_fields = [_cf(self.context['lead_competitor_form']['first_name'].value()), _cf(self.context['lead_competitor_form']['last_name'].value()), _cf(self.context['lead_competitor_form']['instrument'].value()), _cf(self.context['lead_competitor_form']['address'].value()), _cf(self.context['lead_competitor_form']['city'].value()), _cf(self.context['lead_competitor_form']['state'].value()), _cf(self.context['lead_competitor_form']['zip_code'].value()), _cf(self.context['lead_competitor_form']['country'].value()),]
+        lead_performer_form_fields = [_cf(self.context['lead_competitor_form']['first_name'].value()), _cf(self.context['lead_competitor_form']['last_name'].value()), _cf(self.context['lead_competitor_form']['instrument'].value()), _cf(self.context['lead_competitor_form']['address'].value()), _cf(self.context['lead_competitor_form']['city'].value()), _cf(self.context['lead_competitor_form']['state'].value()), _cf(self.context['lead_competitor_form']['zip_code'].value()), _cf(self.context['lead_competitor_form']['country'].value()), _cf(self.context['lead_competitor_form']['birth_certificate_image'].value())]
         if all(teacher_form_fields):
             print ("changing lead performer data!")
         else:
             print ("missing Field?")
         if entry.is_ensemble():
             for form in self.context['ensemble_member_formset']:
-                ensemble_member_form_fields = [_cf(form['first_name'].value()), _cf(form['last_name'].value()), _cf(form['instrument'].value())]
+                ensemble_member_form_fields = [_cf(form['first_name'].value()), _cf(form['last_name'].value()), _cf(form['instrument'].value()), _cf(form['birth_certificate_image'].value())]
                 if all(ensemble_member_form_fields):
                     print ("changing ensemble member data!")
                 else:
@@ -919,7 +921,7 @@ def get_performer(user, pk):
 ## Constants
 # Formset factories
 PieceFormset = modelformset_factory(models.Piece, form=forms.PieceForm, max_num=20, extra=0, can_delete=True, fields=['title', 'opus', 'movement', 'composer', 'minutes', 'seconds', 'youtube_link'])
-EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'month', 'day', 'year'])
+EnsembleMemberFormset = modelformset_factory(models.EnsembleMember, form=forms.EnsembleMemberForm, max_num=20, extra=0, can_delete=True, fields=['first_name', 'last_name', 'instrument', 'month', 'day', 'year', 'birth_certificate_image'])
 # Form prefixes
 piece_formset_prefix = 'pieces'
 ensemble_member_formset_prefix = 'ensemble_member'

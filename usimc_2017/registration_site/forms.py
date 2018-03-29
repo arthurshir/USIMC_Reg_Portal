@@ -155,6 +155,7 @@ class EnsembleMemberForm(forms.ModelForm):
             'month': text_input_widget(placeholder='MM', required=True ),
             'day': text_input_widget(placeholder='DD', required=True ),
             'year': text_input_widget(placeholder='YYYY', required=True ),
+            'birth_certificate_image': file_input_widget(placeholder='Upload an image of your Birth Certificate', required=True),
         }
 
     helper = FormHelper()
