@@ -418,7 +418,7 @@ class Person(Model):
         return birthday >= cutoff
 
     def validate(self):
-        return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday() and self.validate_birthday(self.birthday()))
+        return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday() and self.validate_birthday(self.birthday()) and self.birth_certificate_image)
 
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
@@ -467,7 +467,7 @@ class EnsembleMember(Model):
         return birthday >= cutoff
 
     def validate(self):
-        return not not (self.first_name and self.last_name and self.instrument and self.birthday() and self.validate_birthday(self.birthday()))
+        return not not (self.first_name and self.last_name and self.instrument and self.birthday() and self.validate_birthday(self.birthday()) and self.birth_certificate_image)
 
     def birthday_string(self):
         return xstr(self.birthday())
