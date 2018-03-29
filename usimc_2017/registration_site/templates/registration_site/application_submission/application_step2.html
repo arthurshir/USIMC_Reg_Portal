@@ -77,78 +77,6 @@
           </select>
           <div style="height: 14px"></div>
 
-          <div class="form-section-header">Parent Contact</div>
-          {{ teacher_form.non_field_errors }}
-          {{ contact_form.id }}
-          <div class="row">
-            <div class="col-md-6 application-column">
-              {{ contact_form.first_name}}
-                {{ contact_form.first_name.errors }}
-            </div>
-            <div class="col-md-6 application-column">
-              {{ contact_form.last_name }}
-                {{ contact_form.last_name.errors }}
-            </div>
-            <div class="col-md-12 application-column">
-              {{ contact_form.email }}
-                {{ contact_form.email.errors }}
-            </div>
-            <div class="col-md-12 application-column">
-              {{ contact_form.phone_number }}
-                {{ contact_form.phone_number.errors }}
-            </div>
-          </div>
-          <div style="height: 14px"></div>
-        </div> <!-- parent encosing div -->
-
-        <div class="teacher-div">
-          <div class="form-section-header">Teacher</div>
-          {{ teacher_form.non_field_errors }}
-          {{ teacher_form.id }}
-          <div class="row">
-            <div class="col-md-6 application-column">
-              {{teacher_form.first_name}}
-                {{teacher_form.first_name.errors}}
-            </div>
-            <div class="col-md-6 application-column">
-              {{teacher_form.last_name}}
-                {{teacher_form.last_name.errors}}
-            </div>
-            <div class="col-md-12 application-column">
-              {{teacher_form.email}}
-                {{teacher_form.email.errors}}
-            </div>
-            <div class="col-md-12 application-column">
-              <div class="form-section-subheader">Address</div>
-            </div>
-            <div class="col-md-12 application-column">
-              {{ teacher_form.address }}
-              {{ teacher_form.address.errors }}
-            </div>
-            <div class="col-md-5 application-column">
-              {{ teacher_form.city }}
-              {{ teacher_form.city.errors }}
-            </div>
-            <div class="col-md-2 application-column">
-              {{ teacher_form.state }}
-              {{ teacher_form.state.errors }}
-            </div>
-            <div class="col-md-2 application-column">
-              {{ teacher_form.zip_code }}
-              {{ teacher_form.zip_code.errors }}
-            </div>
-            <div class="col-md-3 application-column">
-              {{ teacher_form.country }}
-              {{ teacher_form.country.errors }}
-            </div>
-            <div class="col-md-12 application-column">
-              {{teacher_form.cmtanc_code}}
-              {{teacher_form.cmtanc_code.errors}}
-            </div>
-          </div>
-          <div style="height: 14px"></div>
-        </div> <!-- teacher enclosing div -->
-
         <div class="lead-competitor-div">
           <div class="form-section-header">Competitors</div>
           {{ lead_competitor_form.non_field_errors }}
@@ -273,6 +201,79 @@
           <div style="height: 14px"></div>
         </div>
         {% endif %}
+
+          <div class="form-section-header">Parent Contact</div>
+          {{ teacher_form.non_field_errors }}
+          {{ contact_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{ contact_form.first_name}}
+                {{ contact_form.first_name.errors }}
+            </div>
+            <div class="col-md-6 application-column">
+              {{ contact_form.last_name }}
+                {{ contact_form.last_name.errors }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.email }}
+                {{ contact_form.email.errors }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{ contact_form.phone_number }}
+                {{ contact_form.phone_number.errors }}
+            </div>
+          </div>
+          <div style="height: 14px"></div>
+        </div> <!-- parent encosing div -->
+
+        <div class="teacher-div">
+          <div class="form-section-header">Teacher</div>
+          {{ teacher_form.non_field_errors }}
+          {{ teacher_form.id }}
+          <div class="row">
+            <div class="col-md-6 application-column">
+              {{teacher_form.first_name}}
+                {{teacher_form.first_name.errors}}
+            </div>
+            <div class="col-md-6 application-column">
+              {{teacher_form.last_name}}
+                {{teacher_form.last_name.errors}}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.email}}
+                {{teacher_form.email.errors}}
+            </div>
+            <div class="col-md-12 application-column">
+              <div class="form-section-subheader">Address</div>
+            </div>
+            <div class="col-md-12 application-column">
+              {{ teacher_form.address }}
+              {{ teacher_form.address.errors }}
+            </div>
+            <div class="col-md-5 application-column">
+              {{ teacher_form.city }}
+              {{ teacher_form.city.errors }}
+            </div>
+            <div class="col-md-2 application-column">
+              {{ teacher_form.state }}
+              {{ teacher_form.state.errors }}
+            </div>
+            <div class="col-md-2 application-column">
+              {{ teacher_form.zip_code }}
+              {{ teacher_form.zip_code.errors }}
+            </div>
+            <div class="col-md-3 application-column">
+              {{ teacher_form.country }}
+              {{ teacher_form.country.errors }}
+            </div>
+            <div class="col-md-12 application-column">
+              {{teacher_form.cmtanc_code}}
+              {{teacher_form.cmtanc_code.errors}}
+            </div>
+          </div>
+          <div style="height: 14px"></div>
+        </div> <!-- teacher enclosing div -->
+
 
         <div class="piece-div">
           <div class="form-section-header">Pieces</div>
