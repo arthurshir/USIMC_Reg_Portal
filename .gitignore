@@ -9,7 +9,7 @@ documents/
 .usimc_2017/static/
 .env
 *.org
-usimc_2017/registration_site/migrations
+usimc_2017/registration_site/migrations/
 
 # C extensions
 *.so
