@@ -402,7 +402,8 @@ class ApplicationPart2View(View):
         add_blank_error('lead_competitor_form', 'month', entry.lead_performer.month )
         add_blank_error('lead_competitor_form', 'day', entry.lead_performer.day )
         add_blank_error('lead_competitor_form', 'year', entry.lead_performer.year )
-        add_blank_error('lead_competitor_form', 'birth_certificate_image', entry.lead_performer.birth_certificate_image )
+        print(entry.lead_performer.birth_certificate_image)
+        add_blank_error('lead_competitor_form', 'birth_certificate_image', "not_empty" if bool(entry.lead_performer.birth_certificate_image) else None) # reason for bool() -> https://stackoverflow.com/questions/5213025/how-to-check-imagefield-is-empty
 
         if entry.awards_include_youth() and not entry.validate_youth_youtube_link_validation():
             if entry.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE \
