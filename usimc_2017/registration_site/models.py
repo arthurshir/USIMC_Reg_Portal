@@ -150,11 +150,15 @@ class Entry(Model):
             if self.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHINESE_TRADITIONAL_INSTRUMENTS_ENSEMBLE \
                 or self.instrument_category == usimc_rules.INSTRUMENT_CHOICE_CHAMBER_ENSEMBLE:
                 return len(
-                    filter(lambda x: x.youtube_link != None, self.pieces.all())
+                    list(
+                        filter(lambda x: x.youtube_link != None, self.pieces.all())
+                        )
                     ) >= 1
 
             return len(
-                filter(lambda x: x.youtube_link != None, self.pieces.all())
+                list(
+                    filter(lambda x: x.youtube_link != None, self.pieces.all())
+                    )
                 ) >= 2
 
     def award_strings(self):
