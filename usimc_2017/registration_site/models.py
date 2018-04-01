@@ -356,6 +356,7 @@ class Teacher(Model):
     zip_code = CharField(null=True, blank=True, max_length=200)
     country = CharField(null=True, blank=True, max_length=200)
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
+    phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
 
     def living_address(self):
         return xstr(self.address) + " " + xstr(self.city) + ", " + xstr(self.state) + " " + xstr(self.zip_code) + ", " + xstr(self.country)
@@ -372,7 +373,7 @@ class Teacher(Model):
         except ValidationError:
             return False
         else:
-            return not not (self.first_name and self.last_name and (self.has_valid_cmtanc_code() if self.cmtanc_code else True))
+            return not not (self.first_name and self.last_name and self.phone_number and (self.has_valid_cmtanc_code() if self.cmtanc_code else True))
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)

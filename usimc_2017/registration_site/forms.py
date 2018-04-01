@@ -123,6 +123,7 @@ class TeacherForm(forms.ModelForm):
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
             'email': email_input_widget(placeholder='Email*', required=True ),
+            'phone_number': phone_number_input_widget(placeholder='Phone Number*', required=True ),
             'address': text_input_widget(placeholder='Address*', required=True ),
             'city': text_input_widget(placeholder='City*', required=True ),
             'state': text_input_widget(placeholder='State*', required=True ),
@@ -139,6 +140,7 @@ class TeacherForm(forms.ModelForm):
             Div('first_name', css_class="col-md-6"),
             Div('last_name', css_class="col-md-6"),
             Div('email', css_class="col-md-12"),
+            Div('phone_number', css_class="col-md-12"),
             Div('cmtanc_code', css_class="col-md-12"),
             css_class="row"
         ),
