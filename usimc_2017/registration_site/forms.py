@@ -118,7 +118,7 @@ class PersonForm(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = models.Teacher
-        fields = ['first_name', 'last_name', 'email', 'cmtanc_code', 'address', 'city', 'state', 'zip_code', 'country']
+        fields = ['first_name', 'last_name', 'email', 'cmtanc_code', 'address', 'city', 'state', 'zip_code', 'country', 'phone_number']
         widgets = {
             'first_name': text_input_widget(placeholder='First Name*', required=True ),
             'last_name': text_input_widget(placeholder='Last Name*', required=True ),
