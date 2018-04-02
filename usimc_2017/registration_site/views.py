@@ -386,7 +386,7 @@ class ApplicationPart2View(View):
         add_blank_error('teacher_form', 'first_name', entry.teacher.first_name)
         add_blank_error('teacher_form', 'last_name', entry.teacher.last_name)
         add_blank_error('teacher_form', 'email', entry.teacher.email)
-        add_blank_error('teacher_form', 'phone_number', entry.parent_contact.phone_number)
+        add_blank_error('teacher_form', 'phone_number', entry.teacher.phone_number)
         add_blank_error('teacher_form', 'address', entry.teacher.address )
         add_blank_error('teacher_form', 'city', entry.teacher.city )
         add_blank_error('teacher_form', 'state', entry.teacher.state )
@@ -496,7 +496,7 @@ class EditApplicationView(View):
         else:
             print ("Missing field?")
 
-        teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()),  _cf(self.context['contact_form']['phone_number'].value()), _cf(self.context['teacher_form']['address'].value()), _cf(self.context['teacher_form']['city'].value()), _cf(self.context['teacher_form']['state'].value()), _cf(self.context['teacher_form']['zip_code'].value()), _cf(self.context['teacher_form']['country'].value()),]
+        teacher_form_fields = [_cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['first_name'].value()), _cf(self.context['teacher_form']['email'].value()),  _cf(self.context['teacher_form']['phone_number'].value()), _cf(self.context['teacher_form']['address'].value()), _cf(self.context['teacher_form']['city'].value()), _cf(self.context['teacher_form']['state'].value()), _cf(self.context['teacher_form']['zip_code'].value()), _cf(self.context['teacher_form']['country'].value()),]
         if all(teacher_form_fields):
             print ("changing teacher data!")
         else:
