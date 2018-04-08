@@ -144,6 +144,7 @@ DROPBOX_ROOT_PATH = 'usimc_2018'
 DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DBBACKUP_STORAGE_OPTIONS = {
     'oauth2_access_token': os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' ),
+    'location': '/backups/'
 }
 
 # Static files (CSS, JavaScript, Images)
