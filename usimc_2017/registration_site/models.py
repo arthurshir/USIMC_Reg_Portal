@@ -30,6 +30,8 @@ def xstr(s):
         return ''
     if isinstance(s, int):
         return str(s)
+    if isinstance(s, float):
+        return str(s)
     else:
         return s
 
@@ -262,6 +264,7 @@ class Entry(Model):
         context['is_not_international_string'] = self.is_not_international_string()
         context['lead_performer_birthday_string'] = self.lead_performer.birthday_string()
         context['lead_performer_home_address_string'] = self.lead_performer.home_address_string()
+        context['teacher_home_address_string'] = self.teacher.home_address_string()
         context['ensemble_members'] = map(lambda x: {
                 'first_name': x.first_name,
                 'last_name': x.last_name,
@@ -358,8 +361,8 @@ class Teacher(Model):
     cmtanc_code = CharField(null=True, blank=True, max_length=200, verbose_name='Teacher\'s CMTANC Membership ID')
     phone_number = CharField(null=True, blank=True, max_length=200, verbose_name='Phone Number')
 
-    def living_address(self):
-        return xstr(self.address) + " " + xstr(self.city) + ", " + xstr(self.state) + " " + xstr(self.zip_code) + ", " + xstr(self.country)
+    def home_address_string(self):
+        return xstr(self.address) + ', ' + xstr(self.city) + ', ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country)
 
     def has_valid_cmtanc_code(self):
         return self.cmtanc_code in usimc_data.get_cmtanc_codes()

@@ -5,16 +5,6 @@
   Instrument Category: {{ instrument_category_string }}
   International Entry: {{ is_not_international_string }}
 
-  Parent of contestant:
-    Name: {{ entry.parent_contact.first_name }} {{ entry.parent_contact.last_name }}
-    Email: {{ entry.parent_contact.email }}
-    Phone Number: {{ entry.parent_contact.phone_number }}
-
-  Teacher:
-    Name: {{ entry.teacher.first_name }} {{ entry.teacher.last_name }}
-    Email: {{ entry.teacher.email }}
-    CMTANC Code: {{ entry.teacher.cmtanc_code }}
-
   Contestants:
     Name: {{ entry.lead_performer.first_name }} {{ entry.lead_performer.last_name }}
     Instrument: {{ entry.lead_performer.instrument }}
@@ -24,6 +14,18 @@
     Name: {{ ensemble_member.first_name }} {{ ensemble_member.last_name }}
     Instrument: {{ ensemble_member.instrument }}
     Birthday: {{ ensemble_member.birthday_string }}{% endfor %}
+
+  Parent of contestant:
+    Name: {{ entry.parent_contact.first_name }} {{ entry.parent_contact.last_name }}
+    Email: {{ entry.parent_contact.email }}
+    Phone Number: {{ entry.parent_contact.phone_number }}
+
+  Teacher:
+    Name: {{ entry.teacher.first_name }} {{ entry.teacher.last_name }}
+    Email: {{ entry.teacher.email }}
+    CMTANC Code: {{ entry.teacher.cmtanc_code }}
+    Home Address: {{ teacher_home_address_string }}
+    Phone Number: {{ entry.teacher.phone_number }}
 
   Pieces:
     {% for piece in pieces %}Title: {{ piece.title }}

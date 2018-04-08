@@ -712,8 +712,8 @@ class PaymentView(View):
             email = EmailMessage(
                 'USIMC Entry Confirmation' + (' - TESTING (Not a real applicant)' if settings.DEBUG else ''),
                 entry.confirmation_email_string(),
-                'usimc2017tech@gmail.com',
-                [user.username, 'info@usimc.org'],
+                settings.DEFAULT_FROM_EMAIL,
+                [user.username, entry.parent_contact.email],
             )
             email.attach_file(os.path.join(BASE_DIR, 'USIMC_Checklist.pdf'))
             if (not settings.DEBUG) or (settings.DEBUG and settings.ENABLE_EMAILS_FOR_DEBUG):
@@ -739,7 +739,8 @@ def payment_confirmation(request, *args, **kwargs):
     entry = get_entry(request.user, kwargs['pk'])
     entry.save()
     context['entry'] = entry
-    context['email'] = entry.parent_contact.email
+    context['username_email'] = entry.parent_contact.email
+    context['parent_email'] = entry.parent_contact.email
     return render(request, 'registration_site/application_submission/payment_confirmation.html', context)
 
 class ApplicationListView(View):
