@@ -713,9 +713,8 @@ class PaymentView(View):
                 'USIMC Entry Confirmation' + (' - TESTING (Not a real applicant)' if settings.DEBUG else ''),
                 entry.confirmation_email_string(),
                 settings.DEFAULT_FROM_EMAIL,
-                [user.username, entry.parent_contact.email],
+                [user.username, entry.parent_contact.email, 'info@usimc.org'],
             )
-            email.attach_file(os.path.join(BASE_DIR, 'USIMC_Checklist.pdf'))
             if (not settings.DEBUG) or (settings.DEBUG and settings.ENABLE_EMAILS_FOR_DEBUG):
                 email.send()
 

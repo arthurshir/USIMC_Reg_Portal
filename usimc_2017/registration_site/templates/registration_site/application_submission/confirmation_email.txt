@@ -9,7 +9,7 @@ Payment Information:
 {{ pricing_string }}
 PAID: {{ price }} on {{ charge_date }}
 
-If you have any questions, please reply to this email.
+If you have any questions, please reply all recipients of this email.
 
 Thank you,
 USIMC 2017 Registration
