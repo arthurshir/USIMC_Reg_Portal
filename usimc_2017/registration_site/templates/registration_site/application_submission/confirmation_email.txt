@@ -1,7 +1,5 @@
 Dear {{ entry.parent_contact.first_name }} {{ entry.parent_contact.last_name }},
 
-Please remember to mail in the items on the checklist attached.
-
 Thank you for applying for the 2017 USIMC. Good luck! Here is your form you have submitted:
 {{ complete_description_string }}
 
