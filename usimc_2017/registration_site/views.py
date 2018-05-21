@@ -244,7 +244,7 @@ class ApplicationPart2View(View):
         entry.teacher.state = _cf(self.context['teacher_form']['state'].value())
         entry.teacher.zip_code = _cf(self.context['teacher_form']['zip_code'].value())
         entry.teacher.country = _cf(self.context['teacher_form']['country'].value())
-        entry.teacher.cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value())
+        entry.teacher.cmtanc_code = _cf(self.context['teacher_form']['cmtanc_code'].value().strip(' '))
         print (entry.teacher.cmtanc_code)
         entry.teacher.save()
 
