@@ -5,6 +5,7 @@ __pycache__/
 
 documents/
 
+.DS_Store
 .sass-cache/
 .usimc_2017/static/
 .env

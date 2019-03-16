@@ -95,8 +95,8 @@ WSGI_APPLICATION = 'usimc_2017.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'usimc',
-        'USER': 'usimc',
+        'NAME': os.environ.get('DATABASE_NAME', 'usimc'),
+        'USER': os.environ.get('DATABASE_USER', 'usimc'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', '1234'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
