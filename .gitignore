@@ -7,10 +7,10 @@ documents/
 
 .DS_Store
 .sass-cache/
-.usimc_2017/static/
+.usimc/static/
 .env
 *.org
-usimc_2017/registration_site/migrations/
+usimc/registration_site/migrations/
 
 # C extensions
 *.so

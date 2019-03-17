@@ -112,10 +112,10 @@ class Entry(Model):
     signature = CharField(max_length=500, blank=True, null=True)
 
     # Relations
-    parent_contact = OneToOneField('ParentContact', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Parent Contact")
-    teacher = OneToOneField('Teacher', null=True, on_delete=CASCADE, related_name="entry", verbose_name="Teacher")
-    lead_performer = OneToOneField('Person', null=True, on_delete=CASCADE, related_name="entry", verbose_name='Lead Performer')
-    usimc_user = ForeignKey('USIMCUser', related_name='entry', verbose_name='USIMC User')
+    parent_contact = OneToOneField('ParentContact', null=True, on_delete=SET_NULL, related_name="entry", verbose_name="Parent Contact")
+    teacher = OneToOneField('Teacher', null=True, on_delete=SET_NULL, related_name="entry", verbose_name="Teacher")
+    lead_performer = OneToOneField('Person', null=True, on_delete=SET_NULL, related_name="entry", verbose_name='Lead Performer')
+    usimc_user = ForeignKey('USIMCUser', on_delete=CASCADE, related_name='entry', verbose_name='USIMC User')
     # pieces -- Pieces Foreign Key
     # ensemble_members -- Ensemble Members Foreign Key
     # charges -- Ensemble Members Foreign Key
@@ -338,7 +338,7 @@ class Piece(Model):
         return not not(self.title and self.composer and self.minutes and self.seconds)
 
     # Relations
-    entry = ForeignKey('Entry', verbose_name='Piece')
+    entry = ForeignKey('Entry', on_delete=CASCADE, verbose_name='Piece')
 
     def basic_information_string(self):
         return xstr(self.title) + ', opus: ' + xstr(self.opus) + ', movement: ' + xstr(self.movement) + ', composer: ' + xstr(self.composer)
@@ -458,7 +458,7 @@ class EnsembleMember(Model):
     updated_at = AutoDateTimeField(default=timezone.now)
 
     # Relations
-    entry = ForeignKey('Entry', verbose_name='Ensemble Member')
+    entry = ForeignKey('Entry', on_delete=CASCADE, verbose_name='Ensemble Member')
 
     def birthday(self):
         if not (self.month and self.day and self.year):

@@ -1,3 +1,68 @@
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//                              USIMC 2019                                  //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+
+
+Sunday 4/17/19
+x - Change name of project from "usimc_2017" to "usimc"
+- Get base app running
+- Set up Dropbox Test
+- Set up Stripe Test
+- Try running tests
+- Test all routes
+- Do research into Dropbox security and other options. Set up Dropbox if needed
+- Get a general idea of how to refactor the codebase
+- Mock up new database schema
+
+
+Phase 1 Todos: - Get USIMC.org/registration done
+  A) Setup:
+    - Initial Cleaning up / Assessment Todos
+        - Set up Github Issues and branches
+        - Assess Stripe funds and the new API.
+        - Done:
+            x - Get working DB with DB dump
+            x - Set up EC2 Instances
+            - Figure out how to get Django app to work
+                x - Try it out locally
+                x - Update packages
+    - Infrastructure:
+        - Set up routing under usimc.org. Get it done and figure out how to restrict access.
+        - Figure out how you are going to do Docker
+        - Set up Jenkins to manage:
+            - Deployments
+            - Testing
+            - Continuous Integration / Continuous Development
+        - Set up Ansible to provision / use Docker
+            - Nginx, uWSGi, Django, PostgreSQL
+            - Add HTTPS to USIMC
+    - Done:
+        x - Set up Docker and Postgresql
+        x - Update the location of your repositories and etc.
+        x - Backup USIMC
+
+Future Phase Todos:
+  - Add file upload limit
+  - Unit test pricing.
+  - Unit test email generation.
+  - competitor information first parents first.
+  - Add Email Verification
+  - Add FAQ pages
+  - Remind them to use CMTANC Code
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//                              USIMC 2018                                  //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
+
 Sunday 3/22/18
 - Add file upload limit
 - Unit test pricing.
@@ -32,20 +97,14 @@ x - Change Birthday Check date
 x - Add Teacher field
 x  - Create new email for this year. Use @Usimc.org if possible
 
-Overall Todos:
-  - Add file upload limit
-  - Unit test pricing.
-  - Unit test email and summary.
-  - Verify database backup.
-  - Add Excel Generation.
-  - Add Email Verification.
-  - Add FAQ pages
-    - Remind them to use CMTANC Code
-  - Change name of project from "usimc_2017" to "usimc"
-  No - Add Submission Editing
 
-Also:
-  - Add charging of AWS bill
+
+
+//////////////////////////////////////////////////////////////////////////////
+//                                                                          //
+//                              USIMC 2017                                  //
+//                                                                          //
+//////////////////////////////////////////////////////////////////////////////
 
 4/25/17
 x - Added favicon

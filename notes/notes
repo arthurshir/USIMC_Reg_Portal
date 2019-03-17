@@ -1,3 +1,10 @@
+Fix:
+* Issue with mod-wsgi==4.5.15
+  * Install dev version: pip install https://github.com/GrahamDumpleton/mod_wsgi/archive/develop.zip
+* Error: pg_config executable not found.
+  * brew install postgresql
+
+
 Edit after submission:
   - Change anything that doesn't affect the price
     - Piece
@@ -25,7 +32,7 @@ Delete all sessions:
 - Session.objects.all().delete()
 
 Running Nginx Uwsgi Server:
-1. sudo uwsgi --ini usimc_2017.ini
+1. sudo uwsgi --ini usimc.ini
 2. 
 
 Example Stopping Uwsgi
@@ -50,7 +57,7 @@ Gotchas:
 - Nginx Configuration
     - Nginx /etc/nginx/sites-available
 - UWsgi Configuration
-  - usimc_2017.ini - Uwsgi chdir = /home/ubuntu/Ling_Registration_Portal/
+  - usimc.ini - Uwsgi chdir = /home/ubuntu/Ling_Registration_Portal/
 
 Locations:
 - Nginx logs - /var/log/nginx

@@ -62,7 +62,7 @@ class IndexView(View):
     context['competition_ended'] = settings.COMPETITION_ENDED
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('registration_site:dashboard')
         else:
             return redirect('registration_site:login')
@@ -84,7 +84,7 @@ class LoginView(View):
     context['form'] = forms.LoginForm
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('registration_site:dashboard')
 
         return render(request, 'registration_site/auth/login.html', self.context)
@@ -115,7 +115,7 @@ class RegisterView(View):
     context['form'] = forms.RegistrationForm
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('registration_site:dashboard')
         return render(request, 'registration_site/auth/register.html', self.context)
 
@@ -779,7 +779,7 @@ class AdminLoginView(View):
     context['form'] = forms.LoginForm
 
     def get(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return redirect('registration_site:admin_dashboard')
 
         return render(request, 'registration_site/auth/login.html', self.context)
