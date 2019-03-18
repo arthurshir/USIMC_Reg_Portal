@@ -15,19 +15,13 @@
         "viola",
         "cello",
         "vocal",
-        "classical_guitar",
-        "harp",
-        "celtic_harp",
-        "chamber_ensemble",
+        "marimba",
+        "woodwinds",
         "piano_duet",
+        "chamber_ensemble",
         "vocal_ensemble",
-        "chinese_traditional_instrument_zither",
-        "chinese_traditional_instrument_bowed_strings",
         "chinese_traditional_instrument_plucked_string",
-        "chinese_traditional_instrument_woodwinds",
-        "chinese_traditional_instrument_guqin",
-        "chinese_traditional_instrument_professional_zither",
-        "chinese_traditional_instruments_ensemble"
+        "chinese_traditional_instrument_bowed_strings"
       ]
     },
     "chinese_music_award": {
@@ -38,9 +32,9 @@
         "viola",
         "cello",
         "vocal",
-        "classical_guitar",
-        "harp",
-        "celtic_harp"
+        "marimba",
+        "woodwinds",
+        "piano_duet"
       ]
     },
     "special_theme_bach": {
@@ -51,13 +45,15 @@
         "viola",
         "cello",
         "vocal",
-        "classical_guitar",
-        "harp",
-        "celtic_harp"
+        "marimba",
+        "woodwinds",
+        "piano_duet",
+        "chinese_traditional_instrument_plucked_string",
+        "chinese_traditional_instrument_bowed_strings"
       ]
     }
   },
-  "age_measurement_date": 1527836400,
+  "age_measurement_date": 1559372400,
   "instrument_categories": { 
     "piano": {
       "name": "Piano",
@@ -67,7 +63,7 @@
         11,
         14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -81,10 +77,10 @@
       "name": "Violin",
       "ensemble": null,
       "age_groups": [
-        9,
+        8,
         13,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -100,7 +96,7 @@
       "age_groups": [
         14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -117,7 +113,7 @@
         11,
         14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -135,7 +131,7 @@
         12,
         14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -145,13 +141,14 @@
         "per_contestant_yes_international": 130
       }
     },
-    "classical_guitar": {
-      "name": "Classical Guitar",
+    "marimba": {
+      "name": "Marimba",
       "ensemble": null,
       "age_groups": [
         11,
+        14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -161,14 +158,14 @@
         "per_contestant_yes_international": 130
       }
     },
-    "harp": {
-      "name": "Harp",
+    "woodwinds": {
+      "name": "Woodwinds",
       "ensemble": null,
       "age_groups": [
         12,
-        15,
+        14,
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -178,28 +175,15 @@
         "per_contestant_yes_international": 130
       }
     },
-    "celtic_harp": {
-      "name": "Celtic Harp",
-      "ensemble": null,
-      "age_groups": [
-        18
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 80,
-        "per_contestant_no_cmtanc": 110,
-        "per_contestant_yes_international": 130
-      }
-    },
-    "chamber_ensemble": {
-      "name": "Chamber Music",
+    "piano_duet": {
+      "name": "Piano Duet",
       "ensemble": {
-        "max_competitors": 6
+        "max_competitors": 2
       },
       "age_groups": [
-        15,
-        30
+        12,
+        18,
+        100
       ],
       "max_pieces": 4,
       "max_length": 12,
@@ -209,14 +193,15 @@
         "per_contestant_yes_international": 70
       }
     },
-    "piano_duet": {
-      "name": "Piano Duet",
+    "chamber_ensemble": {
+      "name": "Chamber Music",
       "ensemble": {
         "max_competitors": 6
       },
       "age_groups": [
-        15,
-        30
+        12,
+        18,
+        100
       ],
       "max_pieces": 4,
       "max_length": 12,
@@ -232,8 +217,9 @@
         "max_competitors": 6
       },
       "age_groups": [
-        15,
-        30
+        12,
+        18,
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -243,15 +229,13 @@
         "per_contestant_yes_international": 70
       }
     },
-    "chinese_traditional_instrument_zither": {
-      "name": "Guzheng (Zither) - Chinese Traditional Instrument",
+    "chinese_traditional_instrument_plucked_string": {
+      "name": "Plucked String - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
-        11,
         14,
-        17,
-        22,
-        30
+        18,
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -265,62 +249,9 @@
       "name": "Bowed Strings - Chinese Traditional Instrument",
       "ensemble": null,
       "age_groups": [
-        11,
         14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 80,
-        "per_contestant_no_cmtanc": 110,
-        "per_contestant_yes_international": 130
-      }
-    },
-    "chinese_traditional_instrument_plucked_string": {
-      "name": "Plucked String - Chinese Traditional Instrument",
-      "ensemble": null,
-      "age_groups": [
-        11,
-        14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 80,
-        "per_contestant_no_cmtanc": 110,
-        "per_contestant_yes_international": 130
-      }
-    },
-    "chinese_traditional_instrument_woodwinds": {
-      "name": "Woodwinds - Chinese Traditional Instrument",
-      "ensemble": null,
-      "age_groups": [
-        11,
-        14,
-        17,
-        22,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 80,
-        "per_contestant_no_cmtanc": 110,
-        "per_contestant_yes_international": 130
-      }
-    },
-    "chinese_traditional_instrument_guqin": {
-      "name": "Guqin - Chinese Traditional Instrument",
-      "ensemble": null,
-      "age_groups": [
         18,
-        30
+        100
       ],
       "max_pieces": 4,
       "max_length": 6,
@@ -328,38 +259,6 @@
         "per_contestant_yes_cmtanc": 80,
         "per_contestant_no_cmtanc": 110,
         "per_contestant_yes_international": 130
-      }
-    },
-    "chinese_traditional_instrument_professional_zither": {
-      "name": "Professional Guzheng (Zither) - Chinese Traditional Instrument",
-      "ensemble": null,
-      "age_groups": [
-        18,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 80,
-        "per_contestant_no_cmtanc": 110,
-        "per_contestant_yes_international": 130
-      }
-    },
-    "chinese_traditional_instruments_ensemble": {
-      "name": "Chinese Traditional Instruments Ensemble",
-      "ensemble": {
-        "max_competitors": 7
-      },
-      "age_groups": [
-        15,
-        30
-      ],
-      "max_pieces": 4,
-      "max_length": 6,
-      "pricing": {
-        "per_contestant_yes_cmtanc": 50,
-        "per_contestant_no_cmtanc": 60,
-        "per_contestant_yes_international": 70
       }
     }
   }
