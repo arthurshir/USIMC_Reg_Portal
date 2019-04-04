@@ -6,17 +6,41 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-Sunday 4/17/19
-x - Change name of project from "usimc_2017" to "usimc"
-- Get base app running
-- Set up Dropbox Test
-- Set up Stripe Test
-- Try running tests
+Saturday 3/30/19
+- Get routing to work
+- Draw routing diagram
+- Write up drafts of Apache and Nginyx Config files.
+- Get Dropbox upload to work
+- Get Stripe payment to work
+x - Go over apache + nginx tutorial https://www.digitalocean.com/community/tutorials/how-to-configure-nginx-as-a-reverse-proxy-for-apache
+x - Figure out how to do routing on nginx/apache level
+x - Go over Django + Wordpress tutorial http://nortonwang.com/2013/06/setting-up-django-and-wordpress-together/
+x - Go over uwsgi tutorial
+x - Figure out how people do routing between two applications
+x - Go over nginx tutorial http://nginx.org/en/docs/beginners_guide.html#control
+x - Go over apache tutorial https://www.linode.com/docs/websites/cms/configure-apache-to-run-multiple-wordpress-sites-on-one-linode/
+x - Django Apache tutorial - https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/modwsgi/
+
+
+
+Wednesday 3/20/19
+- Test submission
 - Test all routes
-- Do research into Dropbox security and other options. Set up Dropbox if needed
+- Add more unit tests
+x - Resolve unit test
+  x - Add birth certificate when testing.
+x - Set up Dropbox Test
+x - Set up Stripe Test
+
+Sunday 3/17/19
+- Add virus scan to Dropbox upload
 - Get a general idea of how to refactor the codebase
 - Mock up new database schema
-
+x - Add get_errors function to validation
+x - Update rules
+x - Change name of project from "usimc_2017" to "usimc"
+x - Get base app running
+x - Do research into Dropbox security and other options. Set up Dropbox if needed
 
 Phase 1 Todos: - Get USIMC.org/registration done
   A) Setup:
@@ -53,8 +77,9 @@ Future Phase Todos:
   - Add FAQ pages
   - Remind them to use CMTANC Code
 
-
-
+Smoke Test
+  x - Password Reset
+  x - Login / Logout
 
 
 //////////////////////////////////////////////////////////////////////////////

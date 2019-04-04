@@ -1,0 +1,22 @@
+Upgrading your API version may break your implementation. Be sure to read the list of changes made since your version.
+You'll be able to roll back to your previous API version for the next 72 hours. Follow our upgrade guide to test the new changes.
+
+
+
+You're upgrading to the latest API version from 2017-02-14.
+
+Here's a few major changes that may affect you:
+
+We introduced two new subscription states: incomplete and incomplete_expired. For more details see [our guide](https://stripe.com/docs/billing/lifecycle#incomplete).
+Changes statement descriptor behavior for card payments
+Many properties on the Account API object have been reworked.
+The id field of invoice line items for subscriptions is no longer set to the subscription ID, but instead to a unique ID. The subscription ID is now contained in the subscription field and the subscription_item field contains the subscription item ID.
+When creating or updating subscriptions, the default value of trial_from_plan is now false, meaning that a subscription will not automatically inherit a plan's trial_period_days. If a subscription is already trialing, switching to a new plan without specifying trial_from_plan will maintain the trial. We recommend setting an explicit trial per subscription instead of setting trials on plans.
+The plan object attributes name and statement_descriptor have been deprecated. Plans are now linked to product objects by the product attribute on plans. The name and statement_descriptor attributes of the linked product are now used instead. An error is now returned if name or statement_descriptor are passed to POST /v1/plans.
+Allows a new subscription's first full invoice to be on a future date, by specifying billing_cycle_anchor, with an optional proration up to that date.
+Payouts were moved out of Transfers into their own resource. /v1/payouts now represents moving money from a Stripe account to a bank account or debit card, and /v1/transfers now represents Connect platforms moving money between Stripe accounts.
+Be sure to read the full list of changes to see all breaking changes for this upgrade.
+
+
+
+https://stripe.com/docs/upgrades?since=2017-02-14#how-can-i-upgrade-my-api

@@ -18,6 +18,9 @@ Edit after submission:
       - Change all data
     - Cannot adjust international status, awards, or instrument category
 
+Run Test:
+./usimc/manage.py test registration_site
+
 Pricing Unit Tests:
   - Check yes_cmtanc * 1_award * 1_member = price
   - Check no_cmtanc * 1_award * 1_member = price

@@ -139,6 +139,24 @@ class Entry(Model):
             (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True)
             )
 
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.parent_contact.validate():
+                print("    failed parent_contact failed")
+            if not self.teacher.validate():
+                print("    failed teacher failed")
+            if not self.lead_performer.validate():
+                print("    failed lead_performer failed")
+            if not self.validate_youth_youtube_link_validation():
+                print("    validate_youth_youtube_link_validation failed")
+            if not reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.pieces.all())):
+                print("    pieces failed")
+            if not (reduce((lambda x, y: x and y), map(lambda x: x.validate(), self.ensemble_members.all())) if len(self.ensemble_members.all()) > 0 else True):
+                print("    ensemble_members failed")
+
     def validate_youth_youtube_link_validation(self):
         """
             For Youth Award Category:
@@ -314,6 +332,21 @@ class ParentContact(Model):
         else:
             return not not (self.phone_number and self.first_name and self.last_name)
 
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.phone_number:
+                print("    phone_number failed")
+            if not self.first_name:
+                print("    first_name failed")
+            if not self.last_name:
+                print("    last_name failed")
+            try:
+                validate_email(self.email)
+            except ValidationError:
+                print("    email failed")
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number)
@@ -336,6 +369,20 @@ class Piece(Model):
 
     def validate(self):
         return not not(self.title and self.composer and self.minutes and self.seconds)
+
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.title:
+                print("    title failed")
+            if not self.composer:
+                print("    composer failed")
+            if not self.minutes:
+                print("    minutes failed")
+            if not self.seconds:
+                print("    seconds failed")
 
     # Relations
     entry = ForeignKey('Entry', on_delete=CASCADE, verbose_name='Piece')
@@ -377,6 +424,24 @@ class Teacher(Model):
             return False
         else:
             return not not (self.first_name and self.last_name and self.phone_number and (self.has_valid_cmtanc_code() if self.cmtanc_code else True))
+
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.first_name:
+                print("    first_name failed")
+            if not self.last_name:
+                print("    last_name failed")
+            if not self.phone_number:
+                print("    phone_number failed")
+            if not (self.has_valid_cmtanc_code() if self.cmtanc_code else True):
+                print("    valid_cmtanc_code failed")
+            try:
+                validate_email(self.email)
+            except ValidationError:
+                print("    email failed")
 
     def basic_information_string(self):
         return xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.email) + ', ' + xstr(self.phone_number) + ', ' + xstr(self.cmtanc_code)
@@ -428,6 +493,35 @@ class Person(Model):
     def validate(self):
         return not not(self.first_name and self.last_name and self.instrument and self.address and self.city and self.state and self.zip_code and self.country and self.birthday() and self.validate_birthday(self.birthday()) and self.birth_certificate_image)
 
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.first_name:
+                print("    first_name failed")
+            if not self.last_name:
+                print("    last_name failed")
+            if not self.instrument:
+                print("    instrument failed")
+            if not self.address:
+                print("    address failed")
+            if not self.city:
+                print("    city failed")
+            if not self.state:
+                print("    state failed")
+            if not self.zip_code:
+                print("    zip_code failed")
+            if not self.country:
+                print("    country failed")
+            if not self.birthday():
+                print("    birthday failed")
+            if not self.birth_certificate_image:
+                print("    birth_certificate_image failed")
+            if not self.validate_birthday(self.birthday()):
+                print("    birthday failed")
+
+
     def basic_information_string(self):
         output = xstr(self.first_name) + ' ' + xstr(self.last_name) + ', ' + xstr(self.instrument) + '\n'
         output += 'Address:\n' + xstr(self.address) + ', ' + xstr(self.city) + ' ' + xstr(self.state) + ', ' + xstr(self.zip_code) + ', ' + xstr(self.country) + '\n'
@@ -476,6 +570,24 @@ class EnsembleMember(Model):
 
     def validate(self):
         return not not (self.first_name and self.last_name and self.instrument and self.birthday() and self.validate_birthday(self.birthday()) and self.birth_certificate_image)
+
+    def validation_message(self):
+        print("Validation status for {}:".format(self))
+        if self.validate():
+            print("    validation passed")
+        else:
+            if not self.first_name:
+                print("    first_name failed")
+            if not self.last_name:
+                print("    last_name failed")
+            if not self.instrument:
+                print("    instrument failed")
+            if not self.birthday():
+                print("    birthday failed")
+            if not self.validate_birthday(self.birthday()):
+                print("    validate_birthday failed")
+            if not self.birth_certificate_image:
+                print("    birth_certificate_image failed")
 
     def birthday_string(self):
         return xstr(self.birthday())

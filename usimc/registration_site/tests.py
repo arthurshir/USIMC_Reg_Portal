@@ -46,6 +46,7 @@ class ModelValidationMethodTests(TestCase):
       ensemble_member.month = str(birthday.month)
       ensemble_member.day = str(birthday.day)
       ensemble_member.year = str(birthday.year)
+      ensemble_member.birth_certificate_image = 'image'
       ensemble_member.save()
 
     for ensemble_member in entry.ensemble_members.all():
@@ -86,6 +87,7 @@ class ModelValidationMethodTests(TestCase):
     entry.lead_performer.month = str(birthday.month)
     entry.lead_performer.day = str(birthday.day)
     entry.lead_performer.year = str(birthday.year)
+    entry.lead_performer.birth_certificate_image = 'image'
     self.assertEqual(entry.lead_performer.validate(), True)
 
     entry.lead_performer.save()
@@ -102,10 +104,10 @@ class ModelValidationMethodTests(TestCase):
     self.assertEqual(entry.teacher.validate(), False)
 
     entry.teacher.email = 'test@gmail.com'
+    entry.teacher.phone_number = '5106768998'
     self.assertEqual(entry.teacher.validate(), True)
 
     entry.teacher.cmtanc_code = "Invalid"
-    entry.teacher.save()
     self.assertEqual(entry.teacher.validate(), False)
 
     entry.teacher.cmtanc_code = "HP12500"
@@ -146,6 +148,7 @@ class ModelValidationMethodTests(TestCase):
       ensemble_member.month = str(birthday.month)
       ensemble_member.day = str(birthday.day)
       ensemble_member.year = str(birthday.year)
+      ensemble_member.birth_certificate_image = 'image'
       ensemble_member.save()
 
     for piece in entry.pieces.all():
@@ -168,6 +171,7 @@ class ModelValidationMethodTests(TestCase):
     entry.lead_performer.month = str(birthday.month)
     entry.lead_performer.day = str(birthday.day)
     entry.lead_performer.year = str(birthday.year)
+    entry.lead_performer.birth_certificate_image = 'image'
     entry.lead_performer.save()
 
     entry.teacher.first_name = 'Test value'
@@ -175,7 +179,6 @@ class ModelValidationMethodTests(TestCase):
     entry.teacher.email = 'Arthur.shir@gmail.com'
     entry.teacher.cmtanc_code = None
     entry.teacher.save()
-    print entry.teacher.validate()
 
     entry.parent_contact.first_name = 'Test value'
     entry.parent_contact.last_name = 'Test value'
@@ -183,14 +186,14 @@ class ModelValidationMethodTests(TestCase):
     entry.parent_contact.phone_number = '5106768998'
     entry.save()
 
-    # self.assertEqual(entry.validate(), True)
-
     entry.teacher.cmtanc_code = "Invalid"
     entry.teacher.save()
     self.assertEqual(entry.validate(), False)
 
     entry.teacher.cmtanc_code = "HP12500"
+    entry.teacher.phone_number = "5106768998"
     entry.teacher.save()
+    entry.teacher.validation_message()
     self.assertEqual(entry.validate(), True)
 
 
