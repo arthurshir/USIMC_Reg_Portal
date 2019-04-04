@@ -4,7 +4,7 @@ cffi==1.12.2
 Click==7.0
 cryptography==2.6.1
 cssmin==0.2.0
-Django==2.1.7
+Django==2.2
 django-crispy-forms==1.7.2
 django-crontab==0.7.1
 django-dbbackup==3.2.0
