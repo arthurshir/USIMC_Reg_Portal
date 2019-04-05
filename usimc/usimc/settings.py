@@ -141,7 +141,7 @@ USE_TZ = True
 MAX_UPLOAD_SIZE = 3000000
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
 DROPBOX_OAUTH2_TOKEN = os.environ.get('DROPBOX_ACCESS_TOKEN', 'invalid' )
-DROPBOX_ROOT_PATH = 'usimc_2018'
+DROPBOX_ROOT_PATH = 'usimc_2019'
 
 # Backups
 DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
