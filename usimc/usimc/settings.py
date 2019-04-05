@@ -21,6 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Load Environment variables
 dotenv.load_dotenv( os.path.join(BASE_DIR, '.env'))
 
+print(BASE_DIR)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -98,7 +100,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE_NAME', 'usimc'),
         'USER': os.environ.get('DATABASE_USER', 'usimc'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', '1234'),
-        'HOST': '127.0.0.1',
+        'HOST': os.environ.get('DATABASE_HOST', '127.0.0.1'),
         'PORT': '5432',
     }
 }
