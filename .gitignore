@@ -7,7 +7,7 @@ documents/
 
 .DS_Store
 .sass-cache/
-.usimc/static/
+usimc/static/
 .env
 *.org
 usimc/registration_site/migrations/
