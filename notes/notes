@@ -6,6 +6,7 @@ Fix:
 
 
 # the virtualenv (full path)
+cd /var/lib/jenkins/workspace/deploy_qa_usimc_competition/
 sudo /var/lib/jenkins/workspace/deploy_qa_usimc_competition/venv/bin/uwsgi --ini usimc.ini
 home            = /path/to/virtualenv
 
