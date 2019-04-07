@@ -6,6 +6,27 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
+Friday 4/6//19
+- Resolve routing to USIMC.org Wordpress
+  - Add Django app to Nginx
+  [No] - Deploy Django App to port 80 and put nginx on different server?
+- Test main functions
+  - Test forgot password
+  - Test log in
+  - Test create user
+  - Test application process
+    - Test create application
+    - Test save application
+    - Test edit application
+    - Test application verification (unit tested)
+    - Test sign waiver
+    - Test price calculation
+    - Test Stripe
+    - Test verification email
+- Find out the issues from last year and make a list to finish up.
+- Add UI improvements to make it look like this year's
+
+
 Saturday 3/30/19
 - Get routing to work
 - Draw routing diagram
@@ -31,6 +52,7 @@ x - Resolve unit test
   x - Add birth certificate when testing.
 x - Set up Dropbox Test
 x - Set up Stripe Test
+
 
 Sunday 3/17/19
 - Add virus scan to Dropbox upload
