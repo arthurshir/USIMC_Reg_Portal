@@ -179,6 +179,9 @@ CRONJOBS = [
     ('0 * * * *', 'registration_site.cron.backup_database')
 ]
 
+# Enable this for Nginx reverse proxy
+USE_X_FORWARDED_HOST = True
+
 # Stripe
 STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
 STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123456')

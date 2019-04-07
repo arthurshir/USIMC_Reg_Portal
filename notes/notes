@@ -5,6 +5,10 @@ Fix:
   * brew install postgresql
 
 
+# the virtualenv (full path)
+sudo /var/lib/jenkins/workspace/deploy_qa_usimc_competition/venv/bin/uwsgi --ini usimc.ini
+home            = /path/to/virtualenv
+
 Edit after submission:
   - Change anything that doesn't affect the price
     - Piece
