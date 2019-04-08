@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -33,4 +35,4 @@ urlpatterns = [
         auth_views.PasswordResetConfirmView.as_view(template_name='user_management/usimc_password_reset_confirm.html'), name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(template_name='user_management/usimc_password_reset_complete.html'), name='password_reset_complete'),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
