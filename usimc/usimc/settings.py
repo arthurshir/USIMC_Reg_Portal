@@ -179,6 +179,9 @@ CRONJOBS = [
     ('0 * * * *', 'registration_site.cron.backup_database')
 ]
 
+# Site ID -  https://docs.djangoproject.com/en/1.11/ref/contrib/sites/#enabling-the-sites-framework
+SITE_ID = 1
+
 # Enable this for Nginx reverse proxy
 USE_X_FORWARDED_HOST = True
 
