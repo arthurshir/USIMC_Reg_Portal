@@ -152,12 +152,12 @@ DBBACKUP_STORAGE_OPTIONS = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/registration/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # User Management
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/registration/login/'
 
 # CrispyForms
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html
