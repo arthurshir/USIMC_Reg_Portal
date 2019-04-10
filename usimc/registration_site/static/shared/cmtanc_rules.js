@@ -1,7 +1,7 @@
 
 // Collect rules
 var rules;
-$.getJSON( "/static/registration_site/rules.json", function( data ) {
+$.getJSON( "/registration/static/registration_site/rules.json", function( data ) {
   rules = data;
 });
 

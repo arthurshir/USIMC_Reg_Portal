@@ -153,6 +153,7 @@ DBBACKUP_STORAGE_OPTIONS = {
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/registration/static/'
+STATIC_URL_WITHOUT_URI = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # User Management
