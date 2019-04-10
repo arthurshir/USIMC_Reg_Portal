@@ -185,9 +185,6 @@ SITE_ID = 1
 # Enable this for Nginx reverse proxy
 USE_X_FORWARDED_HOST = True
 
-# Add uri to resverse_proxy
-FORCE_SCRIPT_NAME = 'registration'
-
 # Stripe
 STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
 STRIPE_TEST_PUBLISHABLE_KEY = os.environ.get('STRIPE_TEST_PUBLISHABLE_KEY', '123456')

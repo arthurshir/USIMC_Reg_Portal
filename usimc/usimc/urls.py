@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
-urlpatterns = [
+urlpatterns2 = [
     
     # Admin
     url(r'^admin/', admin.site.urls),
@@ -36,3 +36,7 @@ urlpatterns = [
     url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(template_name='user_management/usimc_password_reset_complete.html'), name='password_reset_complete'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns = [
+    url(r'^registration/', include(urlpatterns2)),
+]

@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from . import views
 
 app_name = 'registration_site'
-urlpatterns = [
+urlpatterns2 = [
     # Home Page
     url(r'^$', views.IndexView.as_view(), name='index'),
 
@@ -39,4 +39,8 @@ urlpatterns = [
 
     # Info
     # url(r'^info/rules.json$', views.rules_json, name='rules_json'),
+]
+
+urlpatterns = [
+    url(r'^registration/', include(urlpatterns2)),
 ]
