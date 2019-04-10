@@ -6,7 +6,7 @@ $(document).ready(function(){
 
   function update_pricing() {
     $.ajax({
-      url: "/application/create_pricing_string/",
+      url: "/registration/application/create_pricing_string/",
       type: "GET", //send it through get method
       data: { 
         num_ensemble_members: $('.competitor-form').length,
