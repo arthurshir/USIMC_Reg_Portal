@@ -33,8 +33,7 @@
         "cello",
         "vocal",
         "marimba",
-        "woodwinds",
-        "piano_duet"
+        "woodwinds"
       ]
     },
     "special_theme_bach": {
@@ -46,10 +45,7 @@
         "cello",
         "vocal",
         "marimba",
-        "woodwinds",
-        "piano_duet",
-        "chinese_traditional_instrument_plucked_string",
-        "chinese_traditional_instrument_bowed_strings"
+        "woodwinds"
       ]
     }
   },
