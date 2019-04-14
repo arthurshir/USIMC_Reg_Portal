@@ -738,7 +738,7 @@ def payment_confirmation(request, *args, **kwargs):
     entry = get_entry(request.user, kwargs['pk'])
     entry.save()
     context['entry'] = entry
-    context['username_email'] = entry.parent_contact.email
+    context['username_email'] = usimc_user.user.username
     context['parent_email'] = entry.parent_contact.email
     return render(request, 'registration_site/application_submission/payment_confirmation.html', context)
 
