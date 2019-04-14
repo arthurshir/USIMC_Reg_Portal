@@ -9,14 +9,8 @@
 Sunday 4/14/19
 - Fix Bugs:
   - CSS for Main Application
-  - Ensemble member form is showing up for solo
-  - Fix Email confirmation?
-- Vital Adjustments
   - Change HTML stripe to documentation one
 - Test main functions
-  - Test forgot password
-  - Test log in
-  - Test create user
   - Test application process
     - Test create application
     - Test save application
@@ -29,7 +23,20 @@ Sunday 4/14/19
 - Find out the issues from last year and make a list to finish up.
 - Add UI improvements to make it look like this year's
 - Create Nginx error page.
+
+x - Add CM Teachers
+x - Test forgot password
+x - Test log in
+x - Test create user
+x - Connect Dropbox
 x - Template issue? --> To do with configuration
+x - Fix Email confirmation?
+
+Later:
+[Do later] - Ensemble member form is showing up for solo
+[Do later] - Remove capitalization from login 
+
+
 
 Friday 4/6//19
 x - Add HTTPS
