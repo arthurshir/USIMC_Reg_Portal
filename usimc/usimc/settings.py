@@ -172,7 +172,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'invalid' )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER', 'invalid' )
-ENABLE_EMAILS_FOR_DEBUG = False
+ENABLE_EMAILS_FOR_DEBUG = os.environ.get('ENABLE_EMAILS_FOR_DEBUG', 'False') == 'True'
 
 
 # CRON JOBS

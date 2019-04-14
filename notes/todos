@@ -6,10 +6,13 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-Friday 4/6//19
-- Resolve routing to USIMC.org Wordpress
-  - Add Django app to Nginx
-  [No] - Deploy Django App to port 80 and put nginx on different server?
+Sunday 4/14/19
+- Fix Bugs:
+  - CSS for Main Application
+  - Ensemble member form is showing up for solo
+  - Fix Email confirmation?
+- Vital Adjustments
+  - Change HTML stripe to documentation one
 - Test main functions
   - Test forgot password
   - Test log in
@@ -26,6 +29,13 @@ Friday 4/6//19
 - Find out the issues from last year and make a list to finish up.
 - Add UI improvements to make it look like this year's
 
+Friday 4/6//19
+x - Add HTTPS
+  x - Add HTTPS for nginx general
+  x (If needed) - Add HTTPS for usimc.org
+x - Resolve routing to USIMC.org Wordpress
+  x - Add Django app to Nginx
+  [No] - Deploy Django App to port 80 and put nginx on different server?
 
 Saturday 3/30/19
 - Get routing to work
