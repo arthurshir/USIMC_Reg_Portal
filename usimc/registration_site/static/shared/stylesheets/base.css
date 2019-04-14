@@ -165,6 +165,12 @@ form {
   margin: 0px;
 }
 
+.image_file_form_container {
+  max-width: 500px;
+  display: inline-block;
+  overflow-x: hidden;
+}
+
 .form-section-header {
   font-size: 20px;
   margin-left: 2px;

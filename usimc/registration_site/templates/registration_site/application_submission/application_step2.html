@@ -140,8 +140,10 @@
               <div class="col-md-12 application-column">
                 <div style="height:10px;"></div>
                 <div class="form-section-subheader">Birth Certificate*  (Please upload in format "firstname_lastname")<br>(Max File Size 3MB)</div>
-                {{ lead_competitor_form.birth_certificate_image|filename }}
-                {{ lead_competitor_form.birth_certificate_image.errors }}
+                <div class="image_file_form_container">
+                  {{ lead_competitor_form.birth_certificate_image }}
+                  {{ lead_competitor_form.birth_certificate_image.errors }}
+                </div>
               </div>
             </div>
           </div>
@@ -191,8 +193,10 @@
               <div class="col-md-12 application-column">
                 <div style="height:10px;"></div>
                 <div class="form-section-subheader">Birth Certificate*  (Please upload in format "firstname_lastname")<br>(Max File Size 3MB)</div>
-                {{ form.birth_certificate_image|filename }}
-                {{ form.birth_certificate_image.errors }}
+                <div class="image_file_form_container">
+                  {{ form.birth_certificate_image }}
+                  {{ form.birth_certificate_image.errors }}
+                </div>
               </div>
             </div>
           </div>
