@@ -75,8 +75,7 @@ ROOT_URLCONF = 'usimc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # TODO: Refactor all of codebase which references template files to use get_template so you can remove this explicit reference.
-        'DIRS': ['templates', 'registration_site/templates'],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
