@@ -40,6 +40,7 @@ print("DEBUG=", "True" if DEBUG else "False")
 # Security
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
 
 # Application definition
 INSTALLED_APPS = [
