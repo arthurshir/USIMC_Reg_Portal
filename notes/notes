@@ -6,8 +6,7 @@ Fix:
 
 Permissions, uWSGI, etc:
 For now, just run this on server side to start the server:
-  sudo chgrp -R servergroup /etc/uwsgi
-  sudo pkill -f uwsgi -9
+  sudo pkill -f uwsgi -9A
   start_qa_uwsgi
 
 
