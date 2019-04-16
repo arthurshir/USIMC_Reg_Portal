@@ -7,19 +7,10 @@
 
 
 Sunday 4/14/19
-- Fix Bugs:
-  - CSS for Main Application
-  - Change HTML stripe to documentation one
 - Test main functions
   - Test application process
-    - Test create application
-    - Test save application
-    - Test edit application
-    - Test application verification (unit tested)
-    - Test sign waiver
-    - Test price calculation
+    - Comprehensive price calculation test
     - Test Stripe
-    - Test verification email
 - Find out the issues from last year and make a list to finish up.
 - Add UI improvements to make it look like this year's
 - Create Nginx error page.
@@ -31,10 +22,18 @@ x - Test create user
 x - Connect Dropbox
 x - Template issue? --> To do with configuration
 x - Fix Email confirmation?
+x - CSS for Main Application
+x - Test create application
+x - Test save application
+x - Test edit application
+x - Test application verification (unit tested)
+x - Test sign waiver
+x - Test verification email
 
 Later:
 [Do later] - Ensemble member form is showing up for solo
 [Do later] - Remove capitalization from login 
+[Do later] - Change HTML stripe to documentation one
 
 
 
