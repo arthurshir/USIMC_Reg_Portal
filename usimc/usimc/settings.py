@@ -40,7 +40,26 @@ print("DEBUG=", "True" if DEBUG else "False")
 # Security
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-SECURE_SSL_REDIRECT = not DEBUG
+SECURE_SSL_REDIRECT = False
+
+#Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 # Application definition
 INSTALLED_APPS = [
@@ -182,9 +201,6 @@ CRONJOBS = [
 
 # Site ID -  https://docs.djangoproject.com/en/1.11/ref/contrib/sites/#enabling-the-sites-framework
 SITE_ID = 1
-
-# Enable this for Nginx reverse proxy
-USE_X_FORWARDED_HOST = True
 
 # Stripe
 STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY', '123456')
