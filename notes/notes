@@ -1,3 +1,14 @@
+How to do a deployment:
+
+- `sudo pkill -f uwsgi -9`
+- Start Jenkins
+- Jenkins Deploy
+- Stop Jenkins
+- `start_qa_uwsgi`
+- Double check... you may need to set permissions again
+
+
+
 Fix:
 * Issue with mod-wsgi==4.5.15
   * Install dev version: pip install https://github.com/GrahamDumpleton/mod_wsgi/archive/develop.zip
@@ -6,8 +17,23 @@ Fix:
 
 Permissions, uWSGI, etc:
 For now, just run this on server side to start the server:
-  sudo pkill -f uwsgi -9A
+  sudo chgrp -R servergroup /etc/uwsgi
+  sudo pkill -f uwsgi -9
   start_qa_uwsgi
+
+
+UWSGI Logs:
+sudo tail -f /var/log/uwsgi/uwsgi.log
+
+
+Django Shell -- Access shell:
+  source venv/bin/activate
+  ./usimc/manage.py shell
+
+Query Model:
+  from registration_site.models import Person
+  Person.objects.filter(first_name="Tingyuan")
+
 
 
 # the virtualenv (full path)

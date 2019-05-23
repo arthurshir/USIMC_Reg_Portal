@@ -894,6 +894,8 @@ class DownloadEntriesView(View ):
 
         return response
 
+def error_500_view(request):
+    return render(request,'registration_site/error/500.html')
 
 ## REST API
 

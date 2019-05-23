@@ -40,3 +40,5 @@ urlpatterns2 = [
 urlpatterns = [
     url(r'^registration/', include(urlpatterns2)),
 ]
+
+handler500 = 'registration_site.views.error_500_view'
