@@ -137,10 +137,8 @@ Django-storages
 Run Shell Commands and update stuff:
 
 ssh -i "USIMC_OG_Keypair.pem" ec2-user@ec2-13-57-211-246.us-west-1.compute.amazonaws.com
-start_qa_uwsgi
 go_to_jenkins_usimc_qa
 source venv/bin/activate
-./usimc/manage.py runserver
 ./usimc/manage.py shell
 from registration_site.models import USIMCUser
 from registration_site.models import User
