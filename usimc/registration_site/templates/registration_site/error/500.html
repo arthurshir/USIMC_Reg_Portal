@@ -1,62 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
+<!-- Head -->
+{% block head %}
+{% endblock %}
 
-<html>
-	<head>
-		<title></title>
-		<link rel="shortcut icon" href="/registration/static/shared/small_logo.png"/>
-		<!-- jQuery library -->
-		<script src="/registration/static/shared/jquery-3.2.0.min.js"></script>
-		<!-- Bootstrap -->
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		<!-- Include Font -->
-		<link href="https://fonts.googleapis.com/css?family=Fira+Sans:200,300,400,500" rel="stylesheet">
-		<link rel="stylesheet" href="/registration/static/shared/stylesheets/base.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>		
-		<!-- Google Analytics -->
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<!-- Title -->
+{% block title %}USIMC{% endblock %}
+{% block subtitle %}Hosted by USIMF{% endblock %}
 
-		  ga('create', 'UA-97477154-1', 'auto');
-		  ga('send', 'pageview');
+<!-- Nav Button -->
+{% block rightNavButton %}{% endblock %}
 
-		</script>
-		
-
-	</head>
-	<body>
-		<nav class="navbar navbar-default navbar-fixed-top">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-				<a class="navbar-brand" href="/registration/">
-					<div class="navbar-wrapper">
-						<img id="small_logo" src="/registration/static/shared/small_logo.png">
-						<div class="navbar-brand-title">
-							<span id="title">United States International Music Competition</span>
-							<span id="subtitle">Hosted by USIMF</span>
-						</div>
-					</div>
-				</a>
-	    </div>
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	    	<ul class="nav navbar-nav navbar-right">
-		    	<li class="right-button"></li>
-		    </ul>
-	    </div>
-		</nav>
-		
-		<div class="content">
+<!-- Main Content -->
+{% block content %}
 <div class="centered-wrapper">
-
   <div class="text-centered">
     <h1>Internal Error</h1>
     <span>Sorry, it looks like there's an internal issue with our website.</span><br/>
@@ -66,12 +25,5 @@
   <div style="height:10px;"></div>
   <span style="text-align: center;">
   </span>
-  
 </div>
-		
-		<footer class="flex-space-between flex-row">
-				<span>© Copyright USIMF 2019</span>
-				<span>Questions or Complaints? Email us at <a href="mailto:support@usimccompetition.com">support@usimccompetition.com</a></span>
-		</footer>
-	</body>
-</html>
+{% endblock %}
