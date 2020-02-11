@@ -1,4 +1,0 @@
-Strategies to trigger UI update for Delivery Estimator
-
-1. Tie prop to redux store for automatic updating.
-
