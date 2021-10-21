@@ -1,5 +1,5 @@
 appdirs==1.4.3
-Babel==2.6.0
+Babel==2.9.1
 cffi==1.12.2
 Click==7.0
 cryptography==2.6.1
