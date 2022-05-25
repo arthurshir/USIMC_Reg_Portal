@@ -33,7 +33,7 @@ pyexcel==0.5.13
 pyexcel-io==0.5.16
 pyexcel-webio==0.1.4
 PyExecJS==1.5.1
-PyJWT==1.7.1
+PyJWT==2.4.0
 pyparsing==2.3.1
 PyReact==0.6.0
 python-dotenv==0.10.1
