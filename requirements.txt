@@ -22,7 +22,7 @@ gunicorn==19.9.0
 idna==2.8
 ipaddress==1.0.22
 Markdown==3.0.1
-mod-wsgi==4.6.5
+mod-wsgi==4.9.3
 packaging==19.0
 phonenumberslite==8.10.7
 Pillow==5.4.1
